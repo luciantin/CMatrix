@@ -1,0 +1,123 @@
+    puts("Random matrix :");
+
+    NNCIMatrixType matrix = NNCMatrixAllocRandom(3,2);
+    NNCMatrixPrint(matrix);
+    NNCMatrixDeAlloc(matrix);
+
+    puts("Dense Layer Weights :");
+
+    NNCIDenseLayerType linearLayer = NNCDenseLayerAlloc(2, 3);
+    NNCMatrixPrint(linearLayer->weights);
+
+    puts("Matrix dot product");
+
+    NNCIMatrixType matrix_dot = NNCMatrixAllocBaseValue(3,4, 1);
+    nnc_mtype vector[3] = {1, 2, 3};
+    nnc_vector vector_out = NNCMatrixDotProduct(matrix_dot, vector);
+    NNCPrintVector(vector_out, matrix_dot->x);
+    NNCMatrixDeAlloc(matrix_dot);
+
+    puts("Matrix product");
+
+    NNCIMatrixType matrix_dot_a = NNCMatrixAllocBaseValue(1,4, 1);
+    NNCIMatrixType matrix_dot_b = NNCMatrixAllocBaseValue(4,1, 1);
+    NNCIMatrixType matrix_dot_out;
+    matrix_dot_out = NNCMatrixProduct(matrix_dot_a, matrix_dot_b);
+    NNCMatrixPrint(matrix_dot_out);
+    NNCMatrixDeAlloc(matrix_dot_a);
+    NNCMatrixDeAlloc(matrix_dot_b);
+    NNCMatrixDeAlloc(matrix_dot_out);
+
+    puts("Transpose :");
+
+    NNCIMatrixType matrix_t = NNCMatrixAllocBaseValue(4,1, 1);
+    NNCIMatrixType matrix_t_out;
+    matrix_t_out = NNCMatrixTranspose(matrix_t);
+    NNCMatrixPrint(matrix_t);
+    NNCMatrixPrint(matrix_t_out);
+    NNCMatrixDeAlloc(matrix_t);
+    NNCMatrixDeAlloc(matrix_t_out);
+
+    puts("Transpose and matrix product :");
+
+    NNCIMatrixType matrix_t_dot_a = NNCMatrixAllocBaseValue(1,4, 1);
+    NNCIMatrixType matrix_t_dot_b = NNCMatrixAllocBaseValue(1,4, 1);
+    NNCIMatrixType matrix_t_dot_out_a;
+    NNCIMatrixType matrix_t_dot_out;
+    matrix_t_dot_out_a = NNCMatrixTranspose(matrix_t_dot_a);
+    matrix_t_dot_out = NNCMatrixProduct(matrix_t_dot_out_a, matrix_t_dot_b);
+
+    NNCMatrixPrint(matrix_t_dot_out);
+
+    NNCMatrixDeAlloc(matrix_t_dot_a);
+    NNCMatrixDeAlloc(matrix_t_dot_b);
+    NNCMatrixDeAlloc(matrix_t_dot_out_a);
+    NNCMatrixDeAlloc(matrix_t_dot_out);
+
+    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(2, 3);
+    NNCIMatrixType inputs = NNCMatrixAllocRandom(2, 4);
+    NNCMatrixPrint(inputs);
+
+    puts("");
+
+    NNCMatrixPrint(dense1->weights);
+
+    puts("");
+
+    NNCIMatrixType outputs1 = NNCDenseLayerForward(inputs, dense1);
+    NNCMatrixPrint(outputs1);
+
+    puts("");
+
+    NNCIDenseLayerType dense2 = NNCDenseLayerAlloc(3, 5);
+    NNCIMatrixType outputs2 = NNCDenseLayerForward(outputs1, dense2);
+
+    puts("");
+
+    NNCMatrixPrint(outputs2);
+
+    puts("++++++++++");
+
+    NNCIMatrixType outputs3 = NNCActivationReLUForward(outputs2);
+
+
+    NNCMatrixPrint(outputs3);
+
+    puts("--------");
+
+    NNCIMatrixType outputs4 = NNCActivationSoftMaxForward(outputs3);
+
+
+    NNCMatrixPrint(outputs4);
+
+
+
+
+
+    NNCMatrixDeAlloc(inputs);
+    NNCDenseLayerDeAlloc(dense1);
+    NNCMatrixDeAlloc(outputs1);
+    NNCDenseLayerDeAlloc(dense2);
+    NNCMatrixDeAlloc(outputs2);
+
+
+//    puts("Matrix product");
+//
+//    NNCIMatrixType matrix_dot_a = NNCMatrixAllocBaseValue(8,8, 1);
+//    NNCIMatrixType matrix_dot_b = NNCMatrixAllocLine(2,90);
+//    NNCIMatrixType matrix_t_out;
+//    matrix_t_out = NNCMatrixTranspose(matrix_dot_b);
+//    NNCIMatrixType matrix_dot_out;
+//    matrix_dot_out = NNCMatrixProduct(matrix_dot_a, matrix_t_out);
+//
+//    NNCMatrixPrint(matrix_dot_b);
+//
+//    puts("");
+//
+//    NNCMatrixPrint(matrix_dot_out);
+//
+////    puts("");
+//
+//    NNCMatrixDeAlloc(matrix_dot_a);
+//    NNCMatrixDeAlloc(matrix_dot_b);
+//    NNCMatrixDeAlloc(matrix_dot_out);

@@ -1,0 +1,3 @@
+/home/tin/Projects/Projects/CMatrix/cmake-build-debug/CMakeFiles/CMatrix.dir
+/home/tin/Projects/Projects/CMatrix/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/tin/Projects/Projects/CMatrix/cmake-build-debug/CMakeFiles/rebuild_cache.dir
