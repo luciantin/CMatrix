@@ -1,6 +1,7 @@
 #ifndef CMATRIX_NNC_MATRIX_H
 #define CMATRIX_NNC_MATRIX_H
 
+#include <stdbool.h>
 #include "nnc_config.h"
 
 typedef struct NNCMatrixType
@@ -26,6 +27,8 @@ void NNCMatrixDeAlloc(NNCIMatrixType matrix);
 void NNCMatrixPrint(NNCIMatrixType matrix);
 
 NNCIMatrixType NNCMatrixProduct(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b);
+NNCIMatrixType NNCMatrixSum(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b);
+NNCIMatrixType NNCMatrixSumSingle(NNCIMatrixType matrix, bool axis);
 nnc_vector NNCMatrixDotProduct(NNCIMatrixType matrix, nnc_vector vector);
 NNCIMatrixType NNCMatrixAddVector(NNCIMatrixType matrix, nnc_vector vector);
 NNCIMatrixType NNCMatrixTranspose(NNCIMatrixType matrix);

@@ -99,7 +99,24 @@ nnc_vector NNCMatrixArgMax(NNCIMatrixType matrix) {
     return vector_out;
 }
 
-NNCIMatrixType NNCMatrixAllocSampleLine(unsigned int x, unsigned int y) {
+NNCIMatrixType NNCMatrixSum(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b) {
+    if(matrix_a->y == matrix_b->y && matrix_a->x == matrix_b->x){
+        NNCIMatrixType matrix_c = NNCMatrixAlloc(matrix_a->x, matrix_a->y);
+        for(nnc_uint x = 0; x < matrix_a->x; x++) for(nnc_uint y = 0; y < matrix_a->y; y++) matrix_c->matrix[y][x] = matrix_a->matrix[y][x] + matrix_b->matrix[y][x];
+        return matrix_c;
+    } else if(matrix_a->x == matrix_b->x && matrix_b->y == 1){
+        NNCIMatrixType matrix_c = NNCMatrixAlloc(matrix_a->x, matrix_a->y);
+        for(nnc_uint x = 0; x < matrix_a->x; x++) for(nnc_uint y = 0; y < matrix_a->y; y++) matrix_c->matrix[y][x] = matrix_a->matrix[y][x] + matrix_b->matrix[0][x];
+        return matrix_c;
+    } else if(matrix_a->y == matrix_b->y && matrix_b->x == 1){
+        NNCIMatrixType matrix_c = NNCMatrixAlloc(matrix_a->x, matrix_a->y);
+        for(nnc_uint x = 0; x < matrix_a->x; x++) for(nnc_uint y = 0; y < matrix_a->y; y++) matrix_c->matrix[y][x] = matrix_a->matrix[y][x] + matrix_b->matrix[y][0];
+        return matrix_c;
+    }
+    return NULL;
+}
+
+NNCIMatrixType NNCMatrixAllocLine(unsigned int x, unsigned int y) {
     NNCIMatrixType matrix = malloc(sizeof(NNCMatrixType));
     matrix->matrix = malloc(sizeof(nnc_mtype*) * y);
     matrix->x = x; matrix->y = y;
@@ -108,12 +125,24 @@ NNCIMatrixType NNCMatrixAllocSampleLine(unsigned int x, unsigned int y) {
     return matrix;
 }
 
-NNCIMatrixType NNCMatrixAllocSampleSum(unsigned int x, unsigned int y) {
+NNCIMatrixType NNCMatrixAllocSum(unsigned int x, unsigned int y) {
     NNCIMatrixType matrix = malloc(sizeof(NNCMatrixType));
     matrix->matrix = malloc(sizeof(nnc_mtype*) * y);
     matrix->x = x; matrix->y = y;
     for(int _y = 0; _y < y; _y ++) matrix->matrix[_y] = malloc(sizeof(nnc_mtype) * x);
     for(int _y = 0; _y < matrix->y; _y ++) for(int _x = 0; _x < matrix->x; _x ++) matrix->matrix[_y][_x] = _y + _x;
     return matrix;
+}
+
+NNCIMatrixType NNCMatrixSumSingle(NNCIMatrixType matrix, bool axis) {
+    if(axis){
+        NNCIMatrixType matrix_out = NNCMatrixAllocBaseValue(1, matrix->y, 0);
+        for(int _y = 0; _y < matrix->y; _y ++) for(int _x = 0; _x < matrix->x; _x ++) matrix_out->matrix[_y][0] += matrix->matrix[_y][_x];
+        return matrix_out;
+    }else{
+        NNCIMatrixType matrix_out = NNCMatrixAllocBaseValue(matrix->x, 1, 0);
+        for(int _x = 0; _x < matrix->x; _x ++) for(int _y = 0; _y < matrix->y; _y ++) matrix_out->matrix[0][_x] += matrix->matrix[_y][_x];
+        return matrix_out;
+    }
 }
 

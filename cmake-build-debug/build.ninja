@@ -39,7 +39,7 @@ include CMakeFiles/rules.ninja
 #############################################
 # Logical path to working directory; prefix for absolute paths.
 
-cmake_ninja_workdir = /home/tin/Projects/Projects/CMatrix/cmake-build-debug/
+cmake_ninja_workdir = /home/tin/Projects/WasmBoxes/CMatrix/cmake-build-debug/
 # =============================================================================
 # Object build statements for EXECUTABLE target CMatrix
 
@@ -49,43 +49,43 @@ cmake_ninja_workdir = /home/tin/Projects/Projects/CMatrix/cmake-build-debug/
 
 build cmake_object_order_depends_target_CMatrix: phony || CMakeFiles/CMatrix.dir
 
-build CMakeFiles/CMatrix.dir/main.c.o: C_COMPILER__CMatrix_Debug /home/tin/Projects/Projects/CMatrix/main.c || cmake_object_order_depends_target_CMatrix
+build CMakeFiles/CMatrix.dir/main.c.o: C_COMPILER__CMatrix_Debug /home/tin/Projects/WasmBoxes/CMatrix/main.c || cmake_object_order_depends_target_CMatrix
   DEP_FILE = CMakeFiles/CMatrix.dir/main.c.o.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu11
   OBJECT_DIR = CMakeFiles/CMatrix.dir
   OBJECT_FILE_DIR = CMakeFiles/CMatrix.dir
 
-build CMakeFiles/CMatrix.dir/helpers/nnc_matrix.c.o: C_COMPILER__CMatrix_Debug /home/tin/Projects/Projects/CMatrix/helpers/nnc_matrix.c || cmake_object_order_depends_target_CMatrix
+build CMakeFiles/CMatrix.dir/helpers/nnc_matrix.c.o: C_COMPILER__CMatrix_Debug /home/tin/Projects/WasmBoxes/CMatrix/helpers/nnc_matrix.c || cmake_object_order_depends_target_CMatrix
   DEP_FILE = CMakeFiles/CMatrix.dir/helpers/nnc_matrix.c.o.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu11
   OBJECT_DIR = CMakeFiles/CMatrix.dir
   OBJECT_FILE_DIR = CMakeFiles/CMatrix.dir/helpers
 
-build CMakeFiles/CMatrix.dir/helpers/nnc_dense_layer.c.o: C_COMPILER__CMatrix_Debug /home/tin/Projects/Projects/CMatrix/helpers/nnc_dense_layer.c || cmake_object_order_depends_target_CMatrix
+build CMakeFiles/CMatrix.dir/helpers/nnc_dense_layer.c.o: C_COMPILER__CMatrix_Debug /home/tin/Projects/WasmBoxes/CMatrix/helpers/nnc_dense_layer.c || cmake_object_order_depends_target_CMatrix
   DEP_FILE = CMakeFiles/CMatrix.dir/helpers/nnc_dense_layer.c.o.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu11
   OBJECT_DIR = CMakeFiles/CMatrix.dir
   OBJECT_FILE_DIR = CMakeFiles/CMatrix.dir/helpers
 
-build CMakeFiles/CMatrix.dir/helpers/nnc_config.c.o: C_COMPILER__CMatrix_Debug /home/tin/Projects/Projects/CMatrix/helpers/nnc_config.c || cmake_object_order_depends_target_CMatrix
+build CMakeFiles/CMatrix.dir/helpers/nnc_config.c.o: C_COMPILER__CMatrix_Debug /home/tin/Projects/WasmBoxes/CMatrix/helpers/nnc_config.c || cmake_object_order_depends_target_CMatrix
   DEP_FILE = CMakeFiles/CMatrix.dir/helpers/nnc_config.c.o.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu11
   OBJECT_DIR = CMakeFiles/CMatrix.dir
   OBJECT_FILE_DIR = CMakeFiles/CMatrix.dir/helpers
 
-build CMakeFiles/CMatrix.dir/helpers/nnc_activation_layer.c.o: C_COMPILER__CMatrix_Debug /home/tin/Projects/Projects/CMatrix/helpers/nnc_activation_layer.c || cmake_object_order_depends_target_CMatrix
+build CMakeFiles/CMatrix.dir/helpers/nnc_activation_layer.c.o: C_COMPILER__CMatrix_Debug /home/tin/Projects/WasmBoxes/CMatrix/helpers/nnc_activation_layer.c || cmake_object_order_depends_target_CMatrix
   DEP_FILE = CMakeFiles/CMatrix.dir/helpers/nnc_activation_layer.c.o.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu11
   OBJECT_DIR = CMakeFiles/CMatrix.dir
   OBJECT_FILE_DIR = CMakeFiles/CMatrix.dir/helpers
 
-build CMakeFiles/CMatrix.dir/helpers/nnc_loss_function.c.o: C_COMPILER__CMatrix_Debug /home/tin/Projects/Projects/CMatrix/helpers/nnc_loss_function.c || cmake_object_order_depends_target_CMatrix
+build CMakeFiles/CMatrix.dir/helpers/nnc_loss_function.c.o: C_COMPILER__CMatrix_Debug /home/tin/Projects/WasmBoxes/CMatrix/helpers/nnc_loss_function.c || cmake_object_order_depends_target_CMatrix
   DEP_FILE = CMakeFiles/CMatrix.dir/helpers/nnc_loss_function.c.o.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu11
   OBJECT_DIR = CMakeFiles/CMatrix.dir
   OBJECT_FILE_DIR = CMakeFiles/CMatrix.dir/helpers
 
-build CMakeFiles/CMatrix.dir/helpers/nnc_vector.c.o: C_COMPILER__CMatrix_Debug /home/tin/Projects/Projects/CMatrix/helpers/nnc_vector.c || cmake_object_order_depends_target_CMatrix
+build CMakeFiles/CMatrix.dir/helpers/nnc_vector.c.o: C_COMPILER__CMatrix_Debug /home/tin/Projects/WasmBoxes/CMatrix/helpers/nnc_vector.c || cmake_object_order_depends_target_CMatrix
   DEP_FILE = CMakeFiles/CMatrix.dir/helpers/nnc_vector.c.o.d
   FLAGS = -g -fdiagnostics-color=always -std=gnu11
   OBJECT_DIR = CMakeFiles/CMatrix.dir
@@ -113,7 +113,7 @@ build CMatrix: C_EXECUTABLE_LINKER__CMatrix_Debug CMakeFiles/CMatrix.dir/main.c.
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/tin/Projects/Projects/CMatrix/cmake-build-debug && /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  COMMAND = cd /home/tin/Projects/WasmBoxes/CMatrix/cmake-build-debug && /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
   DESC = No interactive CMake dialog available...
   restat = 1
 
@@ -124,7 +124,7 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/tin/Projects/Projects/CMatrix/cmake-build-debug && /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/bin/cmake --regenerate-during-build -S/home/tin/Projects/Projects/CMatrix -B/home/tin/Projects/Projects/CMatrix/cmake-build-debug
+  COMMAND = cd /home/tin/Projects/WasmBoxes/CMatrix/cmake-build-debug && /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/bin/cmake --regenerate-during-build -S/home/tin/Projects/WasmBoxes/CMatrix -B/home/tin/Projects/WasmBoxes/CMatrix/cmake-build-debug
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -140,7 +140,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # =============================================================================
 
 #############################################
-# Folder: /home/tin/Projects/Projects/CMatrix/cmake-build-debug
+# Folder: /home/tin/Projects/WasmBoxes/CMatrix/cmake-build-debug
 
 build all: phony CMatrix
 
@@ -151,14 +151,14 @@ build all: phony CMatrix
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeCInformation.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeCommonLanguageInclude.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeGenericSystem.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeInitializeConfigs.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeLanguageInformation.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeSystemSpecificInformation.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeSystemSpecificInitialize.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Compiler/CMakeCommonCompilerMacros.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Compiler/GNU-C.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Compiler/GNU.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Platform/Linux-GNU-C.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Platform/Linux-GNU.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Platform/Linux.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Platform/UnixPaths.cmake /home/tin/Projects/Projects/CMatrix/CMakeLists.txt CMakeCache.txt CMakeFiles/3.25.2/CMakeCCompiler.cmake CMakeFiles/3.25.2/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeCInformation.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeCommonLanguageInclude.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeGenericSystem.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeInitializeConfigs.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeLanguageInformation.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeSystemSpecificInformation.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeSystemSpecificInitialize.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Compiler/CMakeCommonCompilerMacros.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Compiler/GNU-C.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Compiler/GNU.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Platform/Linux-GNU-C.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Platform/Linux-GNU.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Platform/Linux.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Platform/UnixPaths.cmake /home/tin/Projects/WasmBoxes/CMatrix/CMakeLists.txt CMakeCache.txt CMakeFiles/3.25.2/CMakeCCompiler.cmake CMakeFiles/3.25.2/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeCInformation.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeCommonLanguageInclude.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeGenericSystem.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeInitializeConfigs.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeLanguageInformation.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeSystemSpecificInformation.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeSystemSpecificInitialize.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Compiler/CMakeCommonCompilerMacros.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Compiler/GNU-C.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Compiler/GNU.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Platform/Linux-GNU-C.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Platform/Linux-GNU.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Platform/Linux.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Platform/UnixPaths.cmake /home/tin/Projects/Projects/CMatrix/CMakeLists.txt CMakeCache.txt CMakeFiles/3.25.2/CMakeCCompiler.cmake CMakeFiles/3.25.2/CMakeSystem.cmake: phony
+build /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeCInformation.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeCommonLanguageInclude.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeGenericSystem.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeInitializeConfigs.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeLanguageInformation.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeSystemSpecificInformation.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/CMakeSystemSpecificInitialize.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Compiler/CMakeCommonCompilerMacros.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Compiler/GNU-C.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Compiler/GNU.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Platform/Linux-GNU-C.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Platform/Linux-GNU.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Platform/Linux.cmake /home/tin/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.9161.40/bin/cmake/linux/x64/share/cmake-3.25/Modules/Platform/UnixPaths.cmake /home/tin/Projects/WasmBoxes/CMatrix/CMakeLists.txt CMakeCache.txt CMakeFiles/3.25.2/CMakeCCompiler.cmake CMakeFiles/3.25.2/CMakeSystem.cmake: phony
 
 
 #############################################

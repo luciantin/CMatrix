@@ -1,26 +1,43 @@
 #include <malloc.h>
 #include "nnc_dense_layer.h"
+#include "nnc_vector.h"
 
 NNCIDenseLayerType NNCDenseLayerAlloc(nnc_uint num_inputs, nnc_uint num_neurons) {
     NNCIDenseLayerType layer = malloc(sizeof(NNCIDenseLayerType));
-    layer->biases = malloc(sizeof(nnc_mtype) * num_neurons);
-    for(nnc_uint _x = 0; _x < num_neurons; _x ++) layer->biases[_x] = 0;
-//    layer->weights = NNCMatrixAllocBaseValue(num_neurons, num_inputs, 1);
-    layer->weights = NNCMatrixAllocRandom(num_neurons, num_inputs);
+
+    layer->biases = NNCMatrixAllocBaseValue(num_neurons, 1, 1);
+    layer->weights = NNCMatrixAllocSum(num_neurons, num_inputs);
     layer->num_neurons = num_neurons;
     layer->num_inputs = num_inputs;
+
     return layer;
 }
 
 void NNCDenseLayerDeAlloc(NNCIDenseLayerType layer) {
     NNCMatrixDeAlloc(layer->weights);
-    free(layer->biases);
+    NNCMatrixDeAlloc(layer->biases);
     free(layer);
 }
 
 NNCIMatrixType NNCDenseLayerForward(NNCIMatrixType inputs, NNCIDenseLayerType layer) {
+    layer->inputs = inputs;
     NNCIMatrixType output  = NNCMatrixProduct(inputs, layer->weights);
-    NNCIMatrixType _output = NNCMatrixAddVector(output, layer->biases);
+    NNCIMatrixType _output = NNCMatrixSum(output, layer->biases);
     NNCMatrixDeAlloc(output);
     return _output;
+}
+
+void NNCDenseLayerBackward(NNCIMatrixType dvalues, NNCIDenseLayerType layer) {
+    NNCIMatrixType _inputsT  = NNCMatrixTranspose(layer->inputs);
+    NNCIMatrixType _dweights = NNCMatrixProduct(_inputsT, dvalues);
+    NNCIMatrixType _dbiases  = NNCMatrixSumSingle(dvalues, 0);
+    NNCIMatrixType _weightsT = NNCMatrixTranspose(layer->weights);
+    NNCIMatrixType _dinputs  = NNCMatrixSum(_weightsT, dvalues);
+
+    layer->dweights = _dweights;
+    layer->dinputs  = _dinputs;
+    layer->dbiases  = _dbiases;
+
+    NNCMatrixDeAlloc(_inputsT);
+    NNCMatrixDeAlloc(_weightsT);
 }

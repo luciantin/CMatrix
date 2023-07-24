@@ -121,3 +121,32 @@
 //    NNCMatrixDeAlloc(matrix_dot_a);
 //    NNCMatrixDeAlloc(matrix_dot_b);
 //    NNCMatrixDeAlloc(matrix_dot_out);
+
+
+
+//
+//    NNCIMatrixType inputs = NNCMatrixAlloc(1, 10);
+//    inputs->matrix[0][0] = 1;
+//    inputs->matrix[1][0] = 2;
+//    inputs->matrix[2][0] = 1;
+//    inputs->matrix[3][0] = 2;
+//    inputs->matrix[4][0] = 1;
+//    inputs->matrix[5][0] = 2;
+//    inputs->matrix[6][0] = 1;
+//    inputs->matrix[7][0] = 2;
+//    inputs->matrix[8][0] = 1;
+//    inputs->matrix[9][0] = 2;
+////
+//    NNCIMatrixType target = NNCMatrixAlloc(1, 10);
+//    target->matrix[0][0] = 1;
+//    target->matrix[1][0] = 2;
+//    target->matrix[2][0] = 1;
+//    target->matrix[3][0] = 2;
+//    target->matrix[4][0] = 1;
+//    target->matrix[5][0] = 2;
+//    target->matrix[6][0] = 1;
+//    target->matrix[7][0] = 2;
+//    target->matrix[8][0] = 1;
+//    target->matrix[9][0] = 2;
+////
+//    NNCMatrixPrint(inputs);
