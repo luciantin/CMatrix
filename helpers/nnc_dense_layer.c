@@ -32,7 +32,7 @@ void NNCDenseLayerBackward(NNCIMatrixType dvalues, NNCIDenseLayerType layer) {
     NNCIMatrixType _dweights = NNCMatrixProduct(_inputsT, dvalues);
     NNCIMatrixType _dbiases  = NNCMatrixSumSingle(dvalues, 0);
     NNCIMatrixType _weightsT = NNCMatrixTranspose(layer->weights);
-    NNCIMatrixType _dinputs  = NNCMatrixSum(_weightsT, dvalues);
+    NNCIMatrixType _dinputs  = NNCMatrixProduct(dvalues, _weightsT);
 
     layer->dweights = _dweights;
     layer->dinputs  = _dinputs;

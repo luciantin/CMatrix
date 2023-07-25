@@ -29,6 +29,11 @@ void NNCMatrixPrint(NNCIMatrixType matrix);
 NNCIMatrixType NNCMatrixProduct(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b);
 NNCIMatrixType NNCMatrixSum(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b);
 NNCIMatrixType NNCMatrixSumSingle(NNCIMatrixType matrix, bool axis);
+
+NNCIMatrixType NNCMatrixSub(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b);
+
+NNCIMatrixType NNCMatrixClip(NNCIMatrixType matrix, nnc_mtype min_value, nnc_mtype max_value);
+
 nnc_vector NNCMatrixDotProduct(NNCIMatrixType matrix, nnc_vector vector);
 NNCIMatrixType NNCMatrixAddVector(NNCIMatrixType matrix, nnc_vector vector);
 NNCIMatrixType NNCMatrixTranspose(NNCIMatrixType matrix);

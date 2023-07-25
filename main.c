@@ -13,14 +13,26 @@ int main() {
     puts("--------------");
 
     NNCIMatrixType inputs = NNCMatrixAlloc(4, 5);
-    inputs->matrix[0][0] = 1; inputs->matrix[0][1] = 1; inputs->matrix[0][2] = 1; inputs->matrix[0][3] = 1;
-    inputs->matrix[1][0] = 1; inputs->matrix[1][1] = 5; inputs->matrix[1][2] = 1; inputs->matrix[1][3] = 1;
+    inputs->matrix[0][0] = 1; inputs->matrix[0][1] = 2; inputs->matrix[0][2] = 1; inputs->matrix[0][3] = -1;
+    inputs->matrix[1][0] = 1; inputs->matrix[1][1] = 5; inputs->matrix[1][2] = 1; inputs->matrix[1][3] = -10;
     inputs->matrix[2][0] = 4; inputs->matrix[2][1] = 1; inputs->matrix[2][2] = 4; inputs->matrix[2][3] = 1;
-    inputs->matrix[3][0] = 1; inputs->matrix[3][1] = 1; inputs->matrix[3][2] = 1; inputs->matrix[3][3] = 1;
-    inputs->matrix[4][0] = 1; inputs->matrix[4][1] = 1; inputs->matrix[4][2] = 1; inputs->matrix[4][3] = 1;
+    inputs->matrix[3][0] = 1; inputs->matrix[3][1] = -13; inputs->matrix[3][2] = 1; inputs->matrix[3][3] = 1;
+    inputs->matrix[4][0] = 1; inputs->matrix[4][1] = 1; inputs->matrix[4][2] = -3; inputs->matrix[4][3] = 1;
 
     puts("inputs");
     NNCMatrixPrint(inputs);
+    puts("--------------");
+
+    // dali je suma reda negativna, 0 ili pozitivna
+    NNCIMatrixType target = NNCMatrixAlloc(3, 5);
+    target->matrix[0][0] = 0; target->matrix[0][1] = 0; target->matrix[0][2] = 1;
+    target->matrix[1][0] = 1; target->matrix[1][1] = 0; target->matrix[1][2] = 0;
+    target->matrix[2][0] = 0; target->matrix[2][1] = 0; target->matrix[2][2] = 1;
+    target->matrix[3][0] = 1; target->matrix[3][1] = 0; target->matrix[3][2] = 0;
+    target->matrix[4][0] = 0; target->matrix[4][1] = 1; target->matrix[4][2] = 0;
+
+    puts("target");
+    NNCMatrixPrint(target);
     puts("--------------");
 
     puts("weights");
@@ -35,16 +47,35 @@ int main() {
     puts("output");
     NNCIMatrixType output1 = NNCDenseLayerForward(inputs, dense1);
     NNCMatrixPrint(output1);
+
+    puts("--------------");
+    puts("ReLU forward");
+    NNCIMatrixType normalizedReLU1 = NNCActivationReLUForward(output1);
+    NNCMatrixPrint(normalizedReLU1);
+    puts("--------------");
+
+    puts("SoftMax forward");
+    NNCIMatrixType normalized1 = NNCActivationSoftMaxForward(output1);
+    NNCMatrixPrint(normalized1);
+    puts("--------------");
+
+    puts("NNCLossCCEL forward");
+    NNCIMatrixType lossCCEL = NNCLossCCELForward(normalized1, target);
+    NNCMatrixPrint(lossCCEL);
     puts("--------------");
 
     puts("dvalues");
-    NNCIMatrixType dvalues = NNCMatrixAlloc(4, 1);
-    dvalues->matrix[0][0] = 3; dvalues->matrix[0][1] = 4; dvalues->matrix[0][2] = 5; dvalues->matrix[0][2] = 9;
+    NNCIMatrixType dvalues = NNCMatrixAlloc(3, 5);
+    dvalues->matrix[0][0] = 3; dvalues->matrix[0][1] = 4; dvalues->matrix[0][2] = -5;
+    dvalues->matrix[1][0] = -4; dvalues->matrix[1][1] = 5; dvalues->matrix[1][2] = 6;
+    dvalues->matrix[2][0] = 5; dvalues->matrix[2][1] = -6; dvalues->matrix[2][2] = 7;
+    dvalues->matrix[3][0] = -6; dvalues->matrix[3][1] = 7; dvalues->matrix[3][2] = 8;
+    dvalues->matrix[4][0] = 7; dvalues->matrix[4][1] = 8; dvalues->matrix[4][2] = -9;
+
     NNCMatrixPrint(dvalues);
+
     puts("--------------");
-
     NNCDenseLayerBackward(dvalues, dense1);
-
     puts("dinputs");
     NNCMatrixPrint(dense1->dinputs);
 
@@ -55,6 +86,21 @@ int main() {
     puts("--------------");
     puts("dbiases");
     NNCMatrixPrint(dense1->dbiases);
+
+    puts("--------------");
+    puts("ReLU backward");
+    NNCIMatrixType normalizedReLUBackward = NNCActivationReLUBackward(dvalues);
+    NNCMatrixPrint(normalizedReLUBackward);
+
+
+    puts("--------------");
+    puts("softmax backward");
+    NNCIMatrixType softmaxBackward = NNCActivationSoftMaxBackward(dvalues, normalized1);
+    NNCMatrixPrint(softmaxBackward);
+
+
+
+
 //    NNCMatrixPrint(inputs);
 //    puts("--------------");
 //

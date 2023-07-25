@@ -4,6 +4,7 @@
 #include "nnc_matrix.h"
 #include <math.h>
 
-nnc_vector NNCLossCCEL(NNCIMatrixType input, NNCIMatrixType target);
+NNCIMatrixType NNCLossCCELForward(NNCIMatrixType input, NNCIMatrixType target);
+NNCIMatrixType NNCLossCCELBackward(NNCIMatrixType dvalues, NNCIMatrixType target);
 
 #endif //CMATRIX_NNC_LOSS_FUNCTION_H

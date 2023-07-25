@@ -146,3 +146,28 @@ NNCIMatrixType NNCMatrixSumSingle(NNCIMatrixType matrix, bool axis) {
     }
 }
 
+// ako je vrijednost matrice > max_value onda postai elem. na max_value
+// ako je vrijednost matrice < min_value onda postavi elem. na min_value
+NNCIMatrixType NNCMatrixClip(NNCIMatrixType matrix, nnc_mtype min_value, nnc_mtype max_value){
+    NNCIMatrixType matrix_out = NNCMatrixAlloc(matrix->x, matrix->y);
+    for(int _x = 0; _x < matrix->x; _x ++) for(int _y = 0; _y < matrix->y; _y ++)
+        matrix_out->matrix[_y][_x] = matrix->matrix[_y][_x] > max_value ? max_value : matrix->matrix[_y][_x] < min_value ? min_value : matrix->matrix[_y][_x];
+    return matrix_out;
+}
+
+NNCIMatrixType NNCMatrixSub(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b){
+    if(matrix_a->y == matrix_b->y && matrix_a->x == matrix_b->x){
+        NNCIMatrixType matrix_c = NNCMatrixAlloc(matrix_a->x, matrix_a->y);
+        for(nnc_uint x = 0; x < matrix_a->x; x++) for(nnc_uint y = 0; y < matrix_a->y; y++) matrix_c->matrix[y][x] = matrix_a->matrix[y][x] - matrix_b->matrix[y][x];
+        return matrix_c;
+    } else if(matrix_a->x == matrix_b->x && matrix_b->y == 1){
+        NNCIMatrixType matrix_c = NNCMatrixAlloc(matrix_a->x, matrix_a->y);
+        for(nnc_uint x = 0; x < matrix_a->x; x++) for(nnc_uint y = 0; y < matrix_a->y; y++) matrix_c->matrix[y][x] = matrix_a->matrix[y][x] - matrix_b->matrix[0][x];
+        return matrix_c;
+    } else if(matrix_a->y == matrix_b->y && matrix_b->x == 1){
+        NNCIMatrixType matrix_c = NNCMatrixAlloc(matrix_a->x, matrix_a->y);
+        for(nnc_uint x = 0; x < matrix_a->x; x++) for(nnc_uint y = 0; y < matrix_a->y; y++) matrix_c->matrix[y][x] = matrix_a->matrix[y][x] - matrix_b->matrix[y][0];
+        return matrix_c;
+    }
+    return NULL;
+}
