@@ -83,7 +83,7 @@ NNCIMatrixType NNCMatrixTranspose(NNCIMatrixType matrix) {
 }
 
 nnc_vector NNCMatrixArgMax(NNCIMatrixType matrix) {
-    nnc_vector vector_out = malloc(sizeof(nnc_mtype)*matrix->x);
+    nnc_vector vector_out = malloc(sizeof(nnc_mtype) * matrix->y);
 
     for(int _y = 0; _y < matrix->y; _y ++){
         nnc_uint max_index = 0;
@@ -146,7 +146,15 @@ NNCIMatrixType NNCMatrixSumSingle(NNCIMatrixType matrix, bool axis) {
     }
 }
 
-// ako je vrijednost matrice > max_value onda postai elem. na max_value
+
+NNCIMatrixType NNCMatrixProductNumber(NNCIMatrixType matrix, nnc_mtype num) {
+    NNCIMatrixType matrix_out = NNCMatrixAlloc(matrix->x, matrix->y);
+    for(int _y = 0; _y < matrix->y; _y ++) for(int _x = 0; _x < matrix->x; _x ++) matrix_out->matrix[_y][_x] = matrix->matrix[_y][_x] * num;
+    return matrix_out;
+}
+
+
+// ako je vrijednost matrice > max_value onda postavi elem. na max_value
 // ako je vrijednost matrice < min_value onda postavi elem. na min_value
 NNCIMatrixType NNCMatrixClip(NNCIMatrixType matrix, nnc_mtype min_value, nnc_mtype max_value){
     NNCIMatrixType matrix_out = NNCMatrixAlloc(matrix->x, matrix->y);
@@ -170,4 +178,11 @@ NNCIMatrixType NNCMatrixSub(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b){
         return matrix_c;
     }
     return NULL;
+}
+
+nnc_mtype NNCMatrixMean(NNCIMatrixType matrix){
+    nnc_mtype mean = 0;
+    for(nnc_uint y = 0; y < matrix->y; y++) for(nnc_uint x = 0; x < matrix->x; x++) mean += matrix->matrix[y][x];
+    mean = mean / (matrix->x * matrix->y);
+    return mean;
 }

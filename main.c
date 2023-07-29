@@ -6,138 +6,73 @@
 #include "helpers/nnc_activation_layer.h"
 #include "helpers/nnc_loss_function.h"
 #include "helpers/nnc_vector.h"
+#include "tests.h"
+#include "helpers/nnc_optimizer.h"
 
 
 int main() {
     printf("Start\n");
     puts("--------------");
 
-    NNCIMatrixType inputs = NNCMatrixAlloc(4, 5);
-    inputs->matrix[0][0] = 1; inputs->matrix[0][1] = 2; inputs->matrix[0][2] = 1; inputs->matrix[0][3] = -1;
-    inputs->matrix[1][0] = 1; inputs->matrix[1][1] = 5; inputs->matrix[1][2] = 1; inputs->matrix[1][3] = -10;
-    inputs->matrix[2][0] = 4; inputs->matrix[2][1] = 1; inputs->matrix[2][2] = 4; inputs->matrix[2][3] = 1;
-    inputs->matrix[3][0] = 1; inputs->matrix[3][1] = -13; inputs->matrix[3][2] = 1; inputs->matrix[3][3] = 1;
-    inputs->matrix[4][0] = 1; inputs->matrix[4][1] = 1; inputs->matrix[4][2] = -3; inputs->matrix[4][3] = 1;
+    // 4 inputs
+    NNCIMatrixType inputs = GetSumInputMatrix_Test();
+    // 3 outputs
+    NNCIMatrixType target = GetSumTargetMatrix_Test();
+    int sample_len = 10;
 
-    puts("inputs");
-    NNCMatrixPrint(inputs);
-    puts("--------------");
+    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(4, 64);
+    NNCIDenseLayerType dense2 = NNCDenseLayerAlloc(64, 3);
 
-    // dali je suma reda negativna, 0 ili pozitivna
-    NNCIMatrixType target = NNCMatrixAlloc(3, 5);
-    target->matrix[0][0] = 0; target->matrix[0][1] = 0; target->matrix[0][2] = 1;
-    target->matrix[1][0] = 1; target->matrix[1][1] = 0; target->matrix[1][2] = 0;
-    target->matrix[2][0] = 0; target->matrix[2][1] = 0; target->matrix[2][2] = 1;
-    target->matrix[3][0] = 1; target->matrix[3][1] = 0; target->matrix[3][2] = 0;
-    target->matrix[4][0] = 0; target->matrix[4][1] = 1; target->matrix[4][2] = 0;
+    //---------FORWARD PASS---------
+    for(int epoch = 0; epoch < 50; epoch ++){
+        NNCIMatrixType dense1_output = NNCDenseLayerForward(inputs, dense1);
+        NNCIMatrixType relu1_output = NNCActivationReLUForward(dense1_output);
 
-    puts("target");
-    NNCMatrixPrint(target);
-    puts("--------------");
+        NNCIMatrixType dense2_output = NNCDenseLayerForward(relu1_output, dense2);
+        NNCIMatrixType softmax1_output = NNCActivationSoftMaxForward(dense2_output);
+        NNCIMatrixType ccel1_output = NNCLossCCELForward(softmax1_output, target);
 
-    puts("weights");
-    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(4, 3);
-    NNCMatrixPrint(dense1->weights);
-    puts("--------------");
+        nnc_mtype mean = NNCMatrixMean(ccel1_output);
+        nnc_vector argmax_prediction = NNCMatrixArgMax(softmax1_output);
+        nnc_vector argmax_target = NNCMatrixArgMax(target);
 
-    puts("biases");
-    NNCMatrixPrint(dense1->biases);
-    puts("--------------");
+        printf("loss :");
+        NNCMatrixPrint(ccel1_output);
+        printf("acc : %f\n", NNCVectorAccuracy(argmax_target, argmax_prediction, sample_len));
+        printf("mean : %f \n", mean);
+        printf("target :     ");
+        NNCVectorPrint(argmax_target, sample_len);
+        printf("prediction : ");
+        NNCVectorPrint(argmax_prediction, sample_len);
+        puts("--------------");
 
-    puts("output");
-    NNCIMatrixType output1 = NNCDenseLayerForward(inputs, dense1);
-    NNCMatrixPrint(output1);
+        //---------BACKWARD PASS---------
 
-    puts("--------------");
-    puts("ReLU forward");
-    NNCIMatrixType normalizedReLU1 = NNCActivationReLUForward(output1);
-    NNCMatrixPrint(normalizedReLU1);
-    puts("--------------");
+        NNCIMatrixType ccel1_backward = NNCLossCCELBackward(softmax1_output, target);
+        NNCIMatrixType softmax1_backward = NNCActivationSoftMaxBackward(ccel1_backward, softmax1_output);
+        NNCDenseLayerBackward(softmax1_backward, dense2);
+        NNCIMatrixType relu1_backward = NNCActivationReLUBackward(dense2->dinputs);
+        NNCDenseLayerBackward(relu1_backward, dense1);
 
-    puts("SoftMax forward");
-    NNCIMatrixType normalized1 = NNCActivationSoftMaxForward(output1);
-    NNCMatrixPrint(normalized1);
-    puts("--------------");
+        NNCIOptimizerSGDType optimizerSgd = NNCOptimizerSGDAlloc(0.0001);
+        NNCOptimizerSGDUpdateParams(optimizerSgd, dense1);
+        NNCOptimizerSGDUpdateParams(optimizerSgd, dense2);
 
-    puts("NNCLossCCEL forward");
-    NNCIMatrixType lossCCEL = NNCLossCCELForward(normalized1, target);
-    NNCMatrixPrint(lossCCEL);
-    puts("--------------");
+        NNCMatrixDeAlloc(dense1_output);
+        NNCMatrixDeAlloc(dense2_output);
+        NNCMatrixDeAlloc(relu1_output);
+        NNCMatrixDeAlloc(softmax1_output);
+        NNCMatrixDeAlloc(ccel1_output);
+    }
 
-    puts("dvalues");
-    NNCIMatrixType dvalues = NNCMatrixAlloc(3, 5);
-    dvalues->matrix[0][0] = 3; dvalues->matrix[0][1] = 4; dvalues->matrix[0][2] = -5;
-    dvalues->matrix[1][0] = -4; dvalues->matrix[1][1] = 5; dvalues->matrix[1][2] = 6;
-    dvalues->matrix[2][0] = 5; dvalues->matrix[2][1] = -6; dvalues->matrix[2][2] = 7;
-    dvalues->matrix[3][0] = -6; dvalues->matrix[3][1] = 7; dvalues->matrix[3][2] = 8;
-    dvalues->matrix[4][0] = 7; dvalues->matrix[4][1] = 8; dvalues->matrix[4][2] = -9;
-
-    NNCMatrixPrint(dvalues);
-
-    puts("--------------");
-    NNCDenseLayerBackward(dvalues, dense1);
-    puts("dinputs");
-    NNCMatrixPrint(dense1->dinputs);
-
-    puts("--------------");
-    puts("dweights");
-    NNCMatrixPrint(dense1->dweights);
-
-    puts("--------------");
-    puts("dbiases");
-    NNCMatrixPrint(dense1->dbiases);
-
-    puts("--------------");
-    puts("ReLU backward");
-    NNCIMatrixType normalizedReLUBackward = NNCActivationReLUBackward(dvalues);
-    NNCMatrixPrint(normalizedReLUBackward);
-
-
-    puts("--------------");
-    puts("softmax backward");
-    NNCIMatrixType softmaxBackward = NNCActivationSoftMaxBackward(dvalues, normalized1);
-    NNCMatrixPrint(softmaxBackward);
-
-
-
-
-//    NNCMatrixPrint(inputs);
-//    puts("--------------");
-//
-//    NNCMatrixPrint(NNCMatrixSumSingle(inputs, 0));
-//    puts("--------------");
-//    srand(231423);
-//    //    NNCIDenseLayerType dense123 = NNCDenseLayerAlloc(1, 2);
-//    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(4, 2);
-//    NNCIMatrixType output1 = NNCDenseLayerForward(inputs, dense1);
-//    NNCIMatrixType normalized1 = NNCActivationSoftMaxForward(output1);
-//    nnc_vector loss1 = NNCLossCCEL(normalized1, target);
-
-//    NNCMatrixPrint(dense1->weights);
-//    puts("--------------");
-//    NNCMatrixPrint(dense1->biases);
-
-
-//    NNCMatrixPrint(NNCMatrixSum(dense1->weights, dense1->biases));
-//    puts("--------------");
-
-//    NNCMatrixPrint(output1);
-//    puts("--------------");
-//
-//    NNCMatrixPrint(normalized1);
-//    NNCVectorPrint(loss1, normalized1->y);
-//
-//
-//    puts("--------------");
-//
-////    printf("Mean : %f", NNCVectorMean(loss1, normalized1->y));
-//    NNCIMatrixType matrixTest = NNCMatrixAlloc(3,3);
-//    matrixTest->matrix[0][0] = 0.7;  matrixTest->matrix[0][1] = 0.2; matrixTest->matrix[0][2] = 0.1;
-//    matrixTest->matrix[1][0] = 0.5;  matrixTest->matrix[1][1] = 0.1; matrixTest->matrix[1][2] = 0.4;
-//    matrixTest->matrix[2][0] = 0.02; matrixTest->matrix[2][1] = 0.9; matrixTest->matrix[2][2] = 0.08;
-//
-//    NNCVectorPrint(NNCMatrixArgMax(matrixTest), 3);
     puts("--------------");
     printf("End\n");
+
+    NNCMatrixDeAlloc(inputs);
+    NNCMatrixDeAlloc(target);
+    NNCDenseLayerDeAlloc(dense1);
+    NNCDenseLayerDeAlloc(dense2);
+
+
     return 0;
 }

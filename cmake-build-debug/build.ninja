@@ -91,6 +91,12 @@ build CMakeFiles/CMatrix.dir/helpers/nnc_vector.c.o: C_COMPILER__CMatrix_Debug /
   OBJECT_DIR = CMakeFiles/CMatrix.dir
   OBJECT_FILE_DIR = CMakeFiles/CMatrix.dir/helpers
 
+build CMakeFiles/CMatrix.dir/helpers/nnc_optimizer.c.o: C_COMPILER__CMatrix_Debug /home/tin/Projects/WasmBoxes/CMatrix/helpers/nnc_optimizer.c || cmake_object_order_depends_target_CMatrix
+  DEP_FILE = CMakeFiles/CMatrix.dir/helpers/nnc_optimizer.c.o.d
+  FLAGS = -g -fdiagnostics-color=always -std=gnu11
+  OBJECT_DIR = CMakeFiles/CMatrix.dir
+  OBJECT_FILE_DIR = CMakeFiles/CMatrix.dir/helpers
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target CMatrix
@@ -99,7 +105,7 @@ build CMakeFiles/CMatrix.dir/helpers/nnc_vector.c.o: C_COMPILER__CMatrix_Debug /
 #############################################
 # Link the executable CMatrix
 
-build CMatrix: C_EXECUTABLE_LINKER__CMatrix_Debug CMakeFiles/CMatrix.dir/main.c.o CMakeFiles/CMatrix.dir/helpers/nnc_matrix.c.o CMakeFiles/CMatrix.dir/helpers/nnc_dense_layer.c.o CMakeFiles/CMatrix.dir/helpers/nnc_config.c.o CMakeFiles/CMatrix.dir/helpers/nnc_activation_layer.c.o CMakeFiles/CMatrix.dir/helpers/nnc_loss_function.c.o CMakeFiles/CMatrix.dir/helpers/nnc_vector.c.o
+build CMatrix: C_EXECUTABLE_LINKER__CMatrix_Debug CMakeFiles/CMatrix.dir/main.c.o CMakeFiles/CMatrix.dir/helpers/nnc_matrix.c.o CMakeFiles/CMatrix.dir/helpers/nnc_dense_layer.c.o CMakeFiles/CMatrix.dir/helpers/nnc_config.c.o CMakeFiles/CMatrix.dir/helpers/nnc_activation_layer.c.o CMakeFiles/CMatrix.dir/helpers/nnc_loss_function.c.o CMakeFiles/CMatrix.dir/helpers/nnc_vector.c.o CMakeFiles/CMatrix.dir/helpers/nnc_optimizer.c.o
   FLAGS = -g
   LINK_LIBRARIES = -lm
   OBJECT_DIR = CMakeFiles/CMatrix.dir

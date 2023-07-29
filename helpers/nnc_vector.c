@@ -15,3 +15,10 @@ nnc_mtype NNCVectorMean(nnc_vector vector, nnc_uint len) {
 nnc_vector NNCVectorAdd(nnc_vector a, nnc_vector b, nnc_uint len) {
     return 0;
 }
+
+nnc_mtype NNCVectorAccuracy(nnc_vector a, nnc_vector b, nnc_uint len){
+    nnc_mtype correct = 0;
+    for(nnc_uint _x = 0; _x < len; _x ++) correct += a[_x] == b[_x] ? 1 : 0;
+    correct = correct / len;
+    return correct;
+}

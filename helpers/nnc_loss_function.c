@@ -16,7 +16,7 @@ NNCIMatrixType NNCLossCCELForward(NNCIMatrixType input, NNCIMatrixType target){
 }
 
 NNCIMatrixType NNCLossCCELBackward(NNCIMatrixType dvalues, NNCIMatrixType target){
-    NNCIMatrixType output = NNCMatrixAlloc(dvalues->x, dvalues->x);
+    NNCIMatrixType output = NNCMatrixAlloc(dvalues->x, dvalues->y);
     for(int _y = 0; _y < output->y; _y ++) for(int _x = 0; _x < output->x; _x++)
         //                                          calculate the gradient                and normalize it
         output->matrix[_y][_x] = ( - target->matrix[_y][_x] / dvalues->matrix[_y][_x] ) / dvalues->y;
