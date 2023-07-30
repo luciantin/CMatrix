@@ -40,6 +40,6 @@ nnc_vector NNCMatrixDotProduct(NNCIMatrixType matrix, nnc_vector vector);
 NNCIMatrixType NNCMatrixAddVector(NNCIMatrixType matrix, nnc_vector vector);
 NNCIMatrixType NNCMatrixTranspose(NNCIMatrixType matrix);
 nnc_vector NNCMatrixArgMax(NNCIMatrixType matrix);
-
+nnc_vector NNCMatrixToVector(NNCIMatrixType matrix, bool axis);
 
 #endif //CMATRIX_NNC_MATRIX_H

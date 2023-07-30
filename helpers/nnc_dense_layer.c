@@ -5,10 +5,10 @@
 NNCIDenseLayerType NNCDenseLayerAlloc(nnc_uint num_inputs, nnc_uint num_neurons) {
     NNCIDenseLayerType layer = malloc(sizeof(NNCDenseLayerType));
 
-    layer->biases = NNCMatrixAllocBaseValue(num_neurons, 1, 1);
+    layer->biases = NNCMatrixAllocBaseValue(num_neurons, 1, 0);
 //    layer->weights = NNCMatrixAllocSum(num_neurons, num_inputs);
-    layer->weights = NNCMatrixAllocRandom(num_neurons, num_inputs);
-//    layer->weights = NNCMatrixAllocBaseValue(num_neurons, num_inputs, 1);
+//    layer->weights = NNCMatrixAllocRandom(num_neurons, num_inputs);
+    layer->weights = NNCMatrixAllocBaseValue(num_neurons, num_inputs, 1);
     layer->num_neurons = num_neurons;
     layer->num_inputs = num_inputs;
 

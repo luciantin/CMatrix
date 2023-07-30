@@ -8,71 +8,83 @@
 #include "helpers/nnc_vector.h"
 #include "tests.h"
 #include "helpers/nnc_optimizer.h"
+#include "AutoGenTest.h"
 
 
 int main() {
     printf("Start\n");
     puts("--------------");
 
-    // 4 inputs
-    NNCIMatrixType inputs = GetSumInputMatrix_Test();
-    // 3 outputs
-    NNCIMatrixType target = GetSumTargetMatrix_Test();
-    int sample_len = 10;
+    NNCIMatrixType inputs = GetAutoGenTestMatrix();
+    NNCIMatrixType target = GetAutoGenTruthMatrix();
 
-    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(4, 64);
-    NNCIDenseLayerType dense2 = NNCDenseLayerAlloc(64, 3);
+    int sample_len = inputs->y;
+    int input_len = inputs->x;
+    int output_len = 2;
+    double learning_rate = 1;
+    nnc_mtype decay = 0.01;
+    int epoch_len = 1001;
+
+    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(input_len, 128);
+    NNCIDenseLayerType dense2 = NNCDenseLayerAlloc(128, output_len);
+    NNCIOptimizerSGDType optimizerSgd = NNCOptimizerSGDAlloc(learning_rate, decay);
 
     //---------FORWARD PASS---------
-    for(int epoch = 0; epoch < 50; epoch ++){
-        NNCIMatrixType dense1_output = NNCDenseLayerForward(inputs, dense1);
-        NNCIMatrixType relu1_output = NNCActivationReLUForward(dense1_output);
+    for(int epoch = 0; epoch < epoch_len; epoch ++){
+        NNCIMatrixType dense1_forward = NNCDenseLayerForward(inputs, dense1);
+        NNCIMatrixType relu1_forward = NNCActivationReLUForward(dense1_forward);
+        NNCIMatrixType dense2_forward = NNCDenseLayerForward(relu1_forward, dense2);
+        NNCIMatrixType softmax1_forward = NNCActivationSoftMaxForward(dense2_forward);
+        NNCIMatrixType ccel1_forward = NNCLossCCELForward(softmax1_forward, target);
 
-        NNCIMatrixType dense2_output = NNCDenseLayerForward(relu1_output, dense2);
-        NNCIMatrixType softmax1_output = NNCActivationSoftMaxForward(dense2_output);
-        NNCIMatrixType ccel1_output = NNCLossCCELForward(softmax1_output, target);
+        if(epoch % 100 == 0){
+            nnc_mtype mean = NNCMatrixMean(ccel1_forward);
+            nnc_vector argmax_prediction = NNCMatrixArgMax(softmax1_forward);
+            nnc_vector argmax_target = NNCMatrixToVector(target, 1);
 
-        nnc_mtype mean = NNCMatrixMean(ccel1_output);
-        nnc_vector argmax_prediction = NNCMatrixArgMax(softmax1_output);
-        nnc_vector argmax_target = NNCMatrixArgMax(target);
+            printf("epoch : %d ", epoch);
+            printf(" lrate : %f ", optimizerSgd->current_learning_rate);
+            printf("acc : %f", NNCVectorAccuracy(argmax_target, argmax_prediction, sample_len));
+            printf(" mean loss : %f \n", mean);
+            puts("--------------");
 
-        printf("loss :");
-        NNCMatrixPrint(ccel1_output);
-        printf("acc : %f\n", NNCVectorAccuracy(argmax_target, argmax_prediction, sample_len));
-        printf("mean : %f \n", mean);
-        printf("target :     ");
-        NNCVectorPrint(argmax_target, sample_len);
-        printf("prediction : ");
-        NNCVectorPrint(argmax_prediction, sample_len);
-        puts("--------------");
+            free(argmax_target);
+            free(argmax_prediction);
+        }
 
         //---------BACKWARD PASS---------
 
-        NNCIMatrixType ccel1_backward = NNCLossCCELBackward(softmax1_output, target);
-        NNCIMatrixType softmax1_backward = NNCActivationSoftMaxBackward(ccel1_backward, softmax1_output);
+        NNCIMatrixType ccel1_backward = NNCLossCCELBackward(softmax1_forward, target);
+        NNCIMatrixType softmax1_backward = NNCActivationSoftMaxBackward(ccel1_backward, softmax1_forward);
+
         NNCDenseLayerBackward(softmax1_backward, dense2);
         NNCIMatrixType relu1_backward = NNCActivationReLUBackward(dense2->dinputs);
         NNCDenseLayerBackward(relu1_backward, dense1);
 
-        NNCIOptimizerSGDType optimizerSgd = NNCOptimizerSGDAlloc(0.0001);
+        NNCOptimizerSGDPreUpdateParams(optimizerSgd);
         NNCOptimizerSGDUpdateParams(optimizerSgd, dense1);
         NNCOptimizerSGDUpdateParams(optimizerSgd, dense2);
+        NNCOptimizerSGDPostUpdateParams(optimizerSgd);
 
-        NNCMatrixDeAlloc(dense1_output);
-        NNCMatrixDeAlloc(dense2_output);
-        NNCMatrixDeAlloc(relu1_output);
-        NNCMatrixDeAlloc(softmax1_output);
-        NNCMatrixDeAlloc(ccel1_output);
+        NNCMatrixDeAlloc(dense1_forward);
+        NNCMatrixDeAlloc(dense2_forward);
+        NNCMatrixDeAlloc(relu1_forward);
+        NNCMatrixDeAlloc(softmax1_forward);
+        NNCMatrixDeAlloc(ccel1_forward);
+
+        NNCMatrixDeAlloc(relu1_backward);
+        NNCMatrixDeAlloc(softmax1_backward);
+        NNCMatrixDeAlloc(ccel1_backward);
+        
     }
 
-    puts("--------------");
     printf("End\n");
 
     NNCMatrixDeAlloc(inputs);
     NNCMatrixDeAlloc(target);
     NNCDenseLayerDeAlloc(dense1);
     NNCDenseLayerDeAlloc(dense2);
-
+    NNCOptimizerSGDDeAlloc(optimizerSgd);
 
     return 0;
 }
