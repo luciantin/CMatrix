@@ -24,4 +24,6 @@ void NNCOptimizerSGDPreUpdateParams(NNCIOptimizerSGDType opt);
 void NNCOptimizerSGDUpdateParams(NNCIOptimizerSGDType opt, NNCIDenseLayerType layer);
 void NNCOptimizerSGDPostUpdateParams(NNCIOptimizerSGDType opt);
 
+
+
 #endif //CMATRIX_NNC_OPTIMIZER_H

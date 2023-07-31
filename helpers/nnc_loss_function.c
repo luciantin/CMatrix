@@ -12,7 +12,7 @@ NNCIMatrixType NNCLossCCELForward(NNCIMatrixType prediction, NNCIMatrixType targ
         for(int _y = 0; _y < input_->y; _y ++) {
             double loss = 0;
             for (int _x = 0; _x < input_->x; _x++){
-                loss += (double)input_->matrix[_y][_x] * (double)target->matrix[_y][_x];
+                loss += (nnc_mtype)input_->matrix[_y][_x] * (nnc_mtype)target->matrix[_y][_x];
             }
             output->matrix[_y][0] = -log(loss);
         }
@@ -21,7 +21,7 @@ NNCIMatrixType NNCLossCCELForward(NNCIMatrixType prediction, NNCIMatrixType targ
     else if(target->x == 1){
         for(int _y = 0; _y < input_->y; _y ++){
             int index = (int)target->matrix[_y][0];
-            nnc_mtype pred = (double)input_->matrix[_y][index];
+            nnc_mtype pred = (nnc_mtype)input_->matrix[_y][index];
             output->matrix[_y][0] = -log(pred);
         }
 

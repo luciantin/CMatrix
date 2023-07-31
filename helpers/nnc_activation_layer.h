@@ -4,7 +4,7 @@
 #include "nnc_matrix.h"
 
 NNCIMatrixType NNCActivationReLUForward(NNCIMatrixType input);
-NNCIMatrixType NNCActivationReLUBackward(NNCIMatrixType input);
+NNCIMatrixType NNCActivationReLUBackward(NNCIMatrixType input, NNCIMatrixType dvalues);
 
 NNCIMatrixType NNCActivationSoftMaxForward(NNCIMatrixType input);
 NNCIMatrixType NNCActivationSoftMaxBackward(NNCIMatrixType dvalues, NNCIMatrixType softmax_output);

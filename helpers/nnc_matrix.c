@@ -41,7 +41,7 @@ void NNCMatrixPrint(NNCMatrixType *matrix) {
     for(int _y = 0; _y < matrix->y; _y ++){
         for(int _x = 0; _x < matrix->x; _x ++){
             nnc_vector vec = matrix->matrix[_y];
-            printf(" %f", matrix->matrix[_y][_x]);
+            printf(" %.12e", matrix->matrix[_y][_x]);
         }
         printf("\n");
     }

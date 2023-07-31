@@ -165,8 +165,8 @@ void TestAll(){
 
     puts("--------------");
     puts("ReLU backward");
-    NNCIMatrixType normalizedReLUBackward = NNCActivationReLUBackward(dvalues);
-    NNCMatrixPrint(normalizedReLUBackward);
+//    NNCIMatrixType normalizedReLUBackward = NNCActivationReLUBackward(dvalues);
+//    NNCMatrixPrint(normalizedReLUBackward);
 
 
     puts("--------------");

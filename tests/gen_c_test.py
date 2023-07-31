@@ -49,7 +49,7 @@ def genTruthArray(truthAr):
 
 # X, y = spiral_data(samples=10, classes=2)
 
-X, y = spiral_data(samples=1000, classes=2)
+X, y = spiral_data(samples=10, classes=3)
 
 with open("AutoGenTest.h", "w") as text_file:
     text_file.write("#include \"helpers/nnc_matrix.h\"\n")

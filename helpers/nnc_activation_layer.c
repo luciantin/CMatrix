@@ -10,11 +10,11 @@ NNCIMatrixType NNCActivationReLUForward(NNCIMatrixType input) {
     return output;
 }
 
-NNCIMatrixType NNCActivationReLUBackward(NNCIMatrixType input) {
+NNCIMatrixType NNCActivationReLUBackward(NNCIMatrixType input, NNCIMatrixType dvalues) {
     NNCIMatrixType output  = NNCMatrixAlloc(input->x, input->y);
     for(int _y = 0; _y < input->y; _y ++)
         for(int _x = 0; _x < input->x; _x ++)
-            output->matrix[_y][_x] = input->matrix[_y][_x] <= 0 ? 0 : input->matrix[_y][_x];
+            output->matrix[_y][_x] = input->matrix[_y][_x] <= 0 ? 0 : dvalues->matrix[_y][_x];
     return output;
 }
 
