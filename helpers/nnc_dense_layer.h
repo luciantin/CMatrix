@@ -14,6 +14,12 @@ typedef struct NNCDenseLayerType
     NNCIMatrixType  dinputs;      //
     NNCIMatrixType  dbiases;      // isti kao # neurona
 
+    NNCIMatrixType  mweights;     // momentum of weights
+    NNCIMatrixType  mbiases;      // momentum of biases
+
+    NNCIMatrixType cweights;      // cache of weights
+    NNCIMatrixType cbiases;       // cache of biases
+
     nnc_uint        num_inputs;
     nnc_uint        num_neurons;
 }

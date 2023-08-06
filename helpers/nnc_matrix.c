@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "nnc_config.h"
 #include "nnc_matrix.h"
+#include <math.h>
 
 NNCIMatrixType NNCMatrixAllocBaseValue(nnc_uint x, nnc_uint y, nnc_mtype base_value) {
     NNCIMatrixType matrix = malloc(sizeof(NNCMatrixType));
@@ -48,13 +49,45 @@ void NNCMatrixPrint(NNCMatrixType *matrix) {
 }
 
 NNCIMatrixType NNCMatrixProduct(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b) {
-    NNCIMatrixType matrix_out = NNCMatrixAllocBaseValue(matrix_b->x, matrix_a->y, 0);
-    for (int i = 0; i < matrix_a->y; i++)
-        for (int j = 0; j < matrix_b->x; j++)
-            for (int k = 0; k < matrix_b->y; k++)
-                matrix_out->matrix[i][j] += matrix_a->matrix[i][k] * matrix_b->matrix[k][j];
-    return matrix_out;
+    if(matrix_a->x == matrix_b->x && matrix_a->y == matrix_b->y){
+        NNCIMatrixType matrix_out = NNCMatrixAllocBaseValue(matrix_a->x, matrix_a->y, 0);
+        for (int y = 0; y < matrix_out->y; y++)
+                for (int x = 0; x < matrix_out->x; x++)
+                    matrix_out->matrix[y][x] += matrix_a->matrix[y][x] * matrix_b->matrix[y][x];
+        return matrix_out;
+    }else{
+        NNCIMatrixType matrix_out = NNCMatrixAllocBaseValue(matrix_b->x, matrix_a->y, 0);
+        for (int i = 0; i < matrix_a->y; i++)
+            for (int j = 0; j < matrix_b->x; j++)
+                for (int k = 0; k < matrix_b->y; k++) // FIXME a < b
+                    matrix_out->matrix[i][j] += matrix_a->matrix[i][k] * matrix_b->matrix[k][j];
+        return matrix_out;
+    }
 }
+
+NNCIMatrixType NNCMatrixQuotient(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b) {
+    NNCIMatrixType matrix_b_neg_exp = NNCMatrixQuotientNumberReverse(1, matrix_b);
+//    NNCMatrixPrint(matrix_b_neg_exp);
+//    puts("----------");
+//    NNCMatrixPrint(matrix_b);
+    if(matrix_a->x == matrix_b->x && matrix_a->y == matrix_b->y){
+        NNCIMatrixType matrix_out = NNCMatrixAllocBaseValue(matrix_a->x, matrix_a->y, 0);
+        for (int y = 0; y < matrix_out->y; y++)
+            for (int x = 0; x < matrix_out->x; x++)
+                matrix_out->matrix[y][x] += matrix_a->matrix[y][x] * matrix_b_neg_exp->matrix[y][x];
+        NNCMatrixDeAlloc(matrix_b_neg_exp);
+        return matrix_out;
+    }else{
+        NNCIMatrixType matrix_out = NNCMatrixAllocBaseValue(matrix_b->x, matrix_a->y, 0);
+        for (int i = 0; i < matrix_a->y; i++)
+            for (int j = 0; j < matrix_b->x; j++)
+                for (int k = 0; k < matrix_b->y; k++) // FIXME a < b
+                    matrix_out->matrix[i][j] += matrix_a->matrix[i][k] * matrix_b_neg_exp->matrix[k][j];
+        NNCMatrixDeAlloc(matrix_b_neg_exp);
+        return matrix_out;
+    }
+}
+
 
 nnc_vector NNCMatrixDotProduct(NNCIMatrixType matrix, nnc_vector vector) {
     nnc_vector vector_out = malloc(sizeof(nnc_mtype)*matrix->x);
@@ -114,7 +147,7 @@ NNCIMatrixType NNCMatrixSum(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b) {
         for(nnc_uint x = 0; x < matrix_a->x; x++) for(nnc_uint y = 0; y < matrix_a->y; y++) matrix_c->matrix[y][x] = matrix_a->matrix[y][x] + matrix_b->matrix[y][0];
         return matrix_c;
     }
-    return NULL;
+    return nnc_null;
 }
 
 NNCIMatrixType NNCMatrixAllocLine(unsigned int x, unsigned int y) {
@@ -154,6 +187,17 @@ NNCIMatrixType NNCMatrixProductNumber(NNCIMatrixType matrix, nnc_mtype num) {
     return matrix_out;
 }
 
+NNCIMatrixType NNCMatrixQuotientNumber(NNCIMatrixType matrix, nnc_mtype num) {
+    NNCIMatrixType matrix_out = NNCMatrixAlloc(matrix->x, matrix->y);
+    for(int _y = 0; _y < matrix->y; _y ++) for(int _x = 0; _x < matrix->x; _x ++) matrix_out->matrix[_y][_x] = matrix->matrix[_y][_x] / num;
+    return matrix_out;
+}
+
+NNCIMatrixType NNCMatrixQuotientNumberReverse(nnc_mtype num, NNCIMatrixType matrix){
+    NNCIMatrixType matrix_out = NNCMatrixAlloc(matrix->x, matrix->y);
+    for(int _y = 0; _y < matrix->y; _y ++) for(int _x = 0; _x < matrix->x; _x ++) matrix_out->matrix[_y][_x] = num / matrix->matrix[_y][_x];
+    return matrix_out;
+}
 
 // ako je vrijednost matrice > max_value onda postavi elem. na max_value
 // ako je vrijednost matrice < min_value onda postavi elem. na min_value
@@ -178,8 +222,21 @@ NNCIMatrixType NNCMatrixSub(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b){
         for(nnc_uint x = 0; x < matrix_a->x; x++) for(nnc_uint y = 0; y < matrix_a->y; y++) matrix_c->matrix[y][x] = matrix_a->matrix[y][x] - matrix_b->matrix[y][0];
         return matrix_c;
     }
-    return NULL;
+    return nnc_null;
 }
+
+NNCIMatrixType NNCMatrixSqrt(NNCIMatrixType matrix){
+    NNCIMatrixType output = NNCMatrixAlloc(matrix->x, matrix->y);
+    for(nnc_uint y = 0; y < matrix->y; y++) for(nnc_uint x = 0; x < matrix->x; x++) output->matrix[y][x] = sqrtf(matrix->matrix[y][x]);
+    return output;
+}
+
+NNCIMatrixType NNCMatrixSumNumber(NNCIMatrixType matrix, nnc_mtype number){
+    NNCIMatrixType output = NNCMatrixAlloc(matrix->x, matrix->y);
+    for(nnc_uint y = 0; y < matrix->y; y++) for(nnc_uint x = 0; x < matrix->x; x++) output->matrix[y][x] = matrix->matrix[y][x] + number;
+    return output;
+}
+
 
 nnc_mtype NNCMatrixMean(NNCIMatrixType matrix){
     nnc_mtype mean = 0;

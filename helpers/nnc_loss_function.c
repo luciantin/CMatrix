@@ -45,3 +45,24 @@ NNCIMatrixType NNCLossCCELBackward(NNCIMatrixType dvalues, NNCIMatrixType target
 
     return output;
 }
+
+NNCIMatrixType NNCActivationSoftMaxLossCCELBackward(NNCIMatrixType dvalues, NNCIMatrixType target){
+    NNCIMatrixType output = NNCMatrixAllocBaseValue(dvalues->x, dvalues->y, 0);
+
+    if(target->x > 1){
+        // TODO implement
+        for(int _y = 0; _y < output->y; _y ++) for(int _x = 0; _x < output->x; _x++) break;
+    }
+    else if(target->x == 1){
+        for(int _y = 0; _y < output->y; _y ++) {
+            for(int _x = 0; _x < output->x; _x++) {
+                output->matrix[_y][_x] = dvalues->matrix[_y][_x];
+            }
+            output->matrix[_y][(int)target->matrix[_y][0]] -= 1;
+        }
+    }
+
+    NNCIMatrixType output_ = NNCMatrixQuotientNumber(output, (nnc_mtype)dvalues->y);
+    NNCMatrixDeAlloc(output);
+    return output_;
+}

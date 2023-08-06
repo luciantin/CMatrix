@@ -27,10 +27,16 @@ void NNCMatrixPrint(NNCIMatrixType matrix);
 
 NNCIMatrixType NNCMatrixProduct(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b);
 NNCIMatrixType NNCMatrixProductNumber(NNCIMatrixType matrix, nnc_mtype num);
+NNCIMatrixType NNCMatrixQuotient(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b);
+NNCIMatrixType NNCMatrixQuotientNumber(NNCIMatrixType matrix, nnc_mtype num);
+NNCIMatrixType NNCMatrixQuotientNumberReverse(nnc_mtype num, NNCIMatrixType matrix);
 
 NNCIMatrixType NNCMatrixSum(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b);
 NNCIMatrixType NNCMatrixSumSingle(NNCIMatrixType matrix, bool axis);
+NNCIMatrixType NNCMatrixSumNumber(NNCIMatrixType matrix, nnc_mtype number);
 NNCIMatrixType NNCMatrixSub(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b);
+
+NNCIMatrixType NNCMatrixSqrt(NNCIMatrixType matrix);
 
 nnc_mtype NNCMatrixMean(NNCIMatrixType matrix);
 

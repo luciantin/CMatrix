@@ -7,4 +7,5 @@
 NNCIMatrixType NNCLossCCELForward(NNCIMatrixType input, NNCIMatrixType target);
 NNCIMatrixType NNCLossCCELBackward(NNCIMatrixType dvalues, NNCIMatrixType target);
 
+NNCIMatrixType NNCActivationSoftMaxLossCCELBackward(NNCIMatrixType dvalues, NNCIMatrixType target);
 #endif //CMATRIX_NNC_LOSS_FUNCTION_H

@@ -1,4 +1,9 @@
 import sys
+import os
+
+os.environ['OPENBLAS_NUM_THREADS'] = '1'
+os.environ['MKL_NUM_THREADS'] = '1'
+os.environ['NUMEXPR_NUM_THREADS'] = '1'
 
 import numpy as np
 import nnfs
@@ -25,8 +30,8 @@ class Layer_Dense:
     def __init__(self, n_inputs, n_neurons):
         # Initialize weights and biases
         # self.weights = np.ones((n_inputs, n_neurons))#0.01 * np.random.randn(n_inputs, n_neurons)
-        self.weights = genSumMatrix(n_neurons, n_inputs)
-        # self.weights = 0.01 * np.random.randn(n_inputs, n_neurons)
+        # self.weights = genSumMatrix(n_neurons, n_inputs)
+        self.weights = 0.01 * np.random.randn(n_inputs, n_neurons)
         self.biases = np.zeros((1, n_neurons))
 
     # Forward pass
@@ -79,14 +84,20 @@ class Activation_Softmax:
     def forward(self, inputs):
         # Remember input values
         self.inputs = inputs
-
+        # print("-----------------------------")
+        # print(inputs)
         # Get unnormalized probabilities
         exp_values = np.exp(inputs - np.max(inputs, axis=1,
                                             keepdims=True))
+
+        # print(exp_values)
+        # print(np.max(inputs, axis=1, keepdims=True))
+        # print(inputs - np.max(inputs, axis=1, keepdims=True))
+        # print(np.sum(exp_values, axis=1, keepdims=True))
         # Normalize them for each sample
         probabilities = exp_values / np.sum(exp_values, axis=1,
                                             keepdims=True)
-
+        # print(probabilities)
         self.output = probabilities
 
     # Backward pass
@@ -203,6 +214,23 @@ class Optimizer_Adagrad:
         layer.weight_cache += layer.dweights**2
         layer.bias_cache += layer.dbiases**2
 
+        # print(layer.dbiases**2)
+        # print(layer.bias_cache)
+        # print(layer.dbiases)
+
+        # print("-----------")
+        # print(np.sqrt(layer.bias_cache))
+
+        # print(layer.bias_cache)
+        # print("-----------")
+        # print(layer.weight_cache)
+        # print("-----------")
+
+        # print(np.sqrt(layer.bias_cache) + self.epsilon)
+        # print("-----------")
+        # print(np.sqrt(layer.weight_cache) + self.epsilon)
+        # print("-----------")
+
         # Vanilla SGD parameter update + normalization
         # with square rooted cache
         layer.weights += -self.current_learning_rate * \
@@ -212,6 +240,10 @@ class Optimizer_Adagrad:
                         layer.dbiases / \
                         (np.sqrt(layer.bias_cache) + self.epsilon)
 
+        # print(layer.weights)
+        # print("-----------")
+        # print(layer.biases)
+        # print("-----------")
     # Call once after any parameter updates
     def post_update_params(self):
         self.iterations += 1
@@ -389,7 +421,7 @@ class Loss_CategoricalCrossentropy(Loss):
 
     # Backward pass
     def backward(self, dvalues, y_true):
-
+        print(dvalues)
         # Number of samples
         samples = len(dvalues)
         # Number of labels in every sample
@@ -430,7 +462,6 @@ class Activation_Softmax_Loss_CategoricalCrossentropy():
 
         # Number of samples
         samples = len(dvalues)
-
         # If labels are one-hot encoded,
         # turn them into discrete values
         if len(y_true.shape) == 2:
@@ -438,8 +469,12 @@ class Activation_Softmax_Loss_CategoricalCrossentropy():
 
         # Copy so we can safely modify
         self.dinputs = dvalues.copy()
+        # print(self.dinputs)
+
+
         # Calculate gradient
         self.dinputs[range(samples), y_true] -= 1
+
         # Normalize gradient
         self.dinputs = self.dinputs / samples
 
@@ -449,38 +484,43 @@ class Activation_Softmax_Loss_CategoricalCrossentropy():
 X, y = spiral_data(samples=10, classes=3)
 # print(y)
 # Create Dense layer with 2 input features and 64 output values
-dense1 = Layer_Dense(2, 6)
+dense1 = Layer_Dense(2, 124)
 
 # Create ReLU activation (to be used with Dense layer):
 activation1 = Activation_ReLU()
 
 # Create second Dense layer with 64 input features (as we take output
 # of previous layer here) and 3 output values (output values)
-dense2 = Layer_Dense(6, 3)
+dense2 = Layer_Dense(124, 3)
 # Create Softmax classifier's combined loss and activation
 loss_activation = Activation_Softmax_Loss_CategoricalCrossentropy()
 softmax_activation = Activation_Softmax()
 loss_cce = Loss_CategoricalCrossentropy()
 
 # Create optimizer
-# optimizer = Optimizer_Adam(learning_rate=0.05, decay=1e-5)
-optimizer = Optimizer_SGD();
+# optimizer = Optimizer_Adam(learning_rate=0.5, decay=1e-5)
+# optimizer = Optimizer_SGD(decay=1e-6, learning_rate=1, momentum=0)
+optimizer = Optimizer_Adagrad(decay=1e-6, learning_rate=1)
 
 # Train in loop
-for epoch in range(1001):
+for epoch in range(1000):
 
     dense1.forward(X)
+    # print(dense1.output)
     activation1.forward(dense1.output)
+    # print(activation1.output)
     dense2.forward(activation1.output)
-    loss = loss_activation.forward(dense2.output, y)
-
     # print(dense2.output)
 
-    softmax_activation.forward(dense2.output)
+    # print(dense2.output)
+    loss = loss_activation.forward(dense2.output, y)
+    # print(loss_activation.output)
+
+    # softmax_activation.forward(dense2.output)
     # print(softmax_activation.output)
 
 
-    loss_cce_out = loss_cce.forward(softmax_activation.output, y)
+    # loss_cce_out = loss_cce.forward(softmax_activation.output, y)
     # print(loss_cce_out)
     # DO TU JE OK
 
@@ -504,7 +544,7 @@ for epoch in range(1001):
 
     # Backward pass
     loss_activation.backward(loss_activation.output, y)
-
+    # print(loss_activation.dinputs)
     # print(loss_activation.dinputs)
 
 
@@ -513,7 +553,7 @@ for epoch in range(1001):
 
     # print(dense2.dinputs)
 
-    # loss_cce.backward(softmax_activation.output, y)
+    # loss_cce.backward(loss_activation.output, y)
     #
     # softmax_activation.backward(loss_cce.dinputs)
 
@@ -535,68 +575,3 @@ for epoch in range(1001):
     optimizer.update_params(dense1)
     optimizer.update_params(dense2)
     optimizer.post_update_params()
-
-# # Train in loop
-# for epoch in range(1000):
-#
-#     # Perform a forward pass of our training data through this layer
-#     dense1.forward(X)
-#
-#     # Perform a forward pass through activation function
-#     # takes the output of first dense layer here
-#     activation1.forward(dense1.output)
-#
-#     # Perform a forward pass through second Dense layer
-#     # takes outputs of activation function of first layer as inputs
-#     dense2.forward(activation1.output)
-#
-#     # Perform a forward pass through the activation/loss function
-#     # takes the output of second dense layer here and returns loss
-#
-#     # KRIVO RACUNAM
-#     loss = loss_activation.forward(dense2.output, y)
-#
-#     softmax_activation.forward(dense2.output)
-#     loss_cce_out = loss_cce.forward(softmax_activation.output, y)
-#     loss_ = loss_cce.calculate(softmax_activation.output, y)
-#
-#     # Calculate accuracy from output of activation2 and targets
-#     # calculate values along first axis
-#     predictions = np.argmax(loss_activation.output, axis=1)
-#
-#     # print(loss_activation.output)
-#     # print(softmax_activation.output)
-#
-#     # predictions = np.argmax(softmax_activation.output, axis=1)
-#
-#     if len(y.shape) == 2:
-#         y = np.argmax(y, axis=1)
-#     accuracy = np.mean(predictions==y)
-#
-#     # KRIVO RACUNAM
-#     if not epoch % 100:
-#         print(f'epoch: {epoch}, ' +
-#               f'acc: {accuracy:.3f}, ' +
-#               f'loss: {loss:.3f}, ' +
-#               f'loss_: {loss_:.3f}, ' +
-#               f'lr: {optimizer.current_learning_rate}')
-#
-#     # Backward pass
-#     loss_activation.backward(loss_activation.output, y)
-#
-#     loss_cce.backward(softmax_activation.output, y)
-#     softmax_activation.backward(loss_cce.dinputs)
-#
-#     # print(loss_activation.dinputs)
-#
-#     dense2.backward(loss_activation.dinputs)
-#     # dense2.backward(softmax_activation.dinputs)
-#
-#     activation1.backward(dense2.dinputs)
-#     dense1.backward(activation1.dinputs)
-#
-#     # Update weights and biases
-#     optimizer.pre_update_params()
-#     optimizer.update_params(dense1)
-#     optimizer.update_params(dense2)
-#     optimizer.post_update_params()

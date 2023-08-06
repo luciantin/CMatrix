@@ -9,6 +9,7 @@
 #define nnc_uint        unsigned int
 #define nnc_matrix      nnc_mtype**
 #define nnc_endOfString '\0'
+#define nnc_null        ((void *)0)
 
 #define PRINT_TOP_LEFT_MATRIX_START       true
 #define PRINT_BOTTOM_LEFT_MATRIX_START    false
