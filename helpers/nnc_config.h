@@ -15,5 +15,6 @@
 #define PRINT_BOTTOM_LEFT_MATRIX_START    false
 
 nnc_mtype NNCGetRandomMType();
+nnc_mtype NNCGetRandomUnsignedMType();
 
 #endif //CMATRIX_NNC_CONFIG_H

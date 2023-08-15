@@ -14,7 +14,7 @@ NNCIMatrixType NNCLossCCELForward(NNCIMatrixType prediction, NNCIMatrixType targ
             for (int _x = 0; _x < input_->x; _x++){
                 loss += (nnc_mtype)input_->matrix[_y][_x] * (nnc_mtype)target->matrix[_y][_x];
             }
-            output->matrix[_y][0] = -log(loss);
+            printf(" %.6g ", loss);
         }
     }
     // categorical labels
@@ -24,7 +24,6 @@ NNCIMatrixType NNCLossCCELForward(NNCIMatrixType prediction, NNCIMatrixType targ
             nnc_mtype pred = (nnc_mtype)input_->matrix[_y][index];
             output->matrix[_y][0] = -log(pred);
         }
-
     }
 
     NNCMatrixDeAlloc(input_);

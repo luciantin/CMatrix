@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include "helpers/nnc_matrix.h"
-#include "helpers/nnc_dense_layer.h"
+#include "helpers/nnc_layer.h"
 #include "helpers/nnc_activation_layer.h"
 #include "helpers/nnc_loss_function.h"
 

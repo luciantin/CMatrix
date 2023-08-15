@@ -18,6 +18,8 @@ NNCMatrixType;
 NNCIMatrixType NNCMatrixAlloc(nnc_uint x, nnc_uint y);
 NNCIMatrixType NNCMatrixAllocBaseValue(nnc_uint x, nnc_uint y, nnc_mtype base_value);
 NNCIMatrixType NNCMatrixAllocRandom(nnc_uint x, nnc_uint y);
+NNCIMatrixType NNCMatrixAllocBernoulli(nnc_uint x, nnc_uint y, nnc_mtype p, nnc_mtype divider);
+NNCIMatrixType NNCMatrixAllocDiagonal(nnc_uint x, nnc_uint y, nnc_mtype base_value);
 
 NNCIMatrixType NNCMatrixAllocLine(nnc_uint x, nnc_uint y);
 NNCIMatrixType NNCMatrixAllocSum(nnc_uint x, nnc_uint y);
@@ -31,6 +33,8 @@ NNCIMatrixType NNCMatrixQuotient(NNCIMatrixType matrix_a, NNCIMatrixType matrix_
 NNCIMatrixType NNCMatrixQuotientNumber(NNCIMatrixType matrix, nnc_mtype num);
 NNCIMatrixType NNCMatrixQuotientNumberReverse(nnc_mtype num, NNCIMatrixType matrix);
 
+nnc_mtype NNCMatrixSumAll(NNCIMatrixType matrix);
+nnc_mtype NNCMatrixSumAllAbs(NNCIMatrixType matrix);
 NNCIMatrixType NNCMatrixSum(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b);
 NNCIMatrixType NNCMatrixSumSingle(NNCIMatrixType matrix, bool axis);
 NNCIMatrixType NNCMatrixSumNumber(NNCIMatrixType matrix, nnc_mtype number);

@@ -49,14 +49,23 @@ def genTruthArray(truthAr):
 
 # X, y = spiral_data(samples=10, classes=2)
 
-X, y = spiral_data(samples=10, classes=3)
+X, y = spiral_data(samples=1000, classes=3)
+_X, _y = spiral_data(samples=100, classes=3)
 
 with open("AutoGenTest.h", "w") as text_file:
     text_file.write("#include \"helpers/nnc_matrix.h\"\n")
-    text_file.write("\nNNCIMatrixType GetAutoGenTestMatrix(){\n")
+
+    text_file.write("\nNNCIMatrixType GetAutoGenTrainingMatrix(){\n")
     text_file.write(npArrayToC(X, "zeroOneTest"))
     text_file.write("return zeroOneTest;\n}\n")
-    text_file.write("\nNNCIMatrixType GetAutoGenTruthMatrix(){\n")
+    text_file.write("\nNNCIMatrixType GetAutoGenTrainingTruthMatrix(){\n")
     text_file.write(npArrayToC(y, "zeroOneTest"))
+    text_file.write("return zeroOneTest;\n}\n")
+
+    text_file.write("\nNNCIMatrixType GetAutoGenTestMatrix(){\n")
+    text_file.write(npArrayToC(_X, "zeroOneTest"))
+    text_file.write("return zeroOneTest;\n}\n")
+    text_file.write("\nNNCIMatrixType GetAutoGenTestTruthMatrix(){\n")
+    text_file.write(npArrayToC(_y, "zeroOneTest"))
     text_file.write("return zeroOneTest;\n}\n")
 

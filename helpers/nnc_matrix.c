@@ -32,6 +32,35 @@ NNCIMatrixType NNCMatrixAllocRandom(nnc_uint x, nnc_uint y) {
     return matrix;
 }
 
+NNCIMatrixType NNCMatrixAllocBernoulli(nnc_uint x, nnc_uint y, nnc_mtype p, nnc_mtype divider){
+    NNCIMatrixType matrix = malloc(sizeof(NNCMatrixType));
+    matrix->matrix = malloc(sizeof(nnc_mtype*) * y);
+    matrix->x = x; matrix->y = y;
+    for(int _y = 0; _y < y; _y ++) matrix->matrix[_y] = malloc(sizeof(nnc_mtype) * x);
+    for(int _y = 0; _y < matrix->y; _y ++)
+        for(int _x = 0; _x < matrix->x; _x ++){
+            nnc_mtype r = NNCGetRandomUnsignedMType();
+            matrix->matrix[_y][_x] = r <= p ? 1 : 0;
+            if(divider != 0) matrix->matrix[_y][_x] /= divider;
+        }
+
+    return matrix;
+}
+
+NNCIMatrixType NNCMatrixAllocDiagonal(nnc_uint x, nnc_uint y, nnc_mtype base_value){
+    NNCIMatrixType matrix = malloc(sizeof(NNCMatrixType));
+    matrix->matrix = malloc(sizeof(nnc_mtype*) * y);
+    matrix->x = x; matrix->y = y;
+    for(int _y = 0; _y < y; _y ++) matrix->matrix[_y] = malloc(sizeof(nnc_mtype) * x);
+    for(int _y = 0; _y < matrix->y; _y ++)
+        for(int _x = 0; _x < matrix->x; _x ++){
+            if(_y == _x) matrix->matrix[_y][_x] = base_value;
+            else matrix->matrix[_y][_x] = 0;
+        }
+
+    return matrix;
+}
+
 void NNCMatrixDeAlloc(NNCIMatrixType matrix) {
     for(int _y = 0; _y < matrix->y; _y ++) free(matrix->matrix[_y]);
     free(matrix->matrix);
@@ -39,10 +68,11 @@ void NNCMatrixDeAlloc(NNCIMatrixType matrix) {
 }
 
 void NNCMatrixPrint(NNCMatrixType *matrix) {
+    if(matrix == nnc_null) return;
     for(int _y = 0; _y < matrix->y; _y ++){
         for(int _x = 0; _x < matrix->x; _x ++){
             nnc_vector vec = matrix->matrix[_y];
-            printf(" %.12e", matrix->matrix[_y][_x]);
+            printf(" %.9g", matrix->matrix[_y][_x]);
         }
         printf("\n");
     }
@@ -180,6 +210,21 @@ NNCIMatrixType NNCMatrixSumSingle(NNCIMatrixType matrix, bool axis) {
     }
 }
 
+nnc_mtype NNCMatrixSumAll(NNCIMatrixType matrix) {
+    nnc_mtype sum = 0;
+    for (int _y = 0; _y < matrix->y; _y++)
+        for (int _x = 0; _x < matrix->x; _x++)
+            sum += matrix->matrix[_y][_x];
+    return sum;
+}
+
+nnc_mtype NNCMatrixSumAllAbs(NNCIMatrixType matrix) {
+    nnc_mtype sum = 0;
+    for (int _y = 0; _y < matrix->y; _y++)
+        for (int _x = 0; _x < matrix->x; _x++)
+            sum += fabsf(matrix->matrix[_y][_x]);
+    return sum;
+}
 
 NNCIMatrixType NNCMatrixProductNumber(NNCIMatrixType matrix, nnc_mtype num) {
     NNCIMatrixType matrix_out = NNCMatrixAlloc(matrix->x, matrix->y);
