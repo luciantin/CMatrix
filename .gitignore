@@ -5,3 +5,5 @@
 /venv/
 /build/
 /.history/
+/AutoGenTest.c
+/AutoGenTest.h
