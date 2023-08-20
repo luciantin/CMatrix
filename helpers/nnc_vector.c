@@ -22,3 +22,7 @@ nnc_mtype NNCVectorAccuracy(nnc_vector a, nnc_vector b, nnc_uint len){
     correct = correct / len;
     return correct;
 }
+
+void NNCVectorPrintTargetPrediction(nnc_vector a, nnc_vector b, nnc_uint len){
+    for(nnc_uint _x = 0; _x < len; _x ++) printf("Prediction : %f %f \n", a[_x], b[_x]);
+}

@@ -29,7 +29,7 @@ void RunDevelopment(){
 
     int sample_len = input->y;
     int input_len = input->x;
-    int output_len = 3;
+    int output_len = 10;
     int epoch_len = 100;
 
     nnc_mtype momentum = 0;
@@ -40,9 +40,9 @@ void RunDevelopment(){
     nnc_mtype beta_2 = 0.999;
     nnc_mtype dropout_rate = 0.2;
 
-    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(input_len, 64);
+    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(input_len, 1024);
     NNCIDropoutLayerType dropout1 = NNCDropoutLayerAlloc(dropout_rate);
-    NNCIDenseLayerType dense2 = NNCDenseLayerAlloc(64, output_len);
+    NNCIDenseLayerType dense2 = NNCDenseLayerAlloc(1024, output_len);
     NNCDenseLayerSetRegularizationParameters(dense1, 0, 5e-4, 0, 5e-4);
 
 //    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(input_len, 64);
@@ -56,16 +56,16 @@ void RunDevelopment(){
     NNCIOptimizerAdamType optimizerAdam = NNCOptimizerAdamAlloc(learning_rate, decay, epislon, beta_1, beta_2);
 
     //---------FORWARD PASS---------
-//    epoch_len += 1;
+    epoch_len += 1;
     for(int epoch = 1; epoch <= epoch_len; epoch ++){
 
-//        if(epoch == epoch_len){
-//            input = inputs_test;
-//            target = target_test;
-//            sample_len = input->y;
-//            input_len = input->x;
-//            printf("Test pass : ");
-//        }
+        if(epoch == epoch_len){
+            input = inputs_test;
+            target = target_test;
+            sample_len = input->y;
+            input_len = input->x;
+            printf("Test pass : ");
+        }
 
         NNCIMatrixType dense1_forward = NNCDenseLayerForward(input, dense1);
         NNCIMatrixType relu1_forward = NNCActivationReLUForward(dense1_forward);
@@ -94,11 +94,15 @@ void RunDevelopment(){
             printf(" reg loss : %.6g", regularization_loss);
             printf(" mean loss : %.9g \n", mean);
 
+            if(epoch == epoch_len) {
+                NNCVectorAccuracy(argmax_target, argmax_prediction, sample_len);
+                break; // Test epoch
+            }
+
             free(argmax_target);
             free(argmax_prediction);
         }
 
-//        if(epoch == epoch_len) break; // Test epoch
 
         //---------BACKWARD PASS---------
 
@@ -135,6 +139,7 @@ void RunDevelopment(){
 
 
         NNCMatrixDeAlloc(dense1_forward);
+        NNCMatrixDeAlloc(dropout1_forward);
         NNCMatrixDeAlloc(dense2_forward);
         NNCMatrixDeAlloc(relu1_forward);
         NNCMatrixDeAlloc(softmax1_forward);
@@ -155,6 +160,7 @@ void RunDevelopment(){
     NNCMatrixDeAlloc(target_test);
     NNCDenseLayerDeAlloc(dense1);
     NNCDenseLayerDeAlloc(dense2);
+    NNCDropoutLayerDeAlloc(dropout1);
     NNCOptimizerSGDDeAlloc(optimizerSgd);
     NNCOptimizerAdaGradDeAlloc(optimizerAdaGrad);
     NNCOptimizerRMSPropDeAlloc(optimizerRmsProp);
