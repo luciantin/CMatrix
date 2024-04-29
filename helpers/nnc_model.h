@@ -1,9 +1,10 @@
 #ifndef CMATRIX_NNC_MODEL_H
 #define CMATRIX_NNC_MODEL_H
 
-#include <stdbool.h>
+//#include <stdbool.h>
 #include "nnc_config.h"
 #include "nnc_matrix.h"
+#include "nnc_trainer.h"
 
 #define NNC_MODEL_SERIALIZED_START              '#'
 #define NNC_MODEL_SERIALIZED_START_LEN          3
@@ -35,7 +36,7 @@ NNCModelElementSerializedType;
 
 ///////
 
-enum NNCModelElementLayerType{
+enum NNCModelLayerElementType{
     NNCLayerType_Layer_Dense,
     NNCLayerType_Layer_Dropout,
 
@@ -50,47 +51,48 @@ enum NNCModelElementLayerType{
     NNCLayerType_Optimizer_Adam,
 };
 
-typedef struct NNCModelElementType
+typedef struct NNCModelLayerType
 {
-    enum NNCModelElementLayerType   type;
+    enum NNCModelLayerElementType   type;
     void*                           layer;
     char*                           tag;
 }
-NNCModelElementType;
+NNCModelLayerType;
 
-#define NNCIModelElementType NNCModelElementType*
+#define NNCIModelLayerType NNCModelLayerType*
 
 
-NNCIModelElementType NNCModelElementAlloc(void* layer, enum NNCModelElementLayerType type, char* tag);
-void NNCModelElementDeAlloc(NNCIModelElementType element);
+NNCIModelLayerType NNCModelElementAlloc(void* layer, enum NNCModelLayerElementType type, char* tag);
+void NNCModelElementDeAlloc(NNCIModelLayerType element);
 
-NNCIModelElementSerializedType NNCModelElementSerialize(NNCIModelElementType element);
-NNCIModelElementType NNCModelElementDeserialize(NNCIModelElementSerializedType model_serilized);
+NNCIModelElementSerializedType NNCModelElementSerialize(NNCIModelLayerType element);
+NNCIModelLayerType NNCModelElementDeserialize(NNCIModelElementSerializedType model_serilized);
 
 ////////
 
 typedef struct NNCModelType
 {
     char*                   tag;
-    NNCIModelElementType*   layers;
+    NNCIModelLayerType*     layers;
     nnc_uint                layer_len;
+    nnc_uint                layer_index;    // FIXME solution without layer_index, with nullptr
 }
 NNCModelType;
 
 #define NNCIModelType NNCModelType*
 
-NNCIModelType NNCModelAlloc(char* tag);
+NNCIModelType NNCModelAlloc(char* tag, int layer_len);
 void NNCModelDeAlloc(NNCIModelType model);
 void NNCModelDeAllocAll(NNCIModelType model);
 
-NNCIMatrixType NNCModelTrain(NNCIMatrixType input, NNCIMatrixType target);
-NNCIMatrixType NNCModelTest(NNCIMatrixType input, NNCIMatrixType target);
-NNCIMatrixType NNCModelPredict(NNCIMatrixType input);
+NNCIMatrixType NNCModelTrain(NNCIModelType model, NNCITrainerType trainer, NNCIMatrixType input, NNCIMatrixType target);
+NNCIMatrixType NNCModelTest(NNCIModelType model, NNCIMatrixType input, NNCIMatrixType target);
+NNCIMatrixType NNCModelPredict(NNCIModelType model, NNCIMatrixType input);
 
-NNCIMatrixType NNCModelLayerRemove(NNCIModelType model, char* tag);
-NNCIMatrixType NNCModelLayerAdd(NNCIModelType model, void* layer, enum NNCModelElementLayerType type, char* tag);
+void NNCModelLayerRemove(NNCIModelType model, char* tag); // TODO
+void NNCModelLayerAdd(NNCIModelType model, NNCIModelLayerType layer);
 
-NNCIModelSerializedType NNCModelSave(NNCIModelType model);
+NNCIModelSerializedType NNCModelSerialize(NNCIModelType model);
 NNCIModelType NNCModelDeserialize(NNCIModelSerializedType model_serialized);
 
 

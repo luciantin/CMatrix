@@ -2,7 +2,7 @@
 #include "nnc_vector.h"
 
 void NNCVectorPrint(nnc_vector vector, nnc_uint len) {
-    for(int _x = 0; _x < len; _x ++) printf(" %f ", vector[_x]);
+    for(int _x = 0; _x < len; _x ++) printf(" %.2g ", vector[_x]);
     puts("");
 }
 

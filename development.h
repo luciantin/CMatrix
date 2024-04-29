@@ -13,6 +13,9 @@
 #include "helpers/nnc_vector.h"
 
 void RunDevelopment(){
+    setbuf(stdout, NULL); // Clion printf lag fix
+
+
     srand(111111);
 
     printf("Start\n");
@@ -30,7 +33,7 @@ void RunDevelopment(){
     int sample_len = input->y;
     int input_len = input->x;
     int output_len = 10;
-    int epoch_len = 100;
+    int epoch_len = 50;
 
     nnc_mtype momentum = 0;
     nnc_mtype learning_rate = 0.05;
@@ -40,9 +43,9 @@ void RunDevelopment(){
     nnc_mtype beta_2 = 0.999;
     nnc_mtype dropout_rate = 0.2;
 
-    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(input_len, 1024);
+    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(input_len, 32);
     NNCIDropoutLayerType dropout1 = NNCDropoutLayerAlloc(dropout_rate);
-    NNCIDenseLayerType dense2 = NNCDenseLayerAlloc(1024, output_len);
+    NNCIDenseLayerType dense2 = NNCDenseLayerAlloc(32, output_len);
     NNCDenseLayerSetRegularizationParameters(dense1, 0, 5e-4, 0, 5e-4);
 
 //    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(input_len, 64);
@@ -64,16 +67,16 @@ void RunDevelopment(){
             target = target_test;
             sample_len = input->y;
             input_len = input->x;
-            printf("Test pass : ");
+            printf("Test pass : \n");
         }
 
         NNCIMatrixType dense1_forward = NNCDenseLayerForward(input, dense1);
         NNCIMatrixType relu1_forward = NNCActivationReLUForward(dense1_forward);
 
-        NNCIMatrixType dropout1_forward = NNCDropoutLayerForward(relu1_forward, dropout1);
+//        NNCIMatrixType dropout1_forward = NNCDropoutLayerForward(relu1_forward, dropout1);
 //        NNCMatrixPrint(dropout1_forward);
 
-        NNCIMatrixType dense2_forward = NNCDenseLayerForward(dropout1_forward, dense2);
+        NNCIMatrixType dense2_forward = NNCDenseLayerForward(relu1_forward, dense2);
 
 //        NNCIMatrixType dense2_forward = NNCDenseLayerForward(relu1_forward, dense2);
 
@@ -82,12 +85,15 @@ void RunDevelopment(){
 
         NNCIMatrixType ccel1_forward = NNCLossCCELForward(softmax1_forward, target);
 
+        //---------STATISTICS---------
         if(epoch % 1 == 0){
             nnc_mtype mean = NNCMatrixMean(ccel1_forward);
             nnc_vector argmax_prediction = NNCMatrixArgMax(softmax1_forward);
             nnc_vector argmax_target = NNCMatrixToVector(target, 1);
             nnc_mtype regularization_loss = NNCDenseLayerCalculateRegularizationLoss(dense1) + NNCDenseLayerCalculateRegularizationLoss(dense2);
 
+//            NNCVectorPrint(argmax_prediction, sample_len);
+//            NNCVectorPrint(argmax_target, sample_len);
             printf("epoch : %d ", epoch);
             printf(" lrate : %.9g ", optimizerAdam->current_learning_rate);
             printf("acc : %.9g", NNCVectorAccuracy(argmax_target, argmax_prediction, sample_len));
@@ -113,8 +119,8 @@ void RunDevelopment(){
 
         NNCIMatrixType softmax_ccel_backward = NNCActivationSoftMaxLossCCELBackward(softmax1_forward, target);
         NNCDenseLayerBackward(softmax_ccel_backward, dense2);
-        NNCDropoutLayerBackward(dense2->dinputs, dropout1);
-        NNCIMatrixType relu1_backward = NNCActivationReLUBackward(relu1_forward, dropout1->dinputs);
+//        NNCDropoutLayerBackward(dense2->dinputs, dropout1);
+        NNCIMatrixType relu1_backward = NNCActivationReLUBackward(relu1_forward, dense2->dinputs);
         NNCDenseLayerWithRegularizationBackward(relu1_backward, dense1);
 
 //        NNCOptimizerSGDPreUpdateParams(optimizerSgd);
@@ -139,7 +145,7 @@ void RunDevelopment(){
 
 
         NNCMatrixDeAlloc(dense1_forward);
-        NNCMatrixDeAlloc(dropout1_forward);
+//        NNCMatrixDeAlloc(dropout1_forward);
         NNCMatrixDeAlloc(dense2_forward);
         NNCMatrixDeAlloc(relu1_forward);
         NNCMatrixDeAlloc(softmax1_forward);
