@@ -1,7 +1,7 @@
-/cmake-build-debug/
-/venv/
-/build/
-/.history/
-/.vs/
-/.idea/
-/out/
+cmake-build-debug
+venv
+build
+.history
+.vs
+.idea
+out

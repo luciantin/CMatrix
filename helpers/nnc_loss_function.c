@@ -1,7 +1,5 @@
-#include <malloc.h>
 #include "nnc_loss_function.h"
 #include <math.h>
-#include <stdlib.h>
 
 NNCIMatrixType NNCLossCCELForward(NNCIMatrixType prediction, NNCIMatrixType target){
     NNCIMatrixType output = NNCMatrixAlloc(1, prediction->y);
@@ -14,7 +12,7 @@ NNCIMatrixType NNCLossCCELForward(NNCIMatrixType prediction, NNCIMatrixType targ
             for (int _x = 0; _x < input_->x; _x++){
                 loss += (nnc_mtype)input_->matrix[_y][_x] * (nnc_mtype)target->matrix[_y][_x];
             }
-            printf(" %.6g ", loss);
+            dprintf(" %.6g ", loss);
         }
     }
     // categorical labels

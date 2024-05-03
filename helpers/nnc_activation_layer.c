@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "nnc_activation_layer.h"
 #include <math.h>
 

@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "development.h"
+#include "development3.h"
 
 
 int main() {

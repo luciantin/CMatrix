@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Repos\\CMatrix\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Repos\\CMatrix\\development3.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:development3.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Repos\\CMatrix\\helpers\\nnc_matrix.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:helpers\\nnc_matrix.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Repos\\CMatrix\\helpers\\nnc_loss_function.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:helpers\\nnc_loss_function.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 430,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "nnc_matrix.c",
+              "DocumentMoniker": "C:\\Repos\\CMatrix\\helpers\\nnc_matrix.c",
+              "RelativeDocumentMoniker": "helpers\\nnc_matrix.c",
+              "ToolTip": "C:\\Repos\\CMatrix\\helpers\\nnc_matrix.c",
+              "RelativeToolTip": "helpers\\nnc_matrix.c",
+              "ViewState": "AQIAAGAAAAAAAAAAAAAqwHwAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2024-05-03T04:41:54.421Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "nnc_loss_function.c",
+              "DocumentMoniker": "C:\\Repos\\CMatrix\\helpers\\nnc_loss_function.c",
+              "RelativeDocumentMoniker": "helpers\\nnc_loss_function.c",
+              "ToolTip": "C:\\Repos\\CMatrix\\helpers\\nnc_loss_function.c",
+              "RelativeToolTip": "helpers\\nnc_loss_function.c",
+              "ViewState": "AQIAAB0AAAAAAAAAAAAqwDkAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2024-05-02T22:01:30.332Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "development3.h",
+              "DocumentMoniker": "C:\\Repos\\CMatrix\\development3.h",
+              "RelativeDocumentMoniker": "development3.h",
+              "ToolTip": "C:\\Repos\\CMatrix\\development3.h",
+              "RelativeToolTip": "development3.h",
+              "ViewState": "AQIAABIAAAAAAAAAAAAAADIAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-05-02T21:51:22.889Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

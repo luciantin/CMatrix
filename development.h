@@ -1,31 +1,43 @@
 #ifndef CMATRIX_DEVELOPMENT_H
 #define CMATRIX_DEVELOPMENT_H
 
+#if DEBUG
 #include <stdio.h>
+#endif
+
 #include <malloc.h>
-#include <stdlib.h>
 #include "helpers/nnc_matrix.h"
-#include "AutoGenTest.h"
+//#include "training/AutoGenTest.h"
 #include "helpers/nnc_layer.h"
 #include "helpers/nnc_optimizer.h"
 #include "helpers/nnc_activation_layer.h"
 #include "helpers/nnc_loss_function.h"
 #include "helpers/nnc_vector.h"
+#include "helpers/nnc_config.h"
+#include "helpers/nnc_importer.h"
 
 void RunDevelopment(){
-    setbuf(stdout, NULL); // Clion printf lag fix
 
+    nnc_init_rand(111111);
 
-    srand(111111);
+    #if DEBUG
+    setbuf(stdout, NULL); // Clion dprintf lag fix
+    #endif
 
-    printf("Start\n");
-    puts("--------------");
+    dprintf("Start\n");
+    dputs("--------------");
 
-    NNCIMatrixType inputs_training = GetAutoGenTrainingMatrix();
-    NNCIMatrixType target_training = GetAutoGenTrainingTruthMatrix();
+//    NNCIMatrixType inputs_training = GetAutoGenTrainingMatrix();
+//    NNCIMatrixType target_training = GetAutoGenTrainingTruthMatrix();
 
-    NNCIMatrixType inputs_test = GetAutoGenTestMatrix();
-    NNCIMatrixType target_test = GetAutoGenTestTruthMatrix();
+//    NNCIMatrixType inputs_test = GetAutoGenTestMatrix();
+//    NNCIMatrixType target_test = GetAutoGenTestTruthMatrix();
+
+    NNCIMatrixType inputs_training = NNCImportMatrixFromFile("C:\\Repos\\CMatrix\\training\\datasets\\dataset_numbers_100_train.matrix");
+    NNCIMatrixType target_training = NNCImportMatrixFromFile("C:\\Repos\\CMatrix\\training\\datasets\\dataset_numbers_100_truth_train.matrix");
+
+    NNCIMatrixType inputs_test = NNCImportMatrixFromFile("C:\\Repos\\CMatrix\\training\\datasets\\dataset_numbers_100_test.matrix");
+    NNCIMatrixType target_test = NNCImportMatrixFromFile("C:\\Repos\\CMatrix\\training\\datasets\\dataset_numbers_100_truth_test.matrix");
 
     NNCIMatrixType input = inputs_training;
     NNCIMatrixType target = target_training;
@@ -33,7 +45,7 @@ void RunDevelopment(){
     int sample_len = input->y;
     int input_len = input->x;
     int output_len = 10;
-    int epoch_len = 50;
+    int epoch_len = 1000;
 
     nnc_mtype momentum = 0;
     nnc_mtype learning_rate = 0.05;
@@ -43,9 +55,10 @@ void RunDevelopment(){
     nnc_mtype beta_2 = 0.999;
     nnc_mtype dropout_rate = 0.2;
 
-    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(input_len, 32);
+    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(input_len, 128);
     NNCIDropoutLayerType dropout1 = NNCDropoutLayerAlloc(dropout_rate);
-    NNCIDenseLayerType dense2 = NNCDenseLayerAlloc(32, output_len);
+//    NNCIDenseLayerType dense3 = NNCDenseLayerAlloc(128, 64);
+    NNCIDenseLayerType dense2 = NNCDenseLayerAlloc(64, output_len);
     NNCDenseLayerSetRegularizationParameters(dense1, 0, 5e-4, 0, 5e-4);
 
 //    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(input_len, 64);
@@ -67,7 +80,7 @@ void RunDevelopment(){
             target = target_test;
             sample_len = input->y;
             input_len = input->x;
-            printf("Test pass : \n");
+            dprintf("Test pass : \n");
         }
 
         NNCIMatrixType dense1_forward = NNCDenseLayerForward(input, dense1);
@@ -78,9 +91,6 @@ void RunDevelopment(){
 
         NNCIMatrixType dense2_forward = NNCDenseLayerForward(relu1_forward, dense2);
 
-//        NNCIMatrixType dense2_forward = NNCDenseLayerForward(relu1_forward, dense2);
-
-//        NNCMatrixPrint(dense2_forward);
         NNCIMatrixType softmax1_forward = NNCActivationSoftMaxForward(dense2_forward);
 
         NNCIMatrixType ccel1_forward = NNCLossCCELForward(softmax1_forward, target);
@@ -94,14 +104,18 @@ void RunDevelopment(){
 
 //            NNCVectorPrint(argmax_prediction, sample_len);
 //            NNCVectorPrint(argmax_target, sample_len);
-            printf("epoch : %d ", epoch);
-            printf(" lrate : %.9g ", optimizerAdam->current_learning_rate);
-            printf("acc : %.9g", NNCVectorAccuracy(argmax_target, argmax_prediction, sample_len));
-            printf(" reg loss : %.6g", regularization_loss);
-            printf(" mean loss : %.9g \n", mean);
+            dprintf("epoch : %d ", epoch);
+            dprintf(" lrate : %.9g ", optimizerAdam->current_learning_rate);
+            dprintf("acc : %.9g", NNCVectorAccuracy(argmax_target, argmax_prediction, sample_len));
+            dprintf(" reg loss : %.6g", regularization_loss);
+            dprintf(" mean loss : %.9g \n", mean);
 
             if(epoch == epoch_len) {
                 NNCVectorAccuracy(argmax_target, argmax_prediction, sample_len);
+                dprintf("Target :    ");
+                NNCVectorPrint(argmax_target, sample_len);
+                dprintf("Prediction :");
+                NNCVectorPrint(argmax_prediction, sample_len);
                 break; // Test epoch
             }
 
@@ -158,7 +172,7 @@ void RunDevelopment(){
 
     }
 
-    printf("End\n");
+    dprintf("End\n");
 
     NNCMatrixDeAlloc(inputs_training);
     NNCMatrixDeAlloc(target_training);

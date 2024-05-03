@@ -2,8 +2,8 @@
 #include "nnc_vector.h"
 
 void NNCVectorPrint(nnc_vector vector, nnc_uint len) {
-    for(int _x = 0; _x < len; _x ++) printf(" %.2g ", vector[_x]);
-    puts("");
+    for(int _x = 0; _x < len; _x ++) dprintf(" %.2g ", vector[_x]);
+    dputs("");
 }
 
 nnc_mtype NNCVectorMean(nnc_vector vector, nnc_uint len) {
@@ -24,5 +24,5 @@ nnc_mtype NNCVectorAccuracy(nnc_vector a, nnc_vector b, nnc_uint len){
 }
 
 void NNCVectorPrintTargetPrediction(nnc_vector a, nnc_vector b, nnc_uint len){
-    for(nnc_uint _x = 0; _x < len; _x ++) printf("Prediction : %f %f \n", a[_x], b[_x]);
+    for(nnc_uint _x = 0; _x < len; _x ++) dprintf("Prediction : %f %f \n", a[_x], b[_x]);
 }

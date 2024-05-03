@@ -1,6 +1,5 @@
 #include <malloc.h>
 #include "nnc_optimizer.h"
-#include <stdlib.h>
 #include <math.h>
 
 NNCIOptimizerSGDType NNCOptimizerSGDAlloc(nnc_mtype learning_rate, nnc_mtype decay, nnc_mtype momentum){
@@ -347,9 +346,9 @@ void NNCOptimizerAdamUpdateParams(NNCIOptimizerAdamType opt, NNCIDenseLayerType 
     layer->cbiases = _cbiases;
 
 //    NNCMatrixPrint(layer->cweights);
-//    puts("--------");
+//    dputs("--------");
 //    NNCMatrixPrint(layer->cbiases);
-//    puts("--------");
+//    dputs("--------");
     ///////////////////////////////////////
 
     nnc_mtype b1 = 1 - powf(opt->beta_1, opt->iteration + 1);
@@ -357,9 +356,9 @@ void NNCOptimizerAdamUpdateParams(NNCIOptimizerAdamType opt, NNCIDenseLayerType 
     NNCIMatrixType _mbias_corrected = NNCMatrixQuotientNumber(layer->mbiases, b1);
 
 //    NNCMatrixPrint(_mweight_corrected);
-//    puts("--------");
+//    dputs("--------");
 //    NNCMatrixPrint(_mbias_corrected);
-//    puts("--------");
+//    dputs("--------");
 
     nnc_mtype b2 = 1 - powf( opt->beta_2, opt->iteration + 1);
     NNCIMatrixType _cweight_corrected = NNCMatrixQuotientNumber(layer->cweights, b2);

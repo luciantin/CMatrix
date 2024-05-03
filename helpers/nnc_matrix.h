@@ -4,6 +4,10 @@
 #include <stdbool.h>
 #include "nnc_config.h"
 
+#ifndef NNC_MATRIX_MULTIPLY_SQUARE_ALGO
+    #define NNC_MATRIX_MULTIPLY_SQUARE_ALGO NNC_MATRIX_MULTIPLY_SQUARE_ALGO_ITERATIVE
+#endif
+
 typedef struct NNCMatrixType
 {
     nnc_matrix matrix;

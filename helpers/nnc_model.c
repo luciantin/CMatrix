@@ -31,16 +31,18 @@ void NNCModelLayerAdd(NNCIModelType model, NNCIModelLayerType layer){
 }
 
 NNCIMatrixType NNCModelTrain(NNCIModelType model, NNCITrainerType trainer, NNCIMatrixType input, NNCIMatrixType target){
-    NNCIMatrixType output = NNCMatrixAllocBaseValue(target->x, 0, 0);
-
-    for(nnc_uint layer_index = 0; layer_index <= model->layer_len; layer_index ++){
-        NNCIMatrixType _output_forward =
+    NNCIMatrixType _output_forward = NNCModelLayerForward(model, trainer, model->layers[0], input);
+    for(nnc_uint layer_index = 1; layer_index <= model->layer_len; layer_index ++){
+        _output_forward = NNCModelLayerForward(model, trainer, model->layers[layer_index], _output_forward);
     }
-
-    return output;
+    return _output_forward;
 }
 
-NNCIMatrixType NNCModelLayerForward(NNCIModelType model, NNCIModelLayerType layer, NNCITrainerType trainer, NNCIMatrixType input){
+NNCIMatrixType NNCModelLayerForward(NNCIModelType model, NNCITrainerType trainer, NNCIModelLayerType layer, NNCIMatrixType input){
+
+}
+
+NNCIMatrixType NNCModelLayerBackward(NNCIModelType model, NNCITrainerType trainer, NNCIModelLayerType layer, NNCIMatrixType input){
 
 }
 

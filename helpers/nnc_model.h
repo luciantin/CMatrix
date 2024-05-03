@@ -1,7 +1,6 @@
 #ifndef CMATRIX_NNC_MODEL_H
 #define CMATRIX_NNC_MODEL_H
 
-//#include <stdbool.h>
 #include "nnc_config.h"
 #include "nnc_matrix.h"
 #include "nnc_trainer.h"
@@ -91,6 +90,9 @@ NNCIMatrixType NNCModelPredict(NNCIModelType model, NNCIMatrixType input);
 
 void NNCModelLayerRemove(NNCIModelType model, char* tag); // TODO
 void NNCModelLayerAdd(NNCIModelType model, NNCIModelLayerType layer);
+
+NNCIMatrixType NNCModelLayerForward(NNCIModelType model, NNCITrainerType trainer, NNCIModelLayerType layer, NNCIMatrixType input);
+NNCIMatrixType NNCModelLayerBackward(NNCIModelType model, NNCITrainerType trainer, NNCIModelLayerType layer, NNCIMatrixType input);
 
 NNCIModelSerializedType NNCModelSerialize(NNCIModelType model);
 NNCIModelType NNCModelDeserialize(NNCIModelSerializedType model_serialized);

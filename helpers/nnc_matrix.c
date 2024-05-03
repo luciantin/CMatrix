@@ -1,8 +1,13 @@
 #include <malloc.h>
-#include <stdlib.h>
 #include "nnc_config.h"
 #include "nnc_matrix.h"
 #include <math.h>
+
+
+/////////////////////////////////////////////////////////////
+//              ALLOC / DEALLOC                            //
+/////////////////////////////////////////////////////////////
+
 
 NNCIMatrixType NNCMatrixAllocBaseValue(nnc_uint x, nnc_uint y, nnc_mtype base_value) {
     NNCIMatrixType matrix = malloc(sizeof(NNCMatrixType));
@@ -47,6 +52,24 @@ NNCIMatrixType NNCMatrixAllocBernoulli(nnc_uint x, nnc_uint y, nnc_mtype p, nnc_
     return matrix;
 }
 
+NNCIMatrixType NNCMatrixAllocLine(unsigned int x, unsigned int y) {
+    NNCIMatrixType matrix = malloc(sizeof(NNCMatrixType));
+    matrix->matrix = malloc(sizeof(nnc_mtype*) * y);
+    matrix->x = x; matrix->y = y;
+    for(int _y = 0; _y < y; _y ++) matrix->matrix[_y] = malloc(sizeof(nnc_mtype) * x);
+    for(int _y = 0; _y < matrix->y; _y ++) for(int _x = 0; _x < matrix->x; _x ++) matrix->matrix[_y][_x] = _y;
+    return matrix;
+}
+
+NNCIMatrixType NNCMatrixAllocSum(unsigned int x, unsigned int y) {
+    NNCIMatrixType matrix = malloc(sizeof(NNCMatrixType));
+    matrix->matrix = malloc(sizeof(nnc_mtype*) * y);
+    matrix->x = x; matrix->y = y;
+    for(int _y = 0; _y < y; _y ++) matrix->matrix[_y] = malloc(sizeof(nnc_mtype) * x);
+    for(int _y = 0; _y < matrix->y; _y ++) for(int _x = 0; _x < matrix->x; _x ++) matrix->matrix[_y][_x] = _y + _x;
+    return matrix;
+}
+
 NNCIMatrixType NNCMatrixAllocDiagonal(nnc_uint x, nnc_uint y, nnc_mtype base_value){
     NNCIMatrixType matrix = malloc(sizeof(NNCMatrixType));
     matrix->matrix = malloc(sizeof(nnc_mtype*) * y);
@@ -67,25 +90,34 @@ void NNCMatrixDeAlloc(NNCIMatrixType matrix) {
     free(matrix);
 }
 
+/////////////////////////////////////////////////////////////
+//              HELPERS                                    //
+/////////////////////////////////////////////////////////////
+
 void NNCMatrixPrint(NNCMatrixType *matrix) {
     if(matrix == nnc_null) return;
     for(int _y = 0; _y < matrix->y; _y ++){
         for(int _x = 0; _x < matrix->x; _x ++){
             nnc_vector vec = matrix->matrix[_y];
-            printf(" %.9g", matrix->matrix[_y][_x]);
+            dprintf(" %.9g", matrix->matrix[_y][_x]);
         }
-        printf("\n");
+        dprintf("\n");
     }
 }
 
+/////////////////////////////////////////////////////////////
+//              ALGO                                       //
+/////////////////////////////////////////////////////////////
+
 NNCIMatrixType NNCMatrixProduct(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b) {
+//#if NNC_MATRIX_MULTIPLY_SQUARE_ALGO == NNC_MATRIX_MULTIPLY_SQUARE_ALGO_ITERATIVE
     if(matrix_a->x == matrix_b->x && matrix_a->y == matrix_b->y){
         NNCIMatrixType matrix_out = NNCMatrixAllocBaseValue(matrix_a->x, matrix_a->y, 0);
         for (int y = 0; y < matrix_out->y; y++)
                 for (int x = 0; x < matrix_out->x; x++)
                     matrix_out->matrix[y][x] += matrix_a->matrix[y][x] * matrix_b->matrix[y][x];
         return matrix_out;
-    }else{
+    }else {//if(matrix_a->x < matrix_b->x && matrix_a->y == matrix_b->y){
         NNCIMatrixType matrix_out = NNCMatrixAllocBaseValue(matrix_b->x, matrix_a->y, 0);
         for (int i = 0; i < matrix_a->y; i++)
             for (int j = 0; j < matrix_b->x; j++)
@@ -93,13 +125,19 @@ NNCIMatrixType NNCMatrixProduct(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b
                     matrix_out->matrix[i][j] += matrix_a->matrix[i][k] * matrix_b->matrix[k][j];
         return matrix_out;
     }
+//    else if(matrix_a->x > matrix_b->x && matrix_a->y == matrix_b->y){
+//        NNCIMatrixType matrix_out = NNCMatrixAllocBaseValue(matrix_b->x, matrix_a->y, 0);
+//        for (int i = 0; i < matrix_b->y; i++)
+//            for (int j = 0; j < matrix_a->x; j++)
+//                for (int k = 0; k < matrix_a->y; k++) // FIXME a < b
+//                    matrix_out->matrix[i][j] += matrix_b->matrix[i][k] * matrix_a->matrix[k][j];
+//        return matrix_out;
+//    }
+//#endif
 }
 
 NNCIMatrixType NNCMatrixQuotient(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b) {
     NNCIMatrixType matrix_b_neg_exp = NNCMatrixQuotientNumberReverse(1, matrix_b);
-//    NNCMatrixPrint(matrix_b_neg_exp);
-//    puts("----------");
-//    NNCMatrixPrint(matrix_b);
     if(matrix_a->x == matrix_b->x && matrix_a->y == matrix_b->y){
         NNCIMatrixType matrix_out = NNCMatrixAllocBaseValue(matrix_a->x, matrix_a->y, 0);
         for (int y = 0; y < matrix_out->y; y++)
@@ -117,7 +155,6 @@ NNCIMatrixType NNCMatrixQuotient(NNCIMatrixType matrix_a, NNCIMatrixType matrix_
         return matrix_out;
     }
 }
-
 
 nnc_vector NNCMatrixDotProduct(NNCIMatrixType matrix, nnc_vector vector) {
     nnc_vector vector_out = malloc(sizeof(nnc_mtype)*matrix->x);
@@ -178,24 +215,6 @@ NNCIMatrixType NNCMatrixSum(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b) {
         return matrix_c;
     }
     return nnc_null;
-}
-
-NNCIMatrixType NNCMatrixAllocLine(unsigned int x, unsigned int y) {
-    NNCIMatrixType matrix = malloc(sizeof(NNCMatrixType));
-    matrix->matrix = malloc(sizeof(nnc_mtype*) * y);
-    matrix->x = x; matrix->y = y;
-    for(int _y = 0; _y < y; _y ++) matrix->matrix[_y] = malloc(sizeof(nnc_mtype) * x);
-    for(int _y = 0; _y < matrix->y; _y ++) for(int _x = 0; _x < matrix->x; _x ++) matrix->matrix[_y][_x] = _y;
-    return matrix;
-}
-
-NNCIMatrixType NNCMatrixAllocSum(unsigned int x, unsigned int y) {
-    NNCIMatrixType matrix = malloc(sizeof(NNCMatrixType));
-    matrix->matrix = malloc(sizeof(nnc_mtype*) * y);
-    matrix->x = x; matrix->y = y;
-    for(int _y = 0; _y < y; _y ++) matrix->matrix[_y] = malloc(sizeof(nnc_mtype) * x);
-    for(int _y = 0; _y < matrix->y; _y ++) for(int _x = 0; _x < matrix->x; _x ++) matrix->matrix[_y][_x] = _y + _x;
-    return matrix;
 }
 
 NNCIMatrixType NNCMatrixSumSingle(NNCIMatrixType matrix, bool axis) {
@@ -281,7 +300,6 @@ NNCIMatrixType NNCMatrixSumNumber(NNCIMatrixType matrix, nnc_mtype number){
     for(nnc_uint y = 0; y < matrix->y; y++) for(nnc_uint x = 0; x < matrix->x; x++) output->matrix[y][x] = matrix->matrix[y][x] + number;
     return output;
 }
-
 
 nnc_mtype NNCMatrixMean(NNCIMatrixType matrix){
     nnc_mtype mean = 0;
