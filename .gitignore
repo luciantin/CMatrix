@@ -1,9 +1,7 @@
 /cmake-build-debug/
-/fashion_mnist_images/
-/numbers_mnist_images/
-/tests/
 /venv/
 /build/
 /.history/
-/AutoGenTest.c
-/AutoGenTest.h
+/.vs/
+/.idea/
+/out/
