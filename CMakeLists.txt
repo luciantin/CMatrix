@@ -35,7 +35,9 @@ add_executable(CMatrix
         helpers/nnc_exporter.h
         helpers/nnc_exporter.c
         helpers/nnc_trainer.c
-        helpers/nnc_trainer.h)
+        helpers/nnc_trainer.h
+        helpers/nnc_statistics.c
+        helpers/nnc_statistics.h)
 #target_link_libraries(CMatrix PRIVATE m)
 
 if( USES_EMCMAKE )

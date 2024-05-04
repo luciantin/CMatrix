@@ -14,6 +14,8 @@
 
 #define NNC_MATRIX_MULTIPLY_SQUARE_ALGO NNC_MATRIX_MULTIPLY_SQUARE_ALGO_ITERATIVE
 
+#define NNC_CALCULATE_EXECUTION_TIME 1
+
 #define NNC_PARALLEL 0
 #define NNC_PARALLEL_MAX_PARALLEL_JOBS 19
 
@@ -39,9 +41,13 @@ enum NNC_MATRIX_MULTIPLY_SQUARE_ALGO_TYPE {
 #define nnc_matrix          nnc_mtype**
 #define nnc_end_of_string   '\0'
 #define nnc_null            ((void *)0)
+#define nnc_bool            int
+#define nnc_true            1
+#define nnc_false           0
 
 nnc_mtype NNCGetRandomMType();
 nnc_mtype NNCGetRandomUnsignedMType();
+
 
 #if DEBUG
     #include <stdio.h>
@@ -52,6 +58,7 @@ nnc_mtype NNCGetRandomUnsignedMType();
     #define dputs(...) /**/
 #endif
 
+
 #if PROFILE
 //    #include <stdio.h>
 //    #define dprintf printf
@@ -60,6 +67,7 @@ nnc_mtype NNCGetRandomUnsignedMType();
 //    #define dprintf(...) /**/
 //    #define dputs(...) /**/
 #endif
+
 
 #if NNC_RAND_ALGO == NNC_RAND_ALGO_STDLIB_SRAND
     #include <stdlib.h>
@@ -75,6 +83,16 @@ nnc_mtype NNCGetRandomUnsignedMType();
     #define nnc_init_rand _nnc_rand_seed =
     #define nnc_get_rand_int _nnc_get_rand_int()
     #define nnc_rand_max 65536
+#endif
+
+#if NNC_CALCULATE_EXECUTION_TIME == 1
+    #include <time.h>
+    #define time_type long double
+    #define dgetTime()  ((long double)clock() / (long double)CLOCKS_PER_SEC)
+    #define dgetTimeDiff(begin, end) ((long double)((end - begin)))
+#elif
+    #define dgetTime() (long double)0
+    #define dgetTimeDiffDouble(start, end) (long double)0
 #endif
 
 #endif //CMATRIX_NNC_CONFIG_H

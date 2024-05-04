@@ -3,7 +3,7 @@
 
 #include "nnc_config.h"
 #include "nnc_matrix.h"
-#include "nnc_trainer.h"
+
 
 #define NNC_MODEL_SERIALIZED_START              '#'
 #define NNC_MODEL_SERIALIZED_START_LEN          3
@@ -37,6 +37,7 @@ NNCModelElementSerializedType;
 
 enum NNCModelLayerElementType{
     NNCLayerType_Layer_Dense,
+    NNCLayerType_Layer_Dense_With_Regularization,
     NNCLayerType_Layer_Dropout,
 
     NNCLayerType_Activation_ReLU,
@@ -53,6 +54,7 @@ enum NNCModelLayerElementType{
 static const char * const NNCModelLayerElementTypeToString[] =
 {
     [NNCLayerType_Layer_Dense] = "NNCLayerType_Layer_Dense",
+    [NNCLayerType_Layer_Dense_With_Regularization] = "NNCLayerType_Layer_Dense_With_Regularization",
     [NNCLayerType_Layer_Dropout] = "NNCLayerType_Layer_Dropout",
     [NNCLayerType_Activation_ReLU]  = "NNCLayerType_Activation_ReLU",
     [NNCLayerType_Activation_SoftMax]  = "NNCLayerType_Activation_SoftMax",
@@ -76,24 +78,27 @@ NNCModelLayerType;
 
 NNCIModelLayerType NNCModelLayerAlloc(void* layer, enum NNCModelLayerElementType type, char* tag);
 void NNCModelLayerDeAlloc(NNCIModelLayerType layer);
+void NNCModelLayerDeAllocAll(NNCIModelLayerType layer);
 
 NNCIModelElementSerializedType NNCModelLayerSerialize(NNCIModelLayerType element);
 NNCIModelLayerType NNCModelLayerDeserialize(NNCIModelElementSerializedType model_serilized);
 
 ////////
-typedef struct NNCModelStatistics
-{
-    nnc_mtype learning_rate;
-    nnc_uint sample_len;
-    nnc_uint current_epoch;
-    nnc_uint total_epoch;
-    nnc_mtype regularization_loss;
-    nnc_mtype accuracy;
-    nnc_mtype mean;
-}
-NNCModelStatistics;
 
-#define NNCIModelStatistics NNCModelStatistics*
+typedef struct NNCModelLayerOutputType
+{
+    NNCIMatrixType              data;
+    nnc_bool                    must_not_deallocate;
+}
+NNCModelLayerOutputType;
+
+#define NNCIModelLayerOutputType NNCModelLayerOutputType*
+
+NNCIModelLayerOutputType NNCModelLayerOutputAlloc(NNCIMatrixType output, nnc_bool must_not_deallocate);
+void NNCIModelLayerOutputDeAlloc(NNCIModelLayerOutputType output);
+
+////////
+
 
 typedef struct NNCModelType
 {
@@ -110,21 +115,23 @@ NNCIModelType NNCModelAlloc(char* tag);
 void NNCModelDeAlloc(NNCIModelType model);
 void NNCModelDeAllocAll(NNCIModelType model);
 
-NNCIMatrixType NNCModelTrain(NNCIModelType model, NNCITrainerType trainer, NNCIMatrixType input, NNCIMatrixType target);
-NNCIMatrixType NNCModelTest(NNCIModelType model, NNCIMatrixType input, NNCIMatrixType target);
-NNCIMatrixType NNCModelPredict(NNCIModelType model, NNCIMatrixType input);
+//NNCIModelStatistics NNCModelTrain(NNCIModelType model, NNCITrainerType trainer, NNCIMatrixType input, NNCIMatrixType target);
+//NNCIModelStatistics NNCModelTest(NNCIModelType model, NNCIMatrixType input, NNCIMatrixType target);
+//NNCIMatrixType NNCModelPredict(NNCIModelType model, NNCIMatrixType input);
 
 void NNCModelSetOptimizer(NNCIModelType model, NNCIModelLayerType optimizer);
 void NNCModelLayerRemove(NNCIModelType model, const char* tag);
 void NNCModelLayerAdd(NNCIModelType model, NNCIModelLayerType layer);
 void NNCModelPrintLayers(NNCIModelType model);
 
-NNCIMatrixType* NNCModelLayerForwardPass(NNCIModelType model, NNCIMatrixType input);
-NNCIMatrixType  NNCModelLayerForwardStep(NNCIModelLayerType layer, NNCIMatrixType input);
-NNCIMatrixType* NNCModelLayerBackwardPass(NNCIModelType model, NNCIMatrixType target, NNCIMatrixType* output_forward_lst);
-NNCIMatrixType  NNCModelLayerBackwardStep(NNCIModelLayerType layer, NNCIMatrixType dvalues, NNCIMatrixType layer_output_forward);
+NNCIModelLayerOutputType* NNCModelLayerForwardPass(NNCIModelType model, NNCIMatrixType input);
+NNCIModelLayerOutputType  NNCModelLayerForwardStep(NNCIModelLayerType layer, NNCIModelLayerOutputType input);
+NNCIModelLayerOutputType* NNCModelLayerBackwardPass(NNCIModelType model, NNCIMatrixType target, NNCIModelLayerOutputType* output_forward_lst);
+NNCIModelLayerOutputType NNCModelLayerBackwardStep(NNCIModelLayerType layer, NNCIModelLayerOutputType layer_output_previous, NNCIModelLayerOutputType layer_output_forward);
 
 void NNCModelOptimizerPass(NNCIModelType model);
+
+
 
 NNCIModelSerializedType NNCModelSerialize(NNCIModelType model);
 NNCIModelType NNCModelDeserialize(NNCIModelSerializedType model_serialized);

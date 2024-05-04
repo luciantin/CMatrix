@@ -16,13 +16,14 @@ NNCIModelType NNCModelAlloc(char* tag){
 }
 
 void NNCModelDeAlloc(NNCIModelType model){
+    for(nnc_uint layer_index = 0; layer_index < model->layer_len; layer_index ++) NNCModelLayerDeAlloc(model->layers[layer_index]);
     free(model->layers);
     free(model->tag);
     free(model);
 }
 
 void NNCModelDeAllocAll(NNCIModelType model){
-    // TODO free layers
+    for(nnc_uint layer_index = 0; layer_index < model->layer_len; layer_index ++) NNCModelLayerDeAllocAll(model->layers[layer_index]);
     free(model->layers);
     free(model->tag);
     free(model);
@@ -68,18 +69,9 @@ void NNCModelLayerRemove(NNCModelType *model, const char *tag) {
     }
 }
 
-NNCIMatrixType NNCModelTrain(NNCIModelType model, NNCITrainerType trainer, NNCIMatrixType input, NNCIMatrixType target){
-    NNCIMatrixType* output_forward_lst = NNCModelLayerForwardPass(model, input);
-    NNCIMatrixType* output_backward_lst = NNCModelLayerBackwardPass(model, target, output_forward_lst);
-    NNCModelOptimizerPass(model);
-
-    for(int i = 0; i < model->layer_len; i++) if(output_forward_lst[i] != nnc_null) free(output_forward_lst[i]);
-    for(int i = 0; i < model->layer_len; i++) if(output_backward_lst[i] != nnc_null) free(output_backward_lst[i]);
-}
-
-NNCIMatrixType* NNCModelLayerForwardPass(NNCIModelType model, NNCIMatrixType input){
-    NNCIMatrixType* _output_forward_lst = malloc(sizeof(NNCIMatrixType) * model->layer_len);
-    NNCIMatrixType _output_forward = input;
+NNCIModelLayerOutputType* NNCModelLayerForwardPass(NNCIModelType model, NNCIMatrixType input){
+    NNCIModelLayerOutputType* _output_forward_lst = malloc(sizeof(NNCIMatrixType) * model->layer_len);
+    NNCIModelLayerOutputType _output_forward = NNCModelLayerOutputAlloc(input, nnc_true);;
 
     for(int layer_index = 0; layer_index < model->layer_len; layer_index ++){
         dprintf("%d. - %s - ", layer_index + 1, model->tag);
@@ -89,52 +81,56 @@ NNCIMatrixType* NNCModelLayerForwardPass(NNCIModelType model, NNCIMatrixType inp
     return _output_forward_lst;
 }
 
-NNCIMatrixType NNCModelLayerForwardStep(NNCIModelLayerType layer, NNCIMatrixType input){
+NNCIModelLayerOutputType NNCModelLayerForwardStep(NNCIModelLayerType layer, NNCIModelLayerOutputType input){
     dprintf("forward - %s - %s\n", layer->tag, NNCModelLayerElementTypeToString[layer->type]);
 
-    if(layer->type == NNCLayerType_Layer_Dense){
-        return NNCDenseLayerForward(input, layer->layer);
+    if(layer->type == NNCLayerType_Layer_Dense || layer->type == NNCLayerType_Layer_Dense_With_Regularization){
+        return NNCModelLayerOutputAlloc(NNCDenseLayerForward(input->data, layer->layer), nnc_false);
     }
     else if(layer->type == NNCLayerType_Activation_ReLU){
-        return NNCActivationReLUForward(input);
+        return NNCModelLayerOutputAlloc(NNCActivationReLUForward(input->data), nnc_false);
     }
     else if(layer->type == NNCLayerType_Layer_Dropout){
-        return NNCDropoutLayerForward(input, layer->layer);
+        return NNCModelLayerOutputAlloc(NNCDropoutLayerForward(input->data, layer->layer), nnc_false);
     }
     else if(layer->type == NNCLayerType_Activation_SoftMax){
-        return NNCActivationSoftMaxForward(input);
+        return NNCModelLayerOutputAlloc(NNCActivationSoftMaxForward(input->data), nnc_false);
     }
     else return nnc_null;
 }
 
-NNCIMatrixType* NNCModelLayerBackwardPass(NNCIModelType model, NNCIMatrixType target, NNCIMatrixType* output_forward_lst){
-    NNCIMatrixType* _output_backward_lst = malloc(sizeof(NNCIMatrixType) * model->layer_len);
-    NNCIMatrixType _output_backward = target;
+NNCIModelLayerOutputType* NNCModelLayerBackwardPass(NNCIModelType model, NNCIMatrixType target, NNCIModelLayerOutputType* output_forward_lst){
+    NNCIModelLayerOutputType* _output_backward_lst = malloc(sizeof(NNCIMatrixType) * model->layer_len);
+    NNCIModelLayerOutputType _output_backward = NNCModelLayerOutputAlloc(target, nnc_true);
 
-    for(int layer_index = model->layer_len - 1; layer_index >= 0; layer_index --){
-        dprintf("%d. - %s - ", layer_index + 1, model->tag);
+    for(int layer_index = model->layer_len - 1; layer_index >= 0; layer_index -= 1){
+        dprintf("%d. - %s - backward - %s - %s\n", layer_index + 1, model->tag, model->layers[layer_index]->tag, NNCModelLayerElementTypeToString[model->layers[layer_index]->type]);
+
         _output_backward = NNCModelLayerBackwardStep(model->layers[layer_index], _output_backward, output_forward_lst[layer_index]);
         _output_backward_lst[layer_index] = _output_backward;
     }
+
     return _output_backward_lst;
 }
 
-NNCIMatrixType NNCModelLayerBackwardStep(NNCIModelLayerType layer, NNCIMatrixType dvalues, NNCIMatrixType layer_output_forward){
-    dprintf("backward - %s - %s\n", layer->tag, NNCModelLayerElementTypeToString[layer->type]);
-
+NNCIModelLayerOutputType NNCModelLayerBackwardStep(NNCIModelLayerType layer, NNCIModelLayerOutputType layer_output_previous, NNCIModelLayerOutputType layer_output_forward){
     if(layer->type == NNCLayerType_Layer_Dense){
-        NNCDenseLayerBackward(dvalues, layer->layer);
-        return ((NNCIDenseLayerType)(layer->layer))->dinputs;
+        NNCDenseLayerBackward(layer_output_previous->data, layer->layer);
+        return NNCModelLayerOutputAlloc(((NNCIDenseLayerType)(layer->layer))->dinputs, nnc_true);
+    }
+    if(layer->type == NNCLayerType_Layer_Dense_With_Regularization){
+        NNCDenseLayerWithRegularizationBackward(layer_output_previous->data, layer->layer);
+        return NNCModelLayerOutputAlloc(((NNCIDenseLayerType)(layer->layer))->dinputs, nnc_true);
     }
     else if(layer->type == NNCLayerType_Activation_ReLU){
-        return NNCActivationReLUBackward(layer_output_forward, dvalues);
+        return NNCModelLayerOutputAlloc(NNCActivationReLUBackward(layer_output_forward->data, layer_output_previous->data), nnc_false);
     }
     else if(layer->type == NNCLayerType_Layer_Dropout){
-        NNCDropoutLayerBackward(dvalues, layer->layer);
-        return ((NNCIDropoutLayerType)(layer->layer))->dinputs;
+        NNCDropoutLayerBackward(layer_output_previous->data, layer->layer);
+        return NNCModelLayerOutputAlloc(((NNCIDropoutLayerType)(layer->layer))->dinputs, nnc_true);
     }
     else if(layer->type == NNCLayerType_Activation_SoftMax){
-        return NNCActivationSoftMaxLossCCELBackward(layer_output_forward, dvalues);
+        return NNCModelLayerOutputAlloc(NNCActivationSoftMaxLossCCELBackward(layer_output_forward->data, layer_output_previous->data), nnc_false);
     }
     else return nnc_null;
 }
@@ -145,28 +141,28 @@ void NNCModelOptimizerPass(NNCIModelType model) {
     if(model->optimizer->type == NNCLayerType_Optimizer_Adam){
         NNCOptimizerAdamPreUpdateParams(model->optimizer->layer);
         for(int layer_index = 0; layer_index < model->layer_len; layer_index ++){
-            if(model->layers[layer_index]->type == NNCLayerType_Layer_Dense) NNCOptimizerAdamUpdateParams(model->optimizer->layer, model->layers[layer_index]->layer);
+            if(model->layers[layer_index]->type == NNCLayerType_Layer_Dense || model->layers[layer_index]->type == NNCLayerType_Layer_Dense_With_Regularization) NNCOptimizerAdamUpdateParams(model->optimizer->layer, model->layers[layer_index]->layer);
         }
         NNCOptimizerAdamPostUpdateParams(model->optimizer->layer);
     }
     else if(model->optimizer->type == NNCLayerType_Optimizer_AdaGrad){
         NNCOptimizerAdaGradPreUpdateParams(model->optimizer->layer);
         for(int layer_index = 0; layer_index < model->layer_len; layer_index ++){
-            if(model->layers[layer_index]->type == NNCLayerType_Layer_Dense) NNCOptimizerAdaGradUpdateParams(model->optimizer->layer, model->layers[layer_index]->layer);
+            if(model->layers[layer_index]->type == NNCLayerType_Layer_Dense || model->layers[layer_index]->type == NNCLayerType_Layer_Dense_With_Regularization) NNCOptimizerAdaGradUpdateParams(model->optimizer->layer, model->layers[layer_index]->layer);
         }
         NNCOptimizerAdaGradPostUpdateParams(model->optimizer->layer);
     }
     else if(model->optimizer->type == NNCLayerType_Optimizer_RMSProp){
         NNCOptimizerRMSPropPreUpdateParams(model->optimizer->layer);
         for(int layer_index = 0; layer_index < model->layer_len; layer_index ++){
-            if(model->layers[layer_index]->type == NNCLayerType_Layer_Dense) NNCOptimizerRMSPropUpdateParams(model->optimizer->layer, model->layers[layer_index]->layer);
+            if(model->layers[layer_index]->type == NNCLayerType_Layer_Dense || model->layers[layer_index]->type == NNCLayerType_Layer_Dense_With_Regularization) NNCOptimizerRMSPropUpdateParams(model->optimizer->layer, model->layers[layer_index]->layer);
         }
         NNCOptimizerRMSPropPostUpdateParams(model->optimizer->layer);
     }
     else if(model->optimizer->type == NNCLayerType_Optimizer_SGD){
         NNCOptimizerSGDPreUpdateParams(model->optimizer->layer);
         for(int layer_index = 0; layer_index < model->layer_len; layer_index ++){
-            if(model->layers[layer_index]->type == NNCLayerType_Layer_Dense) NNCOptimizerSGDUpdateParams(model->optimizer->layer, model->layers[layer_index]->layer);
+            if(model->layers[layer_index]->type == NNCLayerType_Layer_Dense || model->layers[layer_index]->type == NNCLayerType_Layer_Dense_With_Regularization) NNCOptimizerSGDUpdateParams(model->optimizer->layer, model->layers[layer_index]->layer);
         }
         NNCOptimizerSGDPostUpdateParams(model->optimizer->layer);
     }
@@ -180,8 +176,21 @@ NNCIModelLayerType NNCModelLayerAlloc(void *layer, enum NNCModelLayerElementType
     return modelLayer;
 }
 
-void NNCModelLayerDeAlloc(NNCIModelLayerType element) {
-    free(element);
+void NNCModelLayerDeAlloc(NNCIModelLayerType layer) {
+    free(layer);
+}
+
+void NNCModelLayerDeAllocAll(NNCIModelLayerType layer) {
+
+    if(layer->type == NNCLayerType_Optimizer_Adam) NNCOptimizerAdamDeAlloc(layer->layer);
+    else if(layer->type == NNCLayerType_Optimizer_AdaGrad) NNCOptimizerAdaGradDeAlloc(layer->layer);
+    else if(layer->type == NNCLayerType_Optimizer_RMSProp) NNCOptimizerRMSPropDeAlloc(layer->layer);
+    else if(layer->type == NNCLayerType_Optimizer_SGD) NNCOptimizerSGDDeAlloc(layer->layer);
+    else if(layer->type == NNCLayerType_Layer_Dense) NNCDenseLayerDeAlloc(layer->layer);
+    else if(layer->type == NNCLayerType_Layer_Dense_With_Regularization) NNCDenseLayerDeAlloc(layer->layer);
+    else if(layer->type == NNCLayerType_Layer_Dropout) NNCDropoutLayerDeAlloc(layer->layer);
+
+    free(layer);
 }
 
 void NNCModelPrintLayers(NNCIModelType model) {
@@ -193,60 +202,14 @@ void NNCModelPrintLayers(NNCIModelType model) {
 #endif
 }
 
-NNCIModelStatistics NNCModelCalculateStatistics(NNCIModelType model, NNCITrainerType trainer, NNCIMatrixType forward_pass_result, NNCIMatrixType target, nnc_uint target_len){
-    NNCIModelStatistics statistics = malloc(sizeof(NNCModelStatistics));
-
-    NNCIMatrixType ccel1_forward = NNCLossCCELForward(forward_pass_result, target);
-    statistics->mean = NNCMatrixMean(ccel1_forward);
-
-    nnc_vector argmax_prediction = NNCMatrixArgMax(forward_pass_result);
-    nnc_vector argmax_target = NNCMatrixToVector(target, 1);
-    statistics->accuracy = NNCVectorAccuracy(argmax_target, argmax_prediction, target_len);
-
-    nnc_mtype regularization_loss = 0;
-    for(int x = 0; x < model->layer_len; x ++){
-        if(model->layers[x]->type == NNCLayerType_Layer_Dense) regularization_loss += NNCDenseLayerCalculateRegularizationLoss(model->layers[x]->layer);
-    }
-    statistics->regularization_loss = regularization_loss;
-
-    statistics->sample_len = target_len;
-    statistics->current_epoch = trainer->current_epoch;
-    statistics->total_epoch = trainer->max_epoch;
-
-    return statistics;
+NNCIModelLayerOutputType NNCModelLayerOutputAlloc(NNCIMatrixType output, nnc_bool must_not_deallocate){
+    NNCIModelLayerOutputType layer_output = malloc(sizeof(NNCModelLayerOutputType));
+    layer_output->data = output;
+    layer_output->must_not_deallocate = must_not_deallocate;
+    return layer_output;
 }
 
-
-void NNCModelPrintTrainingStatistics(NNCIModelType model, NNCIMatrixType* forward_pass_result_lst, ){
-//#if DEBUG == 1
-//    NNCIMatrixType ccel1_forward = NNCLossCCELForward(softmax1_forward, target);
-//    nnc_mtype mean = NNCMatrixMean(ccel1_forward);
-//    nnc_vector argmax_prediction = NNCMatrixArgMax(softmax1_forward);
-//    nnc_vector argmax_target = NNCMatrixToVector(target, 1);
-//    nnc_mtype regularization_loss = NNCDenseLayerCalculateRegularizationLoss(dense1) + NNCDenseLayerCalculateRegularizationLoss(dense2);
-
-//            NNCVectorPrint(argmax_prediction, sample_len);
-//            NNCVectorPrint(argmax_target, sample_len);
-
-    dprintf("epoch : %d ", epoch);
-    dprintf(" lrate : %.9g ", optimizerAdam->current_learning_rate);
-    dprintf("acc : %.9g", NNCVectorAccuracy(argmax_target, argmax_prediction, sample_len));
-    dprintf(" reg loss : %.6g", regularization_loss);
-    dprintf(" mean loss : %.9g \n", mean);
-
-//    if(epoch == epoch_len) {
-//        NNCVectorAccuracy(argmax_target, argmax_prediction, sample_len);
-//        dprintf("Target :    ");
-//        NNCVectorPrint(argmax_target, sample_len);
-//        dprintf("Prediction :");
-//        NNCVectorPrint(argmax_prediction, sample_len);
-//    }
-
-    free(argmax_target);
-    free(argmax_prediction);
-    NNCMatrixDeAlloc(ccel1_forward);
-//#endif
+void NNCIModelLayerOutputDeAlloc(NNCIModelLayerOutputType output){
+    if(output->must_not_deallocate == nnc_false && output->data != nnc_null) NNCMatrixDeAlloc(output->data);
+    free(output);
 }
-
-NNCIMatrixType NNCModelTest(NNCIModelType model, NNCIMatrixType input, NNCIMatrixType target);
-NNCIMatrixType NNCModelPredict(NNCIModelType model, NNCIMatrixType input);
