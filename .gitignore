@@ -1,7 +1,9 @@
-cmake-build-debug
-venv
-build
-.history
-.vs
-.idea
-out
+/cmake-build-debug/
+/venv/
+/build/
+/.history/
+/.vs/
+/.idea/
+/out/
+/training/fashion_mnist_images/
+/training/numbers_mnist_images/

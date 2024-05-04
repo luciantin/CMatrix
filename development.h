@@ -15,6 +15,7 @@
 #include "helpers/nnc_vector.h"
 #include "helpers/nnc_config.h"
 #include "helpers/nnc_importer.h"
+#include "helpers/nnc_model.h"
 
 void RunDevelopment(){
 
@@ -55,21 +56,29 @@ void RunDevelopment(){
     nnc_mtype beta_2 = 0.999;
     nnc_mtype dropout_rate = 0.2;
 
-    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(input_len, 128);
-    NNCIDropoutLayerType dropout1 = NNCDropoutLayerAlloc(dropout_rate);
-//    NNCIDenseLayerType dense3 = NNCDenseLayerAlloc(128, 64);
-    NNCIDenseLayerType dense2 = NNCDenseLayerAlloc(64, output_len);
+
+    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(input_len, 32);
+    NNCIDenseLayerType dense2 = NNCDenseLayerAlloc(32, output_len);
     NNCDenseLayerSetRegularizationParameters(dense1, 0, 5e-4, 0, 5e-4);
 
-//    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(input_len, 64);
-//    NNCIDenseLayerType dense2 = NNCDenseLayerAlloc(64, 128);
-//    NNCIDenseLayerType dense3 = NNCDenseLayerAlloc(128, 64);
-//    NNCIDenseLayerType dense4 = NNCDenseLayerAlloc(64, output_len);
-
-    NNCIOptimizerSGDType optimizerSgd = NNCOptimizerSGDAlloc(learning_rate, decay, momentum);
-    NNCIOptimizerAdaGradType optimizerAdaGrad = NNCOptimizerAdaGradAlloc(learning_rate, decay);
-    NNCIOptimizerRMSPropType optimizerRmsProp = NNCOptimizerRMSPropAlloc(learning_rate, decay);
     NNCIOptimizerAdamType optimizerAdam = NNCOptimizerAdamAlloc(learning_rate, decay, epislon, beta_1, beta_2);
+
+    NNCIModelType model = NNCModelAlloc("Double32");
+
+    NNCIModelLayerType layerDense1 = NNCModelLayerAlloc(dense1, NNCLayerType_Layer_Dense, "dense1");
+    NNCIModelLayerType layerActivationReLu = NNCModelLayerAlloc(nnc_null, NNCLayerType_Activation_ReLU, "relu1");
+    NNCIModelLayerType layerDense2 = NNCModelLayerAlloc(dense2, NNCLayerType_Layer_Dense, "dense2");
+    NNCIModelLayerType layerActivationSoftMax = NNCModelLayerAlloc(nnc_null, NNCLayerType_Activation_SoftMax, "softmax1");
+    NNCIModelLayerType layerOptimizer = NNCModelLayerAlloc(optimizerAdam, NNCLayerType_Optimizer_Adam, "optimizerAdam");
+
+    NNCModelLayerAdd(model, layerDense1);
+    NNCModelLayerAdd(model, layerActivationReLu);
+    NNCModelLayerAdd(model, layerDense2);
+    NNCModelLayerAdd(model, layerActivationSoftMax);
+    NNCModelSetOptimizer(model, layerOptimizer);
+    NNCModelPrintLayers(model);
+
+    NNCModelTrain(model, nnc_null, input, target);
 
     //---------FORWARD PASS---------
     epoch_len += 1;
@@ -86,17 +95,14 @@ void RunDevelopment(){
         NNCIMatrixType dense1_forward = NNCDenseLayerForward(input, dense1);
         NNCIMatrixType relu1_forward = NNCActivationReLUForward(dense1_forward);
 
-//        NNCIMatrixType dropout1_forward = NNCDropoutLayerForward(relu1_forward, dropout1);
-//        NNCMatrixPrint(dropout1_forward);
-
         NNCIMatrixType dense2_forward = NNCDenseLayerForward(relu1_forward, dense2);
 
         NNCIMatrixType softmax1_forward = NNCActivationSoftMaxForward(dense2_forward);
 
-        NNCIMatrixType ccel1_forward = NNCLossCCELForward(softmax1_forward, target);
 
         //---------STATISTICS---------
         if(epoch % 1 == 0){
+            NNCIMatrixType ccel1_forward = NNCLossCCELForward(softmax1_forward, target);
             nnc_mtype mean = NNCMatrixMean(ccel1_forward);
             nnc_vector argmax_prediction = NNCMatrixArgMax(softmax1_forward);
             nnc_vector argmax_target = NNCMatrixToVector(target, 1);
@@ -104,6 +110,7 @@ void RunDevelopment(){
 
 //            NNCVectorPrint(argmax_prediction, sample_len);
 //            NNCVectorPrint(argmax_target, sample_len);
+
             dprintf("epoch : %d ", epoch);
             dprintf(" lrate : %.9g ", optimizerAdam->current_learning_rate);
             dprintf("acc : %.9g", NNCVectorAccuracy(argmax_target, argmax_prediction, sample_len));
@@ -121,36 +128,16 @@ void RunDevelopment(){
 
             free(argmax_target);
             free(argmax_prediction);
+            NNCMatrixDeAlloc(ccel1_forward);
         }
 
 
         //---------BACKWARD PASS---------
 
-//        NNCIMatrixType softmax_ccel_backward = NNCActivationSoftMaxLossCCELBackward(softmax1_forward, target);
-//        NNCDenseLayerWithRegularizationBackward(softmax_ccel_backward, dense2);
-//        NNCIMatrixType relu1_backward = NNCActivationReLUBackward(relu1_forward, dense2->dinputs);
-//        NNCDenseLayerBackward(relu1_backward, dense1);
-
         NNCIMatrixType softmax_ccel_backward = NNCActivationSoftMaxLossCCELBackward(softmax1_forward, target);
         NNCDenseLayerBackward(softmax_ccel_backward, dense2);
-//        NNCDropoutLayerBackward(dense2->dinputs, dropout1);
         NNCIMatrixType relu1_backward = NNCActivationReLUBackward(relu1_forward, dense2->dinputs);
         NNCDenseLayerWithRegularizationBackward(relu1_backward, dense1);
-
-//        NNCOptimizerSGDPreUpdateParams(optimizerSgd);
-//        NNCOptimizerSGDUpdateParams(optimizerSgd, dense1);
-//        NNCOptimizerSGDUpdateParams(optimizerSgd, dense2);
-//        NNCOptimizerSGDPostUpdateParams(optimizerSgd);
-
-//        NNCOptimizerAdaGradPreUpdateParams(optimizerAdaGrad);
-//        NNCOptimizerAdaGradUpdateParams(optimizerAdaGrad, dense1);
-//        NNCOptimizerAdaGradUpdateParams(optimizerAdaGrad, dense2);
-//        NNCOptimizerAdaGradPostUpdateParams(optimizerAdaGrad);
-
-//        NNCOptimizerRMSPropPreUpdateParams(optimizerRmsProp);
-//        NNCOptimizerRMSPropUpdateParams(optimizerRmsProp, dense1);
-//        NNCOptimizerRMSPropUpdateParams(optimizerRmsProp, dense2);
-//        NNCOptimizerRMSPropPostUpdateParams(optimizerRmsProp);
 
         NNCOptimizerAdamPreUpdateParams(optimizerAdam);
         NNCOptimizerAdamUpdateParams(optimizerAdam, dense1);
@@ -159,17 +146,11 @@ void RunDevelopment(){
 
 
         NNCMatrixDeAlloc(dense1_forward);
-//        NNCMatrixDeAlloc(dropout1_forward);
         NNCMatrixDeAlloc(dense2_forward);
         NNCMatrixDeAlloc(relu1_forward);
         NNCMatrixDeAlloc(softmax1_forward);
-        NNCMatrixDeAlloc(ccel1_forward);
         NNCMatrixDeAlloc(softmax_ccel_backward);
         NNCMatrixDeAlloc(relu1_backward);
-
-//        NNCMatrixDeAlloc(softmax1_backward);
-//        NNCMatrixDeAlloc(ccel1_backward);
-
     }
 
     dprintf("End\n");
@@ -180,10 +161,6 @@ void RunDevelopment(){
     NNCMatrixDeAlloc(target_test);
     NNCDenseLayerDeAlloc(dense1);
     NNCDenseLayerDeAlloc(dense2);
-    NNCDropoutLayerDeAlloc(dropout1);
-    NNCOptimizerSGDDeAlloc(optimizerSgd);
-    NNCOptimizerAdaGradDeAlloc(optimizerAdaGrad);
-    NNCOptimizerRMSPropDeAlloc(optimizerRmsProp);
     NNCOptimizerAdamDeAlloc(optimizerAdam);
 
 }

@@ -3,6 +3,7 @@
 
 #define DEBUG 1
 #define PROFILE 0
+#define SANITY_CHECKS 0
 
 #define NNC_PRINT_TOP_LEFT_MATRIX_START       1
 #define NNC_PRINT_BOTTOM_LEFT_MATRIX_START    0

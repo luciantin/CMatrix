@@ -1,7 +1,0 @@
-#ifndef CMATRIX_NNC_DEBUG_H
-#define CMATRIX_NNC_DEBUG_H
-
-
-
-
-#endif //CMATRIX_NNC_DEBUG_H
