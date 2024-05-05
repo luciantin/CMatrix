@@ -47,7 +47,7 @@ NNCIModelStatistics NNCTrainerTrain(NNCITrainerType trainer, NNCIModelType model
         #if NNC_CALCULATE_EXECUTION_TIME == 1
                 time_type epoch_end = dgetTime();
                 time_type time_diff = dgetTimeDiff(epoch_start, epoch_end);
-                dprintf("# Epoch duration : %.3Lg seconds, finished in ~%.4Lg minutes\n", time_diff, (time_diff * (trainer->max_epoch - trainer->current_epoch))/60);
+                dprintf("# Epoch duration : %.3Lg seconds, finished in ~%.4Lg minutes / ~%.4Lg hours\n", time_diff, (time_diff * (trainer->max_epoch - trainer->current_epoch))/60, (time_diff * (trainer->max_epoch - trainer->current_epoch))/60/60);
         #endif
     }
 
@@ -56,5 +56,32 @@ NNCIModelStatistics NNCTrainerTrain(NNCITrainerType trainer, NNCIModelType model
 
 void NNCTrainerLinkModel(NNCITrainerType trainer);
 
-NNCIModelStatistics NNCTrainerTest(NNCITrainerType trainer, NNCIModelType model, NNCIMatrixType input, NNCIMatrixType target);
+NNCIModelStatistics NNCTrainerTest(NNCITrainerType trainer, NNCIModelType model, NNCIMatrixType input, NNCIMatrixType target){
+    NNCIModelStatistics statistics = nnc_null;
+
+    NNCIDenseLayerType dense1 = model->layers[0]->layer;
+    NNCIDenseLayerType dense2 = model->layers[2]->layer;
+
+    dprintf("------------TEST------------");
+
+    #if NNC_CALCULATE_EXECUTION_TIME == 1
+        time_type epoch_start = dgetTime();
+    #endif
+
+    NNCIModelLayerOutputType* output_forward_lst = NNCModelLayerForwardPass(model, input);
+
+    statistics = NNCStatisticsCalculate(model, trainer->current_epoch, trainer->max_epoch, output_forward_lst[model->layer_len-1]->data, target);
+
+    for(int i = 0; i < model->layer_len; i++) if(output_forward_lst[i] != nnc_null) NNCIModelLayerOutputDeAlloc(output_forward_lst[i]);
+    NNCStatisticsPrint(statistics);
+
+    #if NNC_CALCULATE_EXECUTION_TIME == 1
+        time_type epoch_end = dgetTime();
+        time_type time_diff = dgetTimeDiff(epoch_start, epoch_end);
+        dprintf("# Test duration : %.3Lg seconds\n", time_diff);
+    #endif
+
+    return statistics;
+}
+
 NNCIMatrixType NNCTrainerPredict(NNCITrainerType trainer, NNCIModelType model, NNCIMatrixType input);

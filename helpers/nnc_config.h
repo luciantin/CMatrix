@@ -7,10 +7,13 @@
 
 #define NNC_PRINT_TOP_LEFT_MATRIX_START       1
 #define NNC_PRINT_BOTTOM_LEFT_MATRIX_START    0
+#define NNC_PRINT_LAYER_PATH 0
 
 #define NNC_RAND_ALGO NNC_RAND_ALGO_STDLIB_SRAND
 #define NNC_MIN_RAND -1
 #define NNC_MAX_RAND 1
+
+#define NNC_ENABLE_FILE_RW 1
 
 #define NNC_MATRIX_MULTIPLY_SQUARE_ALGO NNC_MATRIX_MULTIPLY_SQUARE_ALGO_ITERATIVE
 
@@ -18,6 +21,9 @@
 
 #define NNC_PARALLEL 0
 #define NNC_PARALLEL_MAX_PARALLEL_JOBS 19
+#if NNC_PARALLEL == 1
+#include <pthread.h>
+#endif
 
 enum NNC_RAND_ALGO_TYPE {
     NNC_RAND_ALGO_STDLIB_SRAND,
@@ -56,6 +62,10 @@ nnc_mtype NNCGetRandomUnsignedMType();
 #else
     #define dprintf(...) /**/
     #define dputs(...) /**/
+#endif
+
+#if NNC_ENABLE_FILE_RW == 1
+    #include <stdio.h>
 #endif
 
 

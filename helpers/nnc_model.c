@@ -74,7 +74,9 @@ NNCIModelLayerOutputType* NNCModelLayerForwardPass(NNCIModelType model, NNCIMatr
     NNCIModelLayerOutputType _output_forward = NNCModelLayerOutputAlloc(input, nnc_true);;
 
     for(int layer_index = 0; layer_index < model->layer_len; layer_index ++){
+#if NNC_PRINT_LAYER_PATH == 1
         dprintf("%d. - %s - ", layer_index + 1, model->tag);
+#endif
         _output_forward = NNCModelLayerForwardStep(model->layers[layer_index], _output_forward);
         _output_forward_lst[layer_index] = _output_forward;
     }
@@ -82,7 +84,9 @@ NNCIModelLayerOutputType* NNCModelLayerForwardPass(NNCIModelType model, NNCIMatr
 }
 
 NNCIModelLayerOutputType NNCModelLayerForwardStep(NNCIModelLayerType layer, NNCIModelLayerOutputType input){
+#if NNC_PRINT_LAYER_PATH == 1
     dprintf("forward - %s - %s\n", layer->tag, NNCModelLayerElementTypeToString[layer->type]);
+#endif
 
     if(layer->type == NNCLayerType_Layer_Dense || layer->type == NNCLayerType_Layer_Dense_With_Regularization){
         return NNCModelLayerOutputAlloc(NNCDenseLayerForward(input->data, layer->layer), nnc_false);
@@ -104,8 +108,9 @@ NNCIModelLayerOutputType* NNCModelLayerBackwardPass(NNCIModelType model, NNCIMat
     NNCIModelLayerOutputType _output_backward = NNCModelLayerOutputAlloc(target, nnc_true);
 
     for(int layer_index = model->layer_len - 1; layer_index >= 0; layer_index -= 1){
+#if NNC_PRINT_LAYER_PATH == 1
         dprintf("%d. - %s - backward - %s - %s\n", layer_index + 1, model->tag, model->layers[layer_index]->tag, NNCModelLayerElementTypeToString[model->layers[layer_index]->type]);
-
+#endif
         _output_backward = NNCModelLayerBackwardStep(model->layers[layer_index], _output_backward, output_forward_lst[layer_index]);
         _output_backward_lst[layer_index] = _output_backward;
     }
@@ -118,7 +123,7 @@ NNCIModelLayerOutputType NNCModelLayerBackwardStep(NNCIModelLayerType layer, NNC
         NNCDenseLayerBackward(layer_output_previous->data, layer->layer);
         return NNCModelLayerOutputAlloc(((NNCIDenseLayerType)(layer->layer))->dinputs, nnc_true);
     }
-    if(layer->type == NNCLayerType_Layer_Dense_With_Regularization){
+    else if(layer->type == NNCLayerType_Layer_Dense_With_Regularization){
         NNCDenseLayerWithRegularizationBackward(layer_output_previous->data, layer->layer);
         return NNCModelLayerOutputAlloc(((NNCIDenseLayerType)(layer->layer))->dinputs, nnc_true);
     }
@@ -136,7 +141,9 @@ NNCIModelLayerOutputType NNCModelLayerBackwardStep(NNCIModelLayerType layer, NNC
 }
 
 void NNCModelOptimizerPass(NNCIModelType model) {
+#if NNC_PRINT_LAYER_PATH == 1
     dprintf("x. - %s - optimizer - %s - %s\n", model->tag, model->optimizer->tag, NNCModelLayerElementTypeToString[model->optimizer->type]);
+#endif
 
     if(model->optimizer->type == NNCLayerType_Optimizer_Adam){
         NNCOptimizerAdamPreUpdateParams(model->optimizer->layer);

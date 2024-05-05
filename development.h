@@ -1,23 +1,18 @@
 #ifndef CMATRIX_DEVELOPMENT_H
 #define CMATRIX_DEVELOPMENT_H
 
-#if DEBUG
-#include <stdio.h>
-#endif
-
 #include <malloc.h>
 #include "helpers/nnc_matrix.h"
-//#include "training/AutoGenTest.h"
 #include "helpers/nnc_layer.h"
 #include "helpers/nnc_optimizer.h"
 #include "helpers/nnc_activation_layer.h"
 #include "helpers/nnc_loss_function.h"
 #include "helpers/nnc_vector.h"
 #include "helpers/nnc_config.h"
-#include "helpers/nnc_importer.h"
 #include "helpers/nnc_model.h"
 #include "helpers/nnc_trainer.h"
 #include "helpers/nnc_statistics.h"
+#include "helpers/nnc_serializer.h"
 
 void RunDevelopment(){
 
@@ -29,12 +24,6 @@ void RunDevelopment(){
 
     dprintf("Start\n");
     dputs("--------------");
-
-//    NNCIMatrixType inputs_training = GetAutoGenTrainingMatrix();
-//    NNCIMatrixType target_training = GetAutoGenTrainingTruthMatrix();
-
-//    NNCIMatrixType inputs_test = GetAutoGenTestMatrix();
-//    NNCIMatrixType target_test = GetAutoGenTestTruthMatrix();
 
     NNCIMatrixType inputs_training = NNCImportMatrixFromFile("C:\\Repos\\CMatrix\\training\\datasets\\dataset_numbers_100_train.matrix");
     NNCIMatrixType target_training = NNCImportMatrixFromFile("C:\\Repos\\CMatrix\\training\\datasets\\dataset_numbers_100_truth_train.matrix");
@@ -48,7 +37,7 @@ void RunDevelopment(){
     int sample_len = input->y;
     int input_len = input->x;
     int output_len = 10;
-    int epoch_len = 10000;
+    int epoch_len = 500;
 
     nnc_mtype momentum = 0;
     nnc_mtype learning_rate = 0.05;
@@ -58,7 +47,7 @@ void RunDevelopment(){
     nnc_mtype beta_2 = 0.999;
     nnc_mtype dropout_rate = 0.01;
 
-    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(input_len, 64);
+    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(input_len, 24);
     NNCDenseLayerSetRegularizationParameters(dense1, 0, 5e-4, 0, 5e-4);
 
     NNCIDropoutLayerType dropout1 = NNCDropoutLayerAlloc(dropout_rate);
@@ -66,10 +55,11 @@ void RunDevelopment(){
     NNCIDenseLayerType dense2 = NNCDenseLayerAlloc(64, 32);
     NNCDenseLayerSetRegularizationParameters(dense2, 0, 5e-4, 0, 5e-4);
 
-    NNCIDenseLayerType dense3 = NNCDenseLayerAlloc(32, output_len);
+    NNCIDenseLayerType dense3 = NNCDenseLayerAlloc(24, output_len);
     NNCDenseLayerSetRegularizationParameters(dense3, 0, 5e-4, 0, 5e-4);
 
     NNCIOptimizerAdamType optimizerAdam = NNCOptimizerAdamAlloc(learning_rate, decay, epislon, beta_1, beta_2);
+    NNCIOptimizerAdaGradType optimizerAdaGrad = NNCOptimizerAdaGradAlloc(learning_rate, decay);
 
     NNCIModelType model = NNCModelAlloc("DoubleDense32");
 
@@ -79,22 +69,26 @@ void RunDevelopment(){
     NNCIModelLayerType layerDense2 = NNCModelLayerAlloc(dense2, NNCLayerType_Layer_Dense_With_Regularization, "dense2");
     NNCIModelLayerType layerDense3 = NNCModelLayerAlloc(dense3, NNCLayerType_Layer_Dense_With_Regularization, "dense3");
     NNCIModelLayerType layerActivationSoftMax = NNCModelLayerAlloc(nnc_null, NNCLayerType_Activation_SoftMax, "softmax1");
-    NNCIModelLayerType layerOptimizer = NNCModelLayerAlloc(optimizerAdam, NNCLayerType_Optimizer_Adam, "optimizerAdam");
+    NNCIModelLayerType layerOptimizerAdam = NNCModelLayerAlloc(optimizerAdam, NNCLayerType_Optimizer_Adam, "optimizerAdam");
+    NNCIModelLayerType layerOptimizerAdaGrad = NNCModelLayerAlloc(optimizerAdaGrad, NNCLayerType_Optimizer_AdaGrad, "optimizerAdaGrad");
     NNCITrainerType trainer = NNCTrainerAlloc("trainer", NNCTrainerTypeStrategy_Iterative, epoch_len);
 
     NNCModelLayerAdd(model, layerDense1);
     NNCModelLayerAdd(model, layerActivationReLu);
-    NNCModelLayerAdd(model, layerDropout1);
-    NNCModelLayerAdd(model, layerDense2);
+//    NNCModelLayerAdd(model, layerDropout1);
+//    NNCModelLayerAdd(model, layerDense2);
     NNCModelLayerAdd(model, layerDense3);
     NNCModelLayerAdd(model, layerActivationSoftMax);
 
-    NNCModelSetOptimizer(model, layerOptimizer);
+    NNCModelSetOptimizer(model, layerOptimizerAdaGrad);
 
     NNCModelPrintLayers(model);
 
-    NNCIModelStatistics statistics = NNCTrainerTrain(trainer, model, input, target);
-//    NNCStatisticsPrint(statistics);
+    NNCIModelStatistics statistics_train = NNCTrainerTrain(trainer, model, input, target);
+    NNCStatisticsPrint(statistics_train);
+
+    NNCIModelStatistics statistics_test = NNCTrainerTest(trainer, model, inputs_test, target_test);
+    NNCStatisticsPrint(statistics_test);
 
 }
 

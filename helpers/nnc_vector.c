@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "nnc_vector.h"
 
 void NNCVectorPrint(nnc_vector vector, nnc_uint len) {

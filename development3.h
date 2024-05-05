@@ -1,9 +1,6 @@
 #ifndef CMATRIX_DEVELOPMENT_H
 #define CMATRIX_DEVELOPMENT_H
 
-#if DEBUG
-#include <stdio.h>
-#endif
 
 #include <malloc.h>
 #include "helpers/nnc_matrix.h"

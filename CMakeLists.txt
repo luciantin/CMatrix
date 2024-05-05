@@ -30,14 +30,14 @@ add_executable(CMatrix
         development.h
         helpers/nnc_model.c
         helpers/nnc_model.h
-        helpers/nnc_importer.c
-        helpers/nnc_importer.h
-        helpers/nnc_exporter.h
-        helpers/nnc_exporter.c
+        helpers/nnc_serializer.h
+        helpers/nnc_serializer.c
         helpers/nnc_trainer.c
         helpers/nnc_trainer.h
         helpers/nnc_statistics.c
-        helpers/nnc_statistics.h)
+        helpers/nnc_statistics.h
+        helpers/nnc_list.c
+        helpers/nnc_list.h)
 #target_link_libraries(CMatrix PRIVATE m)
 
 if( USES_EMCMAKE )

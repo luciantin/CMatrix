@@ -319,3 +319,61 @@ nnc_vector NNCMatrixToVector(NNCIMatrixType matrix, bool axis){
         return vector_out;
     }
 }
+
+
+
+
+
+
+NNCIMatrixType NNCMatrixIterationOperationSingleMatrix(NNCIMatrixType matrix, NNCMatrixIterationOperationSingle operation, nnc_bool inplace){
+#if NNC_PARALLEL == 1
+    return NNCMatrixIterationOperationSingleMatrix_ParallelIteration(matrix, operation, inplace);
+#else
+    return NNCMatrixIterationOperationSingleMatrix_LazyIteration(matrix, operation, inplace);
+#endif
+}
+
+NNCIMatrixType NNCMatrixIterationOperationDoubleMatrix(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b, NNCMatrixIterationOperationDouble operation, nnc_bool inplace){
+#if NNC_PARALLEL == 1
+    return NNCMatrixIterationOperationDoubleMatrix_ParallelIteration(matrix_a, matrix_b, operation, inplace);
+#else
+    return NNCMatrixIterationOperationDoubleMatrix_LazyIteration(matrix_a, matrix_b, operation, inplace);
+#endif
+}
+
+NNCIMatrixType NNCMatrixIterationOperationSingleMatrix_LazyIteration(NNCIMatrixType matrix, NNCMatrixIterationOperationSingle operation, nnc_bool inplace){
+
+}
+
+NNCIMatrixType NNCMatrixIterationOperationDoubleMatrix_LazyIteration(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b, NNCMatrixIterationOperationDouble operation, nnc_bool inplace){
+    if(matrix_a->x == matrix_b->x && matrix_a->y == matrix_b->y){
+        NNCIMatrixType matrix_out = NNCMatrixAllocBaseValue(matrix_a->x, matrix_a->y, 0);
+        for (int y = 0; y < matrix_out->y; y++)
+            for (int x = 0; x < matrix_out->x; x++)
+                matrix_out->matrix[y][x] += matrix_a->matrix[y][x] * matrix_b->matrix[y][x];
+        return matrix_out;
+    }else {//if(matrix_a->x < matrix_b->x && matrix_a->y == matrix_b->y){
+        NNCIMatrixType matrix_out = NNCMatrixAllocBaseValue(matrix_b->x, matrix_a->y, 0);
+        for (int i = 0; i < matrix_a->y; i++)
+            for (int j = 0; j < matrix_b->x; j++)
+                for (int k = 0; k < matrix_b->y; k++) // FIXME a < b
+                    matrix_out->matrix[i][j] += matrix_a->matrix[i][k] * matrix_b->matrix[k][j];
+        return matrix_out;
+    }
+}
+
+NNCIMatrixType NNCMatrixIterationOperationSingleMatrix_ParallelIteration(NNCIMatrixType matrix, NNCMatrixIterationOperationSingle operation, nnc_bool inplace){
+#if NNC_PARALLEL == 1
+#else
+    return nnc_null;
+#endif
+}
+
+NNCIMatrixType NNCMatrixIterationOperationDoubleMatrix_ParallelIteration(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b, NNCMatrixIterationOperationDouble operation, nnc_bool inplace){
+#if NNC_PARALLEL == 1
+#else
+    return nnc_null;
+#endif
+}
+
+

@@ -56,4 +56,20 @@ NNCIMatrixType NNCMatrixTranspose(NNCIMatrixType matrix);
 nnc_vector NNCMatrixArgMax(NNCIMatrixType matrix);
 nnc_vector NNCMatrixToVector(NNCIMatrixType matrix, bool axis);
 
+
+
+typedef nnc_uint (*NNCMatrixIterationOperationSingle)(nnc_uint x, nnc_uint y, nnc_uint value);
+typedef nnc_uint (*NNCMatrixIterationOperationDouble)(nnc_uint a_x, nnc_uint a_y, nnc_uint a_value, nnc_uint b_x, nnc_uint b_y, nnc_uint b_value);
+
+// Inplace always in first matrix
+
+NNCIMatrixType NNCMatrixIterationOperationSingleMatrix(NNCIMatrixType matrix, NNCMatrixIterationOperationSingle operation, nnc_bool inplace);
+NNCIMatrixType NNCMatrixIterationOperationDoubleMatrix(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b, NNCMatrixIterationOperationDouble operation, nnc_bool inplace);
+
+NNCIMatrixType NNCMatrixIterationOperationSingleMatrix_LazyIteration(NNCIMatrixType matrix, NNCMatrixIterationOperationSingle operation, nnc_bool inplace);
+NNCIMatrixType NNCMatrixIterationOperationDoubleMatrix_LazyIteration(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b, NNCMatrixIterationOperationDouble operation, nnc_bool inplace);
+
+NNCIMatrixType NNCMatrixIterationOperationSingleMatrix_ParallelIteration(NNCIMatrixType matrix, NNCMatrixIterationOperationSingle operation, nnc_bool inplace);
+NNCIMatrixType NNCMatrixIterationOperationDoubleMatrix_ParallelIteration(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b, NNCMatrixIterationOperationDouble operation, nnc_bool inplace);
+
 #endif //CMATRIX_NNC_MATRIX_H
