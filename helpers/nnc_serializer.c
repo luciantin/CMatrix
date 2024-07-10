@@ -1,3 +1,4 @@
+#include <string.h>
 #include "nnc_serializer.h"
 #include "nnc_optimizer.h"
 
@@ -53,7 +54,7 @@ void NNCSerializedModelDeAlloc(NNCISerializedModelType model){
 }
 
 void NNCSerializedModelAddLayer(NNCISerializedModelType model, NNCISerializedLayerType layer){
-    NNCISerializedLayerType* tmp_layer = malloc(sizeof(NNCISerializedLayerType*) * (model->layers_len + 1));
+    NNCISerializedLayerType* tmp_layer = malloc(sizeof(NNCSerializedLayerType*) * (model->layers_len + 1));
 
     for(int i = 0; i < model->layers_len; i ++) tmp_layer[i] = model->layers[i];
     tmp_layer[model->layers_len] = layer;
@@ -164,29 +165,123 @@ NNCISerializedModelType NNCSerializedModelLoadFromFile(char* file_name){
 
 NNCIDeSerializedModelType NNCSerializedModelDeSerialize(NNCISerializedModelType model);
 
-NNCISerializedModelType   NNCDeSerializedModelSerialize(NNCIDeSerializedModelType model){
+NNCISerializedModelType   NNCDeSerializedModelSerialize(enum NNCSerializerType type, NNCIDeSerializedModelType dsmodel){
     NNCISerializedModelType smodel = malloc(sizeof(NNCSerializedModelType));
 
-    smodel->type = model->type;
+    smodel->type = dsmodel->type;
 
+    smodel->model = cstrToNode(dsmodel->model->tag);
+    smodel->model_len = countNodes(smodel->model);
 
+    smodel->layers = malloc(sizeof(NNCIModelLayerType) * dsmodel->model->layer_len);
+    smodel->layers_len = dsmodel->model->layer_len;
+
+    for(int i = 0; i < dsmodel->model->layer_len; i++) {
+        smodel->layers[i] = NNCSerializedLayerTypeSerializeLayer(type, dsmodel->model->layers[i]);
+    }
+
+    if(smodel->type == NNCSerializer_ModelWithTrainer) {
+        smodel->trainer = nnc_null;
+        smodel->trainer_len = 0;
+    }
+
+    else {
+        smodel->trainer = nnc_null;
+        smodel->trainer_len = 0;
+    }
+
+    if(smodel->type == NNCSerializer_Model || smodel->type == NNCSerializer_ModelWithTrainer) {
+        smodel->optimizer = NNCSerializedLayerTypeSerializeLayer(type, dsmodel->model->optimizer);
+    }
+    else {
+        smodel->optimizer = nnc_null;
+    }
 
     return smodel;
 }
 
-NNCISerializedLayerType NNCSerializedLayerTypeSerializeLayer(NNCIModelLayerType layer){
+NNCISerializedLayerType NNCSerializedLayerTypeSerializeLayer(enum NNCSerializerType type, NNCIModelLayerType layer){
     NNCISerializedLayerType slayer = malloc(sizeof(NNCSerializedLayerType));
 
     if(layer->type == NNCLayerType_Optimizer_Adam){
+        NNCIOptimizerAdamType opt = (NNCIOptimizerAdamType)layer->layer;
 
+        Node* learning_rate = floatToStrNode(opt->learning_rate);
+        Node* current_learning_rate = floatToStrNode(opt->current_learning_rate);
+        Node* decay = floatToStrNode(opt->decay);
+        Node* iteration = floatToStrNode(opt->iteration);
+        Node* epsilon = floatToStrNode(opt->epsilon);
+        Node* beta_1 = floatToStrNode(opt->beta_1);
+        Node* beta_2 = floatToStrNode(opt->beta_2);
+
+        appendNodeAtEnd(learning_rate, newNode(':'));
+        appendNodeAtEnd(learning_rate, current_learning_rate);
+        appendNodeAtEnd(learning_rate, newNode(':'));
+        appendNodeAtEnd(learning_rate, decay);
+        appendNodeAtEnd(learning_rate, newNode(':'));
+        appendNodeAtEnd(learning_rate, iteration);
+        appendNodeAtEnd(learning_rate, newNode(':'));
+        appendNodeAtEnd(learning_rate, epsilon);
+        appendNodeAtEnd(learning_rate, newNode(':'));
+        appendNodeAtEnd(learning_rate, beta_1);
+        appendNodeAtEnd(learning_rate, newNode(':'));
+        appendNodeAtEnd(learning_rate, beta_2);
+        appendNodeAtEnd(learning_rate, newNode(':'));
+
+        slayer->type = layer->type;
+        slayer->layer = learning_rate;
 
     }
     else if(layer->type == NNCLayerType_Optimizer_AdaGrad){
+        NNCIOptimizerAdaGradType opt = (NNCIOptimizerAdaGradType)layer->layer;
+
+        Node* learning_rate = floatToStrNode(opt->learning_rate);
+        Node* current_learning_rate = floatToStrNode(opt->current_learning_rate);
+        Node* decay = floatToStrNode(opt->decay);
+        Node* iteration = floatToStrNode(opt->iteration);
+        Node* epsilon = floatToStrNode(opt->epsilon);
+
+        appendNodeAtEnd(learning_rate, newNode(':'));
+        appendNodeAtEnd(learning_rate, current_learning_rate);
+        appendNodeAtEnd(learning_rate, newNode(':'));
+        appendNodeAtEnd(learning_rate, decay);
+        appendNodeAtEnd(learning_rate, newNode(':'));
+        appendNodeAtEnd(learning_rate, iteration);
+        appendNodeAtEnd(learning_rate, newNode(':'));
+        appendNodeAtEnd(learning_rate, epsilon);
+        appendNodeAtEnd(learning_rate, newNode(':'));
+
+        slayer->type = layer->type;
+        slayer->layer = learning_rate;
+
     }
     else if(layer->type == NNCLayerType_Optimizer_RMSProp){
+        NNCIOptimizerRMSPropType opt = (NNCIOptimizerRMSPropType)layer->layer;
+
+        Node* learning_rate = floatToStrNode(opt->learning_rate);
+        Node* current_learning_rate = floatToStrNode(opt->current_learning_rate);
+        Node* decay = floatToStrNode(opt->decay);
+        Node* iteration = floatToStrNode(opt->iteration);
+        Node* epsilon = floatToStrNode(opt->epsilon);
+        Node* rho = floatToStrNode(opt->rho);
+
+        appendNodeAtEnd(learning_rate, newNode(':'));
+        appendNodeAtEnd(learning_rate, current_learning_rate);
+        appendNodeAtEnd(learning_rate, newNode(':'));
+        appendNodeAtEnd(learning_rate, decay);
+        appendNodeAtEnd(learning_rate, newNode(':'));
+        appendNodeAtEnd(learning_rate, iteration);
+        appendNodeAtEnd(learning_rate, newNode(':'));
+        appendNodeAtEnd(learning_rate, epsilon);
+        appendNodeAtEnd(learning_rate, newNode(':'));
+        appendNodeAtEnd(learning_rate, rho);
+        appendNodeAtEnd(learning_rate, newNode(':'));
+
+        slayer->type = layer->type;
+        slayer->layer = learning_rate;
+
     }
     else if(layer->type == NNCLayerType_Optimizer_SGD){
-
         NNCIOptimizerSGDType opt = (NNCIOptimizerSGDType)layer->layer;
 
         Node* learning_rate = floatToStrNode(opt->learning_rate);
@@ -210,17 +305,41 @@ NNCISerializedLayerType NNCSerializedLayerTypeSerializeLayer(NNCIModelLayerType 
 
     }
     else if(layer->type == NNCLayerType_Layer_Dense){
+        NNCIDenseLayerType lyr = (NNCIDenseLayerType)layer->layer;
+
+
+
+        slayer->type = layer->type;
+        slayer->layer = nnc_null;
     }
     else if(layer->type == NNCLayerType_Layer_Dense_With_Regularization){
+        NNCIDenseLayerType lyr = (NNCIDenseLayerType)layer->layer;
+
+        slayer->type = layer->type;
+        slayer->layer = nnc_null;
     }
     else if(layer->type == NNCLayerType_Activation_ReLU){
+        slayer->type = layer->type;
+        slayer->layer = nnc_null;
     }
     else if(layer->type == NNCLayerType_Layer_Dropout){
+        NNCIDropoutLayerType lyr = (NNCIDropoutLayerType)layer->layer;
+
+        NNCISerializedMatrixType smatrix_binary_mask = NNCIMatrixSerialize(lyr->binary_mask);
+        Node* binary_mask = cstrToNode(smatrix_binary_mask->matrix);
+        NNCISerializedMatrixDeAlloc(smatrix_binary_mask);
+
+        dprintf("%s", nodesToString(binary_mask));
+
+        slayer->type = layer->type;
+        slayer->layer = nnc_null;
     }
     else if(layer->type == NNCLayerType_Activation_SoftMax){
+        slayer->type = layer->type;
+        slayer->layer = nnc_null;
     }
 
-    return NNCSerializedLayerTypeAlloc(slayer, len, layer->type);
+    return slayer;
 }
 
 NNCIModelLayerType NNCSerializedLayerTypeDeSerializeLayer(NNCISerializedLayerType layer){
@@ -308,4 +427,49 @@ NNCIMatrixType NNCImportMatrixFromFile(char* fileName){
 #else
     return nnc_null;
 #endif
+}
+
+NNCISerializedModelType NNCSerialize(enum NNCSerializerType type, NNCIModelType model, NNCITrainerType trainer) {
+    NNCIDeSerializedModelType demodel = NNCDeSerializedModelAlloc(type, model, trainer);
+    return NNCDeSerializedModelSerialize(type, demodel);
+}
+
+NNCISerializedMatrixType NNCIMatrixSerialize(NNCIMatrixType matrix) {
+    NNCISerializedMatrixType smatrix = malloc(sizeof(NNCSerializedMatrixType));
+
+    smatrix->matrix = nnc_null;
+    smatrix->len = 0;
+
+    for(int x = 0; x < matrix->x; x++){
+        for(int y = 0; y < matrix->y; y++){
+            int tmp_len = snprintf(NULL, 0, "%f", matrix->matrix[x][y]);
+            char* tmp_str = malloc(tmp_len);
+            snprintf(tmp_str, tmp_len, "%f", matrix->matrix[x][y]);
+            tmp_str[tmp_len-1] = ':';
+
+            if(smatrix->matrix == nnc_null){
+                smatrix->matrix = tmp_str;
+                smatrix->len = tmp_len;
+            }else { // TODO implement realloc
+                char* tmp_cpy = malloc(smatrix->len + tmp_len);
+
+                memcpy(tmp_cpy, smatrix->matrix, smatrix->len);
+                memcpy(&tmp_cpy[smatrix->len], tmp_str, tmp_len);
+
+                free(smatrix->matrix);
+                free(tmp_str);
+
+                smatrix->matrix = tmp_cpy;
+                smatrix->len += tmp_len;
+            }
+        }
+    }
+
+    smatrix->matrix[smatrix->len-1] = '\0';
+    return smatrix;
+}
+
+void NNCISerializedMatrixDeAlloc(NNCISerializedMatrixType smatrix) {
+    free(smatrix->matrix);
+    free(smatrix);
 }

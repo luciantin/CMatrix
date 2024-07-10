@@ -202,7 +202,7 @@ void NNCModelLayerDeAllocAll(NNCIModelLayerType layer) {
 
 void NNCModelPrintLayers(NNCIModelType model) {
 #if DEBUG == 1
-    dprintf("Model %s layers : \n");
+    dprintf("Model %s layers : \n", model->tag);
     for(int x = 0; x < model->layer_len; x ++) dprintf("  %d. %s - %s\n", x + 1, model->layers[x]->tag, NNCModelLayerElementTypeToString[model->layers[x]->type]);
     if(model->layer_len == 0) dprintf("Model has 0 layers");
     dprintf("--------------\n");

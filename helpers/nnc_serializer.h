@@ -6,6 +6,15 @@
 #include "nnc_trainer.h"
 #include "nnc_list.h"
 
+enum NNCSerializerType{
+    NNCSerializer_Model,
+    NNCSerializer_ModelWithTrainer,
+    NNCSerializer_TrainedModel
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 typedef struct NNCSerializedLayerType
 {
     Node*                               layer;
@@ -19,14 +28,13 @@ NNCSerializedLayerType;
 NNCISerializedLayerType NNCSerializedLayerTypeAlloc(Node* layer, nnc_uint len, enum NNCModelLayerElementType type);
 void NNCSerializedLayerTypeDeAlloc(NNCISerializedLayerType layer);
 
-NNCISerializedLayerType NNCSerializedLayerTypeSerializeLayer(NNCIModelLayerType layer);
+NNCISerializedLayerType NNCSerializedLayerTypeSerializeLayer(enum NNCSerializerType type, NNCIModelLayerType layer);
 NNCIModelLayerType NNCSerializedLayerTypeDeSerializeLayer(NNCISerializedLayerType layer);
 
-enum NNCSerializerType{
-    NNCSerializer_Model,
-    NNCSerializer_ModelWithTrainer,
-    NNCSerializer_TrainedModel
-};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 static const nnc_uint NNCSerializerTypeToStringLen = 3;
 static const char * const NNCSerializerTypeToString[] =
@@ -49,6 +57,9 @@ NNCDeSerializedModelType;
 
 NNCIDeSerializedModelType NNCDeSerializedModelAlloc(enum NNCSerializerType type, NNCIModelType model, NNCITrainerType trainer);
 void NNCDeSerializedModelDeAlloc(NNCIDeSerializedModelType model);
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 typedef struct NNCSerializedModelType
@@ -74,12 +85,30 @@ void NNCSerializedModelAddLayer(NNCISerializedModelType model, NNCISerializedLay
 void NNCSerializedModelSaveToFile(NNCISerializedModelType model, char* file_name);
 NNCISerializedModelType NNCSerializedModelLoadFromFile(char* file_name);
 
-NNCISerializedModelType   NNCDeSerializedModelSerialize(NNCIDeSerializedModelType model);
+NNCISerializedModelType   NNCDeSerializedModelSerialize(enum NNCSerializerType type, NNCIDeSerializedModelType model);
 NNCIDeSerializedModelType NNCSerializedModelDeSerialize(NNCISerializedModelType model);
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 // file structure :
 // lenX;lenY;val1;val2;...;valN;
 NNCIMatrixType NNCImportMatrixFromFile(char* fileName);
+
+NNCISerializedModelType NNCSerialize(enum NNCSerializerType type, NNCIModelType model, NNCITrainerType trainer);
+
+typedef struct NNCSerializedMatrixType
+{
+    char*       matrix;
+    nnc_uint    len;
+}
+        NNCSerializedMatrixType;
+
+#define NNCISerializedMatrixType NNCSerializedMatrixType*
+
+void NNCISerializedMatrixDeAlloc(NNCISerializedMatrixType smatrix);
+NNCISerializedMatrixType NNCIMatrixSerialize(NNCIMatrixType matrix);
 
 
 

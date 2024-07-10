@@ -72,4 +72,8 @@ NNCIMatrixType NNCMatrixIterationOperationDoubleMatrix_LazyIteration(NNCIMatrixT
 NNCIMatrixType NNCMatrixIterationOperationSingleMatrix_ParallelIteration(NNCIMatrixType matrix, NNCMatrixIterationOperationSingle operation, nnc_bool inplace);
 NNCIMatrixType NNCMatrixIterationOperationDoubleMatrix_ParallelIteration(NNCIMatrixType matrix_a, NNCIMatrixType matrix_b, NNCMatrixIterationOperationDouble operation, nnc_bool inplace);
 
+
+
+
+
 #endif //CMATRIX_NNC_MATRIX_H
