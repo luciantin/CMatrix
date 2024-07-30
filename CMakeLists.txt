@@ -38,9 +38,9 @@ add_executable(CMatrix
         helpers/nnc_statistics.h
         helpers/nnc_list.c
         helpers/nnc_list.h
-        helpers/nnc_string.c
-        helpers/nnc_string.h)
-#target_link_libraries(CMatrix PRIVATE m)
+        )
+
+target_link_libraries(CMatrix PRIVATE m)
 
 if( USES_EMCMAKE )
     set_target_properties(CMatrix PROPERTIES LINK_FLAGS "--minify 0 -Oz -g0 -flto --emrun")

@@ -25,11 +25,11 @@ void RunDevelopment(){
     dprintf("Start\n");
     dputs("--------------");
 
-    NNCIMatrixType inputs_training = NNCImportMatrixFromFile("C:\\Repos\\CMatrix\\training\\datasets\\dataset_numbers_100_train.matrix");
-    NNCIMatrixType target_training = NNCImportMatrixFromFile("C:\\Repos\\CMatrix\\training\\datasets\\dataset_numbers_100_truth_train.matrix");
+    NNCIMatrixType inputs_training = NNCImportMatrixFromFile("../training/datasets/dataset_numbers_100_train.matrix");
+    NNCIMatrixType target_training = NNCImportMatrixFromFile("../training/datasets/dataset_numbers_100_truth_train.matrix");
 
-    NNCIMatrixType inputs_test = NNCImportMatrixFromFile("C:\\Repos\\CMatrix\\training\\datasets\\dataset_numbers_100_test.matrix");
-    NNCIMatrixType target_test = NNCImportMatrixFromFile("C:\\Repos\\CMatrix\\training\\datasets\\dataset_numbers_100_truth_test.matrix");
+    NNCIMatrixType inputs_test = NNCImportMatrixFromFile("../training/datasets/dataset_numbers_100_test.matrix");
+    NNCIMatrixType target_test = NNCImportMatrixFromFile("../training/datasets/dataset_numbers_100_truth_test.matrix");
 
     NNCIMatrixType input = inputs_training;
     NNCIMatrixType target = target_training;
@@ -37,7 +37,7 @@ void RunDevelopment(){
     int sample_len = input->y;
     int input_len = input->x;
     int output_len = 10;
-    int epoch_len = 1;
+    int epoch_len = 5;
 
     nnc_mtype momentum = 0;
     nnc_mtype learning_rate = 0.05;
@@ -47,15 +47,15 @@ void RunDevelopment(){
     nnc_mtype beta_2 = 0.999;
     nnc_mtype dropout_rate = 0.01;
 
-    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(input_len, 2);
+    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(input_len, 12);
     NNCDenseLayerSetRegularizationParameters(dense1, 0, 5e-4, 0, 5e-4);
 
     NNCIDropoutLayerType dropout1 = NNCDropoutLayerAlloc(dropout_rate);
 
-    NNCIDenseLayerType dense2 = NNCDenseLayerAlloc(2, 2);
+    NNCIDenseLayerType dense2 = NNCDenseLayerAlloc(12, 12);
     NNCDenseLayerSetRegularizationParameters(dense2, 0, 5e-4, 0, 5e-4);
 
-    NNCIDenseLayerType dense3 = NNCDenseLayerAlloc(2, output_len);
+    NNCIDenseLayerType dense3 = NNCDenseLayerAlloc(12, output_len);
     NNCDenseLayerSetRegularizationParameters(dense3, 0, 5e-4, 0, 5e-4);
 
     NNCIOptimizerAdamType optimizerAdam = NNCOptimizerAdamAlloc(learning_rate, decay, epislon, beta_1, beta_2);
@@ -65,6 +65,7 @@ void RunDevelopment(){
 
     NNCIModelLayerType layerDense1 = NNCModelLayerAlloc(dense1, NNCLayerType_Layer_Dense_With_Regularization, "dense1");
     NNCIModelLayerType layerActivationReLu = NNCModelLayerAlloc(nnc_null, NNCLayerType_Activation_ReLU, "relu1");
+    NNCIModelLayerType layerActivationSoftmax1 = NNCModelLayerAlloc(nnc_null, NNCLayerType_Activation_SoftMax, "softmax1");
     NNCIModelLayerType layerDropout1 = NNCModelLayerAlloc(dropout1, NNCLayerType_Layer_Dropout, "dropout1");
     NNCIModelLayerType layerDense2 = NNCModelLayerAlloc(dense2, NNCLayerType_Layer_Dense_With_Regularization, "dense2");
     NNCIModelLayerType layerDense3 = NNCModelLayerAlloc(dense3, NNCLayerType_Layer_Dense_With_Regularization, "dense3");
@@ -75,8 +76,9 @@ void RunDevelopment(){
 
     NNCModelLayerAdd(model, layerDense1);
     NNCModelLayerAdd(model, layerActivationReLu);
-    NNCModelLayerAdd(model, layerDropout1);
-//    NNCModelLayerAdd(model, layerDense2);
+//    NNCModelLayerAdd(model, layerDropout1);
+    NNCModelLayerAdd(model, layerDense2);
+//    NNCModelLayerAdd(model, layerActivationSoftmax1);
     NNCModelLayerAdd(model, layerDense3);
     NNCModelLayerAdd(model, layerActivationSoftMax);
 
@@ -90,9 +92,9 @@ void RunDevelopment(){
     NNCIModelStatistics statistics_test = NNCTrainerTest(trainer, model, inputs_test, target_test);
     NNCStatisticsPrint(statistics_test);
 
-    dprintf("%s", NNCIMatrixSerialize(dense2->weights)->matrix);
+//    dprintf("%s", NNCIMatrixSerialize(dense2->weights)->matrix);
 
-    NNCISerializedModelType demodel = NNCSerialize(NNCSerializer_Model, model, trainer);
+    NNCISerializedModelType demodel = NNCSerialize(NNCSerializer_TrainedModel, model, trainer);
     NNCSerializedModelSaveToFile(demodel, "modelTest.txt");
 
     dprintf("Done");

@@ -1,8 +1,0 @@
-#ifndef CMATRIX_NNC_STRING_H
-#define CMATRIX_NNC_STRING_H
-
-
-
-
-
-#endif //CMATRIX_NNC_STRING_H
