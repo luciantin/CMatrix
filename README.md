@@ -1,2 +1,2 @@
 # CMatrix
-nnfs in c
+nn in c

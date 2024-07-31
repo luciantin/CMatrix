@@ -274,7 +274,7 @@ NNCIListCString NNCListToCString(NNCIList node, nnc_bool use_delimiter, char del
 }
 
 NNCIList NNCMatrixTypeToList(NNCIMatrixType matrix, nnc_bool use_delimiter, char delimiter) {
-    NNCIList lmatrix = NNCListAllocChar('M');
+    NNCIList lmatrix = NNCListAllocChar(NNC_MODEL_SERIALIZED_MATRIX_START);
     if(use_delimiter == nnc_true) NNCListAppendChar(lmatrix, delimiter);
 
     NNCListAppend(lmatrix, NNCListAllocInt((int)matrix->x));
@@ -289,6 +289,7 @@ NNCIList NNCMatrixTypeToList(NNCIMatrixType matrix, nnc_bool use_delimiter, char
         }
     }
 
+    NNCListAppendChar(lmatrix, NNC_MODEL_SERIALIZED_MATRIX_END);
 
     return lmatrix;
 }

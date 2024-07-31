@@ -100,27 +100,27 @@ _X = _X[_keys]
 _y = _y[_keys]
 
 
-X = X[:10000]
-y = y[:10000]
+X = X[:50000]
+y = y[:50000]
 
-_X = _X[:100]
-_y = _y[:100]
+_X = _X[:100000]
+_y = _y[:100000]
 
 # print(X)
 # print("---------------")
 # print(X)
 
 
-with open("datasets/dataset_numbers_100_train.matrix", "w") as text_file:
+with open("datasets/dataset_numbers_50_000_train.matrix", "w") as text_file:
     text_file.write(npArrayToMatrixTxt(X))
 
-with open("datasets/dataset_numbers_100_truth_train.matrix", "w") as text_file:
+with open("datasets/dataset_numbers_50_000_truth_train.matrix", "w") as text_file:
     text_file.write(npArrayToMatrixTxt(y))
 
-with open("datasets/dataset_numbers_100_test.matrix", "w") as text_file:
+with open("datasets/dataset_numbers_100_000_test.matrix", "w") as text_file:
     text_file.write(npArrayToMatrixTxt(_X))
 
-with open("datasets/dataset_numbers_100_truth_test.matrix", "w") as text_file:
+with open("datasets/dataset_numbers_100_000_truth_test.matrix", "w") as text_file:
     text_file.write(npArrayToMatrixTxt(_y))
 
 # with open("AutoGenTest.c", "w") as text_file:

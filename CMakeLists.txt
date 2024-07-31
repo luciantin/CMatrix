@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.25)
 project(CMatrix C)
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
 set(CMAKE_C_STANDARD 11)
 set(DEBUG false CACHE BOOL "Build in debug mode")
 set(USES_EMCMAKE false CACHE BOOL "Use emcc link flags")
@@ -25,8 +27,8 @@ add_executable(CMatrix
         helpers/nnc_vector.h
         helpers/nnc_optimizer.c
         helpers/nnc_optimizer.h
-        training/AutoGenTest.h
-        training/AutoGenTest.c
+#        training/AutoGenTest.h
+#        training/AutoGenTest.c
         development.h
         helpers/nnc_model.c
         helpers/nnc_model.h

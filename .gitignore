@@ -7,3 +7,4 @@
 /out/
 /training/fashion_mnist_images/
 /training/numbers_mnist_images/
+/CMakeSettings.json
