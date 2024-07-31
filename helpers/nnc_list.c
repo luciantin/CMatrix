@@ -235,7 +235,7 @@ NNCIListCString NNCListToCString(NNCIList node, nnc_bool use_delimiter, char del
             tmp_len += prefix_len;
             tmp_str = malloc(tmp_len);
             tmp_str[0 + prefix_len] = *((char*)currentNode->value);
-            tmp_str[1 + prefix_len] = '\0';
+            tmp_str[1 + prefix_len] = nnc_end_of_string;
             if(minified == 1) tmp_str[0]='C';
         } else if(currentNode->type == MTYPE){ // FIXME float != nnc_mtype
             tmp_len = snprintf(NULL, 0, "%f", *((nnc_mtype*)currentNode->value));
@@ -269,7 +269,7 @@ NNCIListCString NNCListToCString(NNCIList node, nnc_bool use_delimiter, char del
         currentNode = currentNode->next;
     }
 
-    lcstr->string[lcstr->len] = '\0';
+    lcstr->string[lcstr->len] = nnc_end_of_string;
     return lcstr;
 }
 
@@ -311,7 +311,7 @@ NNCIListCString NNCListCStringAllocFromCString(char* cstring) {
 
     while(true){
         lcstring->len += 1;
-        if(cstring[lcstring->len] == '\0') break;
+        if(cstring[lcstring->len] == nnc_end_of_string) break;
     }
 
     return lcstring;
@@ -410,7 +410,7 @@ NNCIList NNCListAllocCopy(NNCIList list) {
 //}
 //
 //Node* cstrToNode(char* str){
-//    if(str != nnc_null && str[0] != '\0'){
+//    if(str != nnc_null && str[0] != nnc_end_of_string){
 //        int index = 0;
 //
 //        char current_char = str[index];
@@ -420,7 +420,7 @@ NNCIList NNCListAllocCopy(NNCIList list) {
 //        Node* current_node = head;
 //        current_char = str[index];
 //
-//        while(current_char != '\0'){
+//        while(current_char != nnc_end_of_string){
 //            current_node->next = newNode(current_char);
 //            current_char = str[index];
 //            index += 1;

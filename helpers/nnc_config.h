@@ -107,11 +107,11 @@ nnc_mtype NNCGetRandomUnsignedMType();
 
 
 
-#define NNC_MODEL_SERIALIZED_START              '#'
-#define NNC_MODEL_SERIALIZED_START_LEN          3
-#define NNC_MODEL_SERIALIZED_END                '$'
-#define NNC_MODEL_SERIALIZED_END_LEN            3
-#define NNC_MODEL_SERIALIZED_ELEMENT_SEPARATOR  '|'
+//#define NNC_MODEL_SERIALIZED_START              '#'
+//#define NNC_MODEL_SERIALIZED_START_LEN          3
+//#define NNC_MODEL_SERIALIZED_END                '$'
+//#define NNC_MODEL_SERIALIZED_END_LEN            3
+//#define NNC_MODEL_SERIALIZED_ELEMENT_SEPARATOR  '|'
 #define NNC_MODEL_SERIALIZED_MATRIX_START 'M'
 #define NNC_MODEL_SERIALIZED_MATRIX_END 'N'
 

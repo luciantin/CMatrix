@@ -153,7 +153,7 @@ NNCIMatrixType NNCImportMatrixFromFile(char* fileName){
     while ((c = fgetc(file)) != EOF) {
         if((char)c == ';'){
 
-            currentConcatValue[currentConcatValueIndex] = '\0';
+            currentConcatValue[currentConcatValueIndex] = nnc_end_of_string;
 
             if(currentFieldIndex >= 2){
                 nnc_mtype value = atof(currentConcatValue);
@@ -225,7 +225,7 @@ NNCISerializedMatrixType NNCIMatrixSerialize(NNCIMatrixType matrix) {
         }
     }
 
-    smatrix->matrix[smatrix->len-1] = '\0';
+    smatrix->matrix[smatrix->len-1] = nnc_end_of_string;
     return smatrix;
 }
 
@@ -571,7 +571,7 @@ NNCIList NNCSerializedModelMinify(NNCISerializedModelType model) {
 //
 //    while ((c = fgetc(file)) != EOF) {
 //        if((char)c == ';'){
-//            currentConcatValue[currentConcatValueIndex] = '\0';
+//            currentConcatValue[currentConcatValueIndex] = nnc_end_of_string;
 //
 //        }
 //        else{
