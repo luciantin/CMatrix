@@ -93,7 +93,7 @@ int NNCListLength(NNCIList node);
 
 
 
-NNCIList NNCMatrixTypeToList(NNCIMatrixType matrix);
+NNCIList NNCMatrixTypeToList(NNCIMatrixType matrix, nnc_bool use_delimiter, char delimiter);
 NNCIListCString NNCListToCString(NNCIList node, nnc_bool use_delimiter, char delimiter, nnc_bool minified);
 NNCIList NNCCStringToList(NNCIListCString str, nnc_bool use_delimiter, char delimiter, nnc_bool minified);
 

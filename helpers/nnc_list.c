@@ -1,6 +1,7 @@
 #include <string.h>
 #include "nnc_list.h"
 #include "nnc_config.h"
+#include "nnc_serializer.h"
 
 NNCIList NNCListAlloc(void *value) {
     NNCIList node = malloc(sizeof(NNCList));
@@ -272,14 +273,22 @@ NNCIListCString NNCListToCString(NNCIList node, nnc_bool use_delimiter, char del
     return lcstr;
 }
 
-NNCIList NNCMatrixTypeToList(NNCIMatrixType matrix) {
+NNCIList NNCMatrixTypeToList(NNCIMatrixType matrix, nnc_bool use_delimiter, char delimiter) {
     NNCIList lmatrix = NNCListAllocChar('M');
-    NNCListAppend(lmatrix, NNCListAllocInt(matrix->x));
-    NNCListAppend(lmatrix, NNCListAllocInt(matrix->y));
+    if(use_delimiter == nnc_true) NNCListAppendChar(lmatrix, delimiter);
 
-    for(int _y = 0; _y < matrix->y; _y ++)
-        for(int _x = 0; _x < matrix->x; _x ++)
+    NNCListAppend(lmatrix, NNCListAllocInt((int)matrix->x));
+    if(use_delimiter == nnc_true) NNCListAppendChar(lmatrix, delimiter);
+    NNCListAppend(lmatrix, NNCListAllocInt((int)matrix->y));
+    if(use_delimiter == nnc_true) NNCListAppendChar(lmatrix, delimiter);
+
+    for(int _y = 0; _y < matrix->y; _y ++){
+        for(int _x = 0; _x < matrix->x; _x ++){
             NNCListAppend(lmatrix, NNCListAllocMType(matrix->matrix[_y][_x]));
+            if(use_delimiter == nnc_true) NNCListAppendChar(lmatrix, delimiter);
+        }
+    }
+
 
     return lmatrix;
 }

@@ -47,15 +47,15 @@ void RunDevelopment(){
     nnc_mtype beta_2 = 0.999;
     nnc_mtype dropout_rate = 0.01;
 
-    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(input_len, 12);
+    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(input_len, 64);
     NNCDenseLayerSetRegularizationParameters(dense1, 0, 5e-4, 0, 5e-4);
 
     NNCIDropoutLayerType dropout1 = NNCDropoutLayerAlloc(dropout_rate);
 
-    NNCIDenseLayerType dense2 = NNCDenseLayerAlloc(12, 12);
+    NNCIDenseLayerType dense2 = NNCDenseLayerAlloc(64, 32);
     NNCDenseLayerSetRegularizationParameters(dense2, 0, 5e-4, 0, 5e-4);
 
-    NNCIDenseLayerType dense3 = NNCDenseLayerAlloc(12, output_len);
+    NNCIDenseLayerType dense3 = NNCDenseLayerAlloc(32, output_len);
     NNCDenseLayerSetRegularizationParameters(dense3, 0, 5e-4, 0, 5e-4);
 
     NNCIOptimizerAdamType optimizerAdam = NNCOptimizerAdamAlloc(learning_rate, decay, epislon, beta_1, beta_2);
