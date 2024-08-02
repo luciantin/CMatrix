@@ -1,7 +1,6 @@
 #include <string.h>
 #include "nnc_list.h"
 #include "nnc_config.h"
-#include "nnc_serializer.h"
 
 NNCIList NNCListAlloc(void *value) {
     NNCIList node = malloc(sizeof(NNCList));
@@ -335,11 +334,120 @@ void NNCListCStringDeAlloc(NNCIListCString cstring) {
     free(cstring);
 }
 
+// trenutno mora biti minified i bez delimitera
 NNCIList NNCCStringToList(NNCIListCString str, nnc_bool use_delimiter, char delimiter, nnc_bool minified) {
-    NNCIList clist = NNCListAllocChar(str->string[0]);
-    for(int i = 1; i < str->len; i ++){
-        NNCListAppend(clist, NNCListAllocChar(str->string[i]));
+
+    if(minified == nnc_false) {
+        NNCIList clist = NNCListAllocChar(str->string[0]);
+        for(int i = 1; i < str->len; i ++){
+            NNCListAppend(clist, NNCListAllocChar(str->string[i]));
+        }
+        return clist;
     }
+
+    NNCIList clist = NNCListAllocChar(str->string[0]);
+
+    for(int i = 0; i < str->len; i ++){
+
+        if(str->string[i] == 'I'){
+            i += 1;
+            int value = 0;
+            nnc_bool is_negative = nnc_false;
+
+            while(i < str->len && str->string[i] != 'I' && str->string[i] != 'C' && str->string[i] != 'F' && str->string[i] != 'M' && str->string[i] != '\0'){
+                if(str->string[i] == '-'){
+                    is_negative = nnc_true;
+                    i += 1;
+                } else{
+                    value *= 10;
+                    value += (int)(str->string[i] - '0');
+                    i += 1;
+                }
+            }
+
+            if(is_negative == nnc_true) value = value * -1;
+
+            NNCListAppendInt(clist, value);
+        }
+        else if(str->string[i] == 'C'){
+            NNCListAppendChar(clist, str->string[i+1]);
+            i += 1;
+        }
+        else if(str->string[i] == 'F'){
+            i += 1;
+            int value = 0;
+            float decimal = 0;
+            int value_index = 0;
+            nnc_bool is_negative = nnc_false;
+            nnc_bool is_decimal = nnc_false;
+
+            while(i < str->len && str->string[i] != 'I' && str->string[i] != 'C' && str->string[i] != 'F' && str->string[i] != 'M' && str->string[i] != '\0'){
+                if(str->string[i] == '-'){
+                    is_negative = nnc_true;
+                    i += 1;
+                } else if(str->string[i] == '.') {
+                    is_decimal = nnc_true;
+                    value_index = -1;
+                    i += 1;
+                } else{
+                    if(is_decimal == nnc_false){
+                        value *= 10;
+                        value += (int)(str->string[i] - '0');
+                    }
+                    else{
+                        float tmp = (float)(str->string[i] - '0');
+                        for(int ti = 0; ti > value_index; ti--) tmp /= 10;
+                        decimal += tmp;
+                        value_index -= 1;
+                    }
+                    i += 1;
+                }
+            }
+
+            decimal += (float)value;
+            if(is_negative == nnc_true) decimal = decimal * -1;
+
+            NNCListAppendFloat(clist, decimal);
+        }
+        else if(str->string[i] == 'M'){
+            i += 1;
+            int value = 0;
+            float decimal = 0;
+            int value_index = 0;
+            nnc_bool is_negative = nnc_false;
+            nnc_bool is_decimal = nnc_false;
+
+            while(i < str->len && (str->string[i] != 'I' || str->string[i] != 'C' || str->string[i] != 'F' || str->string[i] != 'M' || str->string[i] != '\0')){
+                if(str->string[i] == '-'){
+                    is_negative = nnc_true;
+                    i += 1;
+                } else if(str->string[i] == '.') {
+                    is_decimal = nnc_true;
+                    value_index = -1;
+                    i += 1;
+                } else{
+                    if(is_decimal == nnc_false){
+                        value *= 10;
+                        value += (int)(str->string[i] - '0');
+                    }
+                    else{
+                        float tmp = (float)(str->string[i] - '0');
+                        for(int ti = 0; ti > value_index; ti--) tmp /= 10;
+                        decimal += tmp;
+                        value_index -= 1;
+                    }
+                    i += 1;
+                }
+            }
+
+            decimal += (float)value;
+            if(is_negative == nnc_true) decimal = decimal * -1;
+
+            NNCListAppendFloat(clist, decimal);
+        }
+    }
+
+
     return clist;
 }
 

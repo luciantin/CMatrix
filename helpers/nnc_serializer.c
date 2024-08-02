@@ -246,19 +246,19 @@ NNCISerializedLayerType NNCSerializedLayerTypeSerializeLayer(enum NNCSerializerT
         slayer->layer = NNCListAllocChar(NNC_LAYER_START_BYTE);
 
         NNCListAppendMType(slayer->layer,opt->learning_rate);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,opt->current_learning_rate);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,opt->decay);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,opt->iteration);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,opt->epsilon);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,opt->beta_1);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,opt->beta_2);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
 
     }
     else if(layer->type == NNCLayerType_Optimizer_AdaGrad){
@@ -268,15 +268,15 @@ NNCISerializedLayerType NNCSerializedLayerTypeSerializeLayer(enum NNCSerializerT
         slayer->layer = NNCListAllocChar(NNC_LAYER_START_BYTE);
 
         NNCListAppendMType(slayer->layer,opt->learning_rate);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,opt->current_learning_rate);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,opt->decay);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,opt->iteration);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,opt->epsilon);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
 
     }
     else if(layer->type == NNCLayerType_Optimizer_RMSProp){
@@ -286,17 +286,17 @@ NNCISerializedLayerType NNCSerializedLayerTypeSerializeLayer(enum NNCSerializerT
         slayer->layer = NNCListAllocChar(NNC_LAYER_START_BYTE);
 
         NNCListAppendMType(slayer->layer,opt->learning_rate);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,opt->current_learning_rate);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,opt->decay);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,opt->iteration);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,opt->epsilon);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,opt->rho);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
 
     }
     else if(layer->type == NNCLayerType_Optimizer_SGD){
@@ -306,15 +306,15 @@ NNCISerializedLayerType NNCSerializedLayerTypeSerializeLayer(enum NNCSerializerT
         slayer->layer = NNCListAllocChar(NNC_LAYER_START_BYTE);
 
         NNCListAppendMType(slayer->layer,opt->learning_rate);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,opt->current_learning_rate);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,opt->decay);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,opt->iteration);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,opt->momentum);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
 
     }
     else if(layer->type == NNCLayerType_Layer_Dense || layer->type == NNCLayerType_Layer_Dense_With_Regularization){
@@ -324,57 +324,57 @@ NNCISerializedLayerType NNCSerializedLayerTypeSerializeLayer(enum NNCSerializerT
         slayer->layer = NNCListAllocChar(NNC_LAYER_START_BYTE);
 
         NNCListAppendInt(slayer->layer,(int)lyr->num_inputs);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendInt(slayer->layer,(int)lyr->num_neurons);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,lyr->l1r_weights);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,lyr->l1r_biases);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,lyr->l2r_weights);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
         NNCListAppendMType(slayer->layer,lyr->l2r_biases);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
 
-        if(lyr->weights != nnc_null) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->weights, nnc_true, NNC_VALUE_END_BYTE));
+        if(lyr->weights != nnc_null) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->weights, nnc_false, NNC_VALUE_END_BYTE));
         else NNCListAppendChar(slayer->layer, NNC_VALUE_NOT_DEFINED);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
 
-        if(lyr->biases != nnc_null) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->biases, nnc_true, NNC_VALUE_END_BYTE));
+        if(lyr->biases != nnc_null) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->biases, nnc_false, NNC_VALUE_END_BYTE));
         else NNCListAppendChar(slayer->layer, NNC_VALUE_NOT_DEFINED);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
 
-        if(lyr->dweights != nnc_null && (type == NNCSerializer_ModelWithTrainer || type == NNCSerializer_Model)) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->dweights, nnc_true, NNC_VALUE_END_BYTE));
+        if(lyr->dweights != nnc_null && (type == NNCSerializer_ModelWithTrainer || type == NNCSerializer_Model)) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->dweights, nnc_false, NNC_VALUE_END_BYTE));
         else NNCListAppendChar(slayer->layer, NNC_VALUE_NOT_DEFINED);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
 
-        if(lyr->dbiases != nnc_null && (type == NNCSerializer_ModelWithTrainer || type == NNCSerializer_Model)) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->dbiases, nnc_true, NNC_VALUE_END_BYTE));
+        if(lyr->dbiases != nnc_null && (type == NNCSerializer_ModelWithTrainer || type == NNCSerializer_Model)) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->dbiases, nnc_false, NNC_VALUE_END_BYTE));
         else NNCListAppendChar(slayer->layer, NNC_VALUE_NOT_DEFINED);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
 
-        if(lyr->cweights != nnc_null && (type == NNCSerializer_ModelWithTrainer || type == NNCSerializer_Model)) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->cweights, nnc_true, NNC_VALUE_END_BYTE));
+        if(lyr->cweights != nnc_null && (type == NNCSerializer_ModelWithTrainer || type == NNCSerializer_Model)) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->cweights, nnc_false, NNC_VALUE_END_BYTE));
         else NNCListAppendChar(slayer->layer, NNC_VALUE_NOT_DEFINED);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
 
-        if(lyr->cbiases != nnc_null && (type == NNCSerializer_ModelWithTrainer || type == NNCSerializer_Model)) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->cbiases, nnc_true, NNC_VALUE_END_BYTE));
+        if(lyr->cbiases != nnc_null && (type == NNCSerializer_ModelWithTrainer || type == NNCSerializer_Model)) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->cbiases, nnc_false, NNC_VALUE_END_BYTE));
         else NNCListAppendChar(slayer->layer, NNC_VALUE_NOT_DEFINED);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
 
-        if(lyr->mweights != nnc_null && (type == NNCSerializer_ModelWithTrainer || type == NNCSerializer_Model)) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->mweights, nnc_true, NNC_VALUE_END_BYTE));
+        if(lyr->mweights != nnc_null && (type == NNCSerializer_ModelWithTrainer || type == NNCSerializer_Model)) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->mweights, nnc_false, NNC_VALUE_END_BYTE));
         else NNCListAppendChar(slayer->layer, NNC_VALUE_NOT_DEFINED);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
 
-        if(lyr->mbiases != nnc_null && (type == NNCSerializer_ModelWithTrainer || type == NNCSerializer_Model)) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->mbiases, nnc_true, NNC_VALUE_END_BYTE));
+        if(lyr->mbiases != nnc_null && (type == NNCSerializer_ModelWithTrainer || type == NNCSerializer_Model)) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->mbiases, nnc_false, NNC_VALUE_END_BYTE));
         else NNCListAppendChar(slayer->layer, NNC_VALUE_NOT_DEFINED);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
 
-        if(lyr->inputs != nnc_null && (type == NNCSerializer_ModelWithTrainer || type == NNCSerializer_Model)) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->inputs, nnc_true, NNC_VALUE_END_BYTE));
+        if(lyr->inputs != nnc_null && (type == NNCSerializer_ModelWithTrainer || type == NNCSerializer_Model)) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->inputs, nnc_false, NNC_VALUE_END_BYTE));
         else NNCListAppendChar(slayer->layer, NNC_VALUE_NOT_DEFINED);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
 
-        if(lyr->dinputs != nnc_null && (type == NNCSerializer_ModelWithTrainer || type == NNCSerializer_Model)) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->dinputs, nnc_true, NNC_VALUE_END_BYTE));
+        if(lyr->dinputs != nnc_null && (type == NNCSerializer_ModelWithTrainer || type == NNCSerializer_Model)) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->dinputs, nnc_false, NNC_VALUE_END_BYTE));
         else NNCListAppendChar(slayer->layer, NNC_VALUE_NOT_DEFINED);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
     }
     else if(layer->type == NNCLayerType_Activation_ReLU){
         slayer->type = layer->type;
@@ -387,15 +387,15 @@ NNCISerializedLayerType NNCSerializedLayerTypeSerializeLayer(enum NNCSerializerT
         slayer->layer = NNCListAllocChar(NNC_LAYER_START_BYTE);
 
         NNCListAppendMType(slayer->layer,lyr->dropout_rate);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
 
-        if(lyr->binary_mask != nnc_null) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->binary_mask, nnc_true, NNC_VALUE_END_BYTE));
+        if(lyr->binary_mask != nnc_null) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->binary_mask, nnc_false, NNC_VALUE_END_BYTE));
         else NNCListAppendChar(slayer->layer, NNC_VALUE_NOT_DEFINED);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
 
-        if(lyr->dinputs != nnc_null && (type == NNCSerializer_ModelWithTrainer || type == NNCSerializer_Model)) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->dinputs, nnc_true, NNC_VALUE_END_BYTE));
+        if(lyr->dinputs != nnc_null && (type == NNCSerializer_ModelWithTrainer || type == NNCSerializer_Model)) NNCListAppend(slayer->layer, NNCMatrixTypeToList(lyr->dinputs, nnc_false, NNC_VALUE_END_BYTE));
         else NNCListAppendChar(slayer->layer, NNC_VALUE_NOT_DEFINED);
-        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
+//        //        NNCListAppendChar(slayer->layer, NNC_VALUE_END_BYTE);
 
     }
     else if(layer->type == NNCLayerType_Activation_SoftMax){
@@ -410,67 +410,67 @@ NNCISerializedLayerType NNCSerializedLayerTypeSerializeLayer(enum NNCSerializerT
 
 NNCIList NNCSerializedModelMinify(NNCISerializedModelType model) {
     NNCIList lclist = NNCCStringToList(NNCListCStringAllocFromCString(NNCSerializerTypeToString[model->type]), nnc_false, NNC_VALUE_NOT_DEFINED, nnc_false);
-    NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
+//    NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
 
     if(model->model_len != 0){
         NNCListAppend(lclist, NNCListAllocInt((int)model->model_len));
-        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
+//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
         NNCListAppend(lclist, model->model);
-        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
+//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
     }
     else {
         NNCListAppend(lclist, NNCListAllocInt(0));
-        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
+//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
         NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_EMPTY_BYTE));
-        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
+//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
     }
 
     if(model->trainer_len != 0){
         NNCListAppend(lclist, NNCListAllocInt((int)model->trainer_len));
-        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
+//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
         NNCListAppend(lclist, model->trainer);
-        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
+//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
     }
     else {
         NNCListAppend(lclist, NNCListAllocInt(0));
-        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
+//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
         NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_EMPTY_BYTE));
-        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
+//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
     }
 
     if(model->layers_len != 0){
 
         NNCListAppend(lclist, NNCListAllocInt((int)model->layers_len));
-        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
+//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
 
         for(int i = 0; i < model->layers_len; i++){
             NNCListAppend(lclist, NNCCStringToList(NNCListCStringAllocFromCString(NNCModelLayerElementTypeToString[model->layers[i]->type]), nnc_false, NNC_VALUE_NOT_DEFINED, nnc_false));
             NNCListAppend(lclist, NNCListAllocInt((int)model->layers[i]->type));
-            NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
+//            NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
             if(model->layers[i]->layer != nnc_null) NNCListAppend(lclist, model->layers[i]->layer);
             else NNCListAppendChar(lclist, NNC_VALUE_EMPTY_BYTE);
-            NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
+//            NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
         }
     }
     else {
         NNCListAppend(lclist, NNCListAllocInt(0));
-        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
+//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
         NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_EMPTY_BYTE));
-        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
+//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
     }
 
     if(model->optimizer != nnc_null){
         NNCListAppend(lclist, NNCCStringToList(NNCListCStringAllocFromCString(NNCModelLayerElementTypeToString[model->optimizer->type]), nnc_false, NNC_VALUE_NOT_DEFINED, nnc_false));
         NNCListAppend(lclist, NNCListAllocInt((int)model->optimizer->len));
-        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
+//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
         NNCListAppend(lclist, model->optimizer->layer);
-        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
+//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
     }
     else {
         NNCListAppend(lclist, NNCListAllocInt(0));
-        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
+//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
         NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_EMPTY_BYTE));
-        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
+//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
     }
 
 
@@ -493,8 +493,8 @@ NNCISerializedModelType NNCSerializedModelMaxify(NNCIList list) {
     int index = 0;
     NNCIList current_node = NNCListPop(&list);
 
-    NNCIListCString mmstr = NNCListToCString(list, nnc_false, ';', 0);
-    printf("\n%s\n", mmstr->string);
+//    NNCIListCString mmstr = NNCListToCString(list, nnc_false, ';', 0);
+//    printf("\n%s\n", mmstr->string);
 
     while(current_node != nnc_null){
 
@@ -504,75 +504,9 @@ NNCISerializedModelType NNCSerializedModelMaxify(NNCIList list) {
         current_node = NNCListPop(&list);
     }
 
-    NNCIListCString mstr = NNCListToCString(ltype, nnc_false, ';', 0);
-    printf("\n%s\n", mstr->string);
+//    NNCIListCString mstr = NNCListToCString(ltype, nnc_false, ';', 0);
+//    printf("\n%s\n", mstr->string);
 
-//    NNCIList lclist = NNCCStringToList(NNCListCStringAllocFromCString(NNCSerializerTypeToString[model->type]), nnc_false, NNC_VALUE_NOT_DEFINED, nnc_false);
-//    NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
-//
-//    if(model->model_len != 0){
-//        NNCListAppend(lclist, NNCListAllocInt((int)model->model_len));
-//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
-//        NNCListAppend(lclist, model->model);
-//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
-//    }
-//    else {
-//        NNCListAppend(lclist, NNCListAllocInt(0));
-//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
-//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_EMPTY_BYTE));
-//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
-//    }
-//
-//    if(model->trainer_len != 0){
-//        NNCListAppend(lclist, NNCListAllocInt((int)model->trainer_len));
-//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
-//        NNCListAppend(lclist, model->trainer);
-//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
-//    }
-//    else {
-//        NNCListAppend(lclist, NNCListAllocInt(0));
-//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
-//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_EMPTY_BYTE));
-//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
-//    }
-//
-//    if(model->layers_len != 0){
-//
-//        NNCListAppend(lclist, NNCListAllocInt((int)model->layers_len));
-//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
-//
-//        for(int i = 0; i < model->layers_len; i++){
-//            NNCListAppend(lclist, NNCCStringToList(NNCListCStringAllocFromCString(NNCModelLayerElementTypeToString[model->layers[i]->type]), nnc_false, NNC_VALUE_NOT_DEFINED, nnc_false));
-//            NNCListAppend(lclist, NNCListAllocInt((int)model->layers[i]->type));
-//            NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
-//            if(model->layers[i]->layer != nnc_null) NNCListAppend(lclist, model->layers[i]->layer);
-//            else NNCListAppendChar(lclist, NNC_VALUE_EMPTY_BYTE);
-//            NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
-//        }
-//    }
-//    else {
-//        NNCListAppend(lclist, NNCListAllocInt(0));
-//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
-//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_EMPTY_BYTE));
-//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
-//    }
-//
-//    if(model->optimizer != nnc_null){
-//        NNCListAppend(lclist, NNCCStringToList(NNCListCStringAllocFromCString(NNCModelLayerElementTypeToString[model->optimizer->type]), nnc_false, NNC_VALUE_NOT_DEFINED, nnc_false));
-//        NNCListAppend(lclist, NNCListAllocInt((int)model->optimizer->len));
-//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
-//        NNCListAppend(lclist, model->optimizer->layer);
-//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
-//    }
-//    else {
-//        NNCListAppend(lclist, NNCListAllocInt(0));
-//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
-//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_EMPTY_BYTE));
-//        NNCListAppend(lclist, NNCListAllocChar(NNC_VALUE_END_BYTE));
-//    }
-//
-//
-//    return lclist;
 }
 
 void NNCSerializedModelSaveToFile(NNCISerializedModelType model, char* file_name) {
@@ -580,7 +514,7 @@ void NNCSerializedModelSaveToFile(NNCISerializedModelType model, char* file_name
     if (fp != NULL)
     {
         NNCIList cstr = NNCSerializedModelMinify(model);
-        NNCIListCString ccstr = NNCListToCString(cstr, nnc_false, NNC_VALUE_END_BYTE, nnc_false);
+        NNCIListCString ccstr = NNCListToCString(cstr, nnc_false, NNC_VALUE_EMPTY_BYTE, nnc_true);
         fputs(ccstr->string, fp);
         NNCListDeAlloc(cstr);
         NNCListCStringDeAlloc(ccstr);
@@ -590,7 +524,7 @@ void NNCSerializedModelSaveToFile(NNCISerializedModelType model, char* file_name
 
 NNCISerializedModelType NNCSerializedModelLoadFromFile(char* file_name) {
 
-    FILE *f = fopen(file_name, "rb");
+    FILE *f = fopen(file_name, "r");
     fseek(f, 0, SEEK_END);
     long flen = ftell(f);
     fseek(f, 0, SEEK_SET);
@@ -602,12 +536,17 @@ NNCISerializedModelType NNCSerializedModelLoadFromFile(char* file_name) {
     smodel[flen] = nnc_end_of_string;
 
     NNCIListCString cclist = NNCListCStringAllocFromCString(smodel);
-    free(smodel);
+    NNCIList clist = NNCCStringToList(cclist, nnc_false, NNC_VALUE_END_BYTE, nnc_true);
 
-    NNCIList clist = NNCCStringToList(cclist, nnc_false, NNC_VALUE_END_BYTE, nnc_false);
+    NNCIListCString csl = NNCListToCString(clist, nnc_false, NNC_VALUE_EMPTY_BYTE, nnc_false);
+    printf("\n%s\n", csl->string);
+    printf("\n-------------------------\n");
+
     NNCListCStringDeAlloc(cclist);
 
     NNCISerializedModelType model = NNCSerializedModelMaxify(clist);
+
+
     return model;
 }
 
