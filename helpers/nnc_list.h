@@ -10,7 +10,9 @@
 
 // todo
 #define NNCLIST_DOUBLY_LINKED 1
-//#define NNCLIST_FAST_APPEND 1
+#define NNCLIST_FAST_APPEND 1
+#define NNCLIST_ITERATIVE 1
+#define NNCLIST_RECURSIVE 0
 
 enum NNCListValueType {
     VOID,
@@ -90,8 +92,9 @@ int NNCListLengthToLastNode(NNCIList node);
 int NNCListLengthToFirstNode(NNCIList node);
 int NNCListLength(NNCIList node);
 
-
-
+NNCIList NNCListAtIndex(NNCIList head, int index);
+NNCIList NNCListSplit(NNCIList head, int index);
+NNCIList NNCListPop(NNCIList* head);
 
 NNCIList NNCMatrixTypeToList(NNCIMatrixType matrix, nnc_bool use_delimiter, char delimiter);
 NNCIListCString NNCListToCString(NNCIList node, nnc_bool use_delimiter, char delimiter, nnc_bool minified);

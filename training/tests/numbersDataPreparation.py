@@ -111,6 +111,22 @@ _y = _y[:100000]
 # print(X)
 
 
+# with open("datasets/dataset_numbers_100_train.matrix", "w") as text_file:
+#     text_file.write(npArrayToMatrixTxt(X))
+#
+# with open("datasets/dataset_numbers_100_truth_train.matrix", "w") as text_file:
+#     text_file.write(npArrayToMatrixTxt(y))
+#
+# with open("datasets/dataset_numbers_100_test.matrix", "w") as text_file:
+#     text_file.write(npArrayToMatrixTxt(_X))
+#
+# with open("datasets/dataset_numbers_100_truth_test.matrix", "w") as text_file:
+#     text_file.write(npArrayToMatrixTxt(_y))
+#
+#
+
+
+#
 with open("datasets/dataset_numbers_50_000_train.matrix", "w") as text_file:
     text_file.write(npArrayToMatrixTxt(X))
 
@@ -122,6 +138,22 @@ with open("datasets/dataset_numbers_100_000_test.matrix", "w") as text_file:
 
 with open("datasets/dataset_numbers_100_000_truth_test.matrix", "w") as text_file:
     text_file.write(npArrayToMatrixTxt(_y))
+
+
+
+#
+# with open("datasets/dataset_numbers_1000_train.matrix", "w") as text_file:
+#     text_file.write(npArrayToMatrixTxt(X))
+#
+# with open("datasets/dataset_numbers_1000_truth_train.matrix", "w") as text_file:
+#     text_file.write(npArrayToMatrixTxt(y))
+#
+# with open("datasets/dataset_numbers_1000_test.matrix", "w") as text_file:
+#     text_file.write(npArrayToMatrixTxt(_X))
+#
+# with open("datasets/dataset_numbers_1000_truth_test.matrix", "w") as text_file:
+#     text_file.write(npArrayToMatrixTxt(_y))
+#
 
 # with open("AutoGenTest.c", "w") as text_file:
 #     text_file.write("#include \"../helpers/nnc_matrix.h\"\n")

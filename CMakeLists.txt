@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 3.25)
 project(CMatrix C)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
 set(CMAKE_C_STANDARD 11)
 set(DEBUG false CACHE BOOL "Build in debug mode")
 set(USES_EMCMAKE false CACHE BOOL "Use emcc link flags")
+set(CMAKE_MAXIMUM_RECURSION_DEPTH 200000)
 
 message("USES_EMCMAKE=${USES_EMCMAKE}")
 message("DEBUG=${DEBUG}")
@@ -18,7 +19,7 @@ add_executable(CMatrix
         helpers/nnc_layer.c
         helpers/nnc_layer.h
         helpers/nnc_config.c
-        helpers/nnc_datasets.h
+#        helpers/nnc_datasets.h
         helpers/nnc_activation_layer.c
         helpers/nnc_activation_layer.h
         helpers/nnc_loss_function.c

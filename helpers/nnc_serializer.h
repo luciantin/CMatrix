@@ -86,7 +86,9 @@ NNCISerializedModelType NNCSerializedModelAlloc(enum NNCSerializerType type, NNC
 void NNCSerializedModelDeAlloc(NNCISerializedModelType model);
 
 void NNCSerializedModelAddLayer(NNCISerializedModelType model, NNCISerializedLayerType layer);
+
 NNCIList NNCSerializedModelMinify(NNCISerializedModelType model);
+NNCISerializedModelType NNCSerializedModelMaxify(NNCIList list);
 
 void NNCSerializedModelSaveToFile(NNCISerializedModelType model, char* file_name);
 NNCISerializedModelType NNCSerializedModelLoadFromFile(char* file_name);
