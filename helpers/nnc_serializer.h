@@ -7,6 +7,7 @@
 #include "nnc_list.h"
 
 #define NNC_LAYER_START_BYTE ':'
+#define NNC_LAYER_END_BYTE '#'
 #define NNC_VALUE_END_BYTE ';'
 #define NNC_VALUE_NOT_DEFINED '-'
 #define NNC_VALUE_EMPTY_BYTE '*'
@@ -14,7 +15,8 @@
 enum NNCSerializerType{
     NNCSerializer_Model,
     NNCSerializer_ModelWithTrainer,
-    NNCSerializer_TrainedModel
+    NNCSerializer_TrainedModel,
+    NNCSerializer_NONE
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,7 +38,8 @@ void NNCSerializedLayerTypeDeAlloc(NNCISerializedLayerType layer);
 NNCISerializedLayerType NNCSerializedLayerTypeSerializeLayer(enum NNCSerializerType type, NNCIModelLayerType layer);
 NNCIModelLayerType NNCSerializedLayerTypeDeSerializeLayer(NNCISerializedLayerType layer);
 
-
+NNCIList NNCSerializedLayerTypeToList(NNCISerializedLayerType layer);
+NNCISerializedLayerType NNCSerializedLayerTypeFromList_Destructive(NNCIList* list);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -70,25 +73,23 @@ void NNCDeSerializedModelDeAlloc(NNCIDeSerializedModelType model);
 typedef struct NNCSerializedModelType
 {
     enum NNCSerializerType              type;
-    NNCIList                            model;
-    nnc_uint                            model_len;
-    NNCIList                            trainer;
-    nnc_uint                            trainer_len;
+    NNCIList                            tag;
+    NNCISerializedLayerType             trainer;
+    NNCISerializedLayerType             optimizer;
     NNCISerializedLayerType*            layers;
     nnc_uint                            layers_len;
-    NNCISerializedLayerType             optimizer;
 }
 NNCSerializedModelType;
 
 #define NNCISerializedModelType NNCSerializedModelType*
 
-NNCISerializedModelType NNCSerializedModelAlloc(enum NNCSerializerType type, NNCIList model, nnc_uint model_len, NNCIList trainer, nnc_uint trainer_len, NNCISerializedLayerType* layers, nnc_uint layers_len, NNCISerializedLayerType optimizer);
+NNCISerializedModelType NNCSerializedModelAlloc(enum NNCSerializerType type, NNCIList tag, NNCISerializedLayerType trainer, NNCISerializedLayerType optimizer, NNCISerializedLayerType* layers, nnc_uint layers_len);
 void NNCSerializedModelDeAlloc(NNCISerializedModelType model);
 
 void NNCSerializedModelAddLayer(NNCISerializedModelType model, NNCISerializedLayerType layer);
 
 NNCIList NNCSerializedModelMinify(NNCISerializedModelType model);
-NNCISerializedModelType NNCSerializedModelMaxify(NNCIList list);
+NNCISerializedModelType NNCSerializedModelMaxify_Destructive(NNCIList list);
 
 void NNCSerializedModelSaveToFile(NNCISerializedModelType model, char* file_name);
 NNCISerializedModelType NNCSerializedModelLoadFromFile(char* file_name);

@@ -24,8 +24,9 @@ void NNCModelDeAlloc(NNCIModelType model){
 
 void NNCModelDeAllocAll(NNCIModelType model){
     for(nnc_uint layer_index = 0; layer_index < model->layer_len; layer_index ++) NNCModelLayerDeAllocAll(model->layers[layer_index]);
+    NNCModelLayerDeAllocAll(model->optimizer);
     free(model->layers);
-    free(model->tag);
+//    free(model->tag);
     free(model);
 }
 
@@ -218,5 +219,10 @@ NNCIModelLayerOutputType NNCModelLayerOutputAlloc(NNCIMatrixType output, nnc_boo
 
 void NNCIModelLayerOutputDeAlloc(NNCIModelLayerOutputType output){
     if(output->must_not_deallocate == nnc_false && output->data != nnc_null) NNCMatrixDeAlloc(output->data);
+    free(output);
+}
+
+void NNCIModelLayerOutputDeAllocForced(NNCIModelLayerOutputType output){
+    if(output->data != nnc_null) NNCMatrixDeAlloc(output->data);
     free(output);
 }

@@ -166,6 +166,9 @@ void NNCListInsertBeforeMType(NNCIList head, nnc_mtype value) {
 }
 
 void NNCListAppend(NNCIList head, NNCIList node) {
+    if(node == nnc_null){
+        return;
+    }
     if(head->next == nnc_null) {
         head->next = node;
         node->prev = head;
@@ -230,17 +233,19 @@ NNCIListCString NNCListToCString(NNCIList node, nnc_bool use_delimiter, char del
 
         if(currentNode->type == INT){
             tmp_len = snprintf(NULL, 0, "%d", *((int*)currentNode->value));
+            tmp_len += 1;
             if(tmp_len == 1) tmp_len = 2;
             tmp_len += prefix_len;
             tmp_str = malloc(tmp_len);
-            snprintf(&tmp_str[prefix_len], tmp_len, "%d", *((int*)currentNode->value));
+            snprintf(tmp_str + prefix_len, tmp_len, "%d", *((int*)currentNode->value));
             if(minified == 1) tmp_str[0]='I';
         } else if(currentNode->type == FLOAT){
             tmp_len = snprintf(NULL, 0, "%f", *((float*)currentNode->value));
+            tmp_len += 1;
             if(tmp_len == 1) tmp_len = 2;
             tmp_len += prefix_len;
             tmp_str = malloc(tmp_len);
-            snprintf(&tmp_str[prefix_len], tmp_len, "%f", *((float*)currentNode->value));
+            snprintf(tmp_str + prefix_len, tmp_len, "%f", *((float*)currentNode->value));
             if(minified == 1) tmp_str[0]='F';
         } else if(currentNode->type == CHAR){
             tmp_len = 2;
@@ -251,6 +256,7 @@ NNCIListCString NNCListToCString(NNCIList node, nnc_bool use_delimiter, char del
             if(minified == 1) tmp_str[0]='C';
         } else if(currentNode->type == MTYPE){ // FIXME float != nnc_mtype
             tmp_len = snprintf(NULL, 0, "%f", *((nnc_mtype*)currentNode->value));
+            tmp_len += 1;
             if(tmp_len == 1) tmp_len = 2;
             tmp_len += prefix_len;
             tmp_str = malloc(tmp_len);
@@ -365,6 +371,8 @@ NNCIList NNCCStringToList(NNCIListCString str, nnc_bool use_delimiter, char deli
                 }
             }
 
+            i -= 1;
+
             if(is_negative == nnc_true) value = value * -1;
 
             NNCListAppendInt(clist, value);
@@ -404,6 +412,8 @@ NNCIList NNCCStringToList(NNCIListCString str, nnc_bool use_delimiter, char deli
                 }
             }
 
+            i -= 1;
+
             decimal += (float)value;
             if(is_negative == nnc_true) decimal = decimal * -1;
 
@@ -417,7 +427,7 @@ NNCIList NNCCStringToList(NNCIListCString str, nnc_bool use_delimiter, char deli
             nnc_bool is_negative = nnc_false;
             nnc_bool is_decimal = nnc_false;
 
-            while(i < str->len && (str->string[i] != 'I' || str->string[i] != 'C' || str->string[i] != 'F' || str->string[i] != 'M' || str->string[i] != '\0')){
+            while(i < str->len && str->string[i] != 'I' && str->string[i] != 'C' && str->string[i] != 'F' && str->string[i] != 'M' && str->string[i] != '\0'){
                 if(str->string[i] == '-'){
                     is_negative = nnc_true;
                     i += 1;
@@ -439,6 +449,8 @@ NNCIList NNCCStringToList(NNCIListCString str, nnc_bool use_delimiter, char deli
                     i += 1;
                 }
             }
+
+            i -= 1;
 
             decimal += (float)value;
             if(is_negative == nnc_true) decimal = decimal * -1;

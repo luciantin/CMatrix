@@ -34,23 +34,23 @@ void RunDevelopment(){
     NNCIMatrixType input = inputs_training;
     NNCIMatrixType target = target_training;
 
-    int sample_len = input->y;
+//    int sample_len = input->y;
     int input_len = input->x;
     int output_len = 10;
-    int epoch_len = 10;
+    int epoch_len = 5;
 
-    nnc_mtype momentum = 0;
+//    nnc_mtype momentum = 0;
     nnc_mtype learning_rate = 0.05;
     nnc_mtype decay = 1e-5;
-    nnc_mtype epislon = 1e-7;
-    nnc_mtype beta_1 = 0.9;
-    nnc_mtype beta_2 = 0.999;
-    nnc_mtype dropout_rate = 0.01;
+//    nnc_mtype epislon = 1e-7;
+//    nnc_mtype beta_1 = 0.9;
+//    nnc_mtype beta_2 = 0.999;
+//    nnc_mtype dropout_rate = 0.01;
 
     NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(input_len, 16);
     NNCDenseLayerSetRegularizationParameters(dense1, 0, 5e-4, 0, 5e-4);
 
-    NNCIDropoutLayerType dropout1 = NNCDropoutLayerAlloc(dropout_rate);
+//    NNCIDropoutLayerType dropout1 = NNCDropoutLayerAlloc(dropout_rate);
 
     NNCIDenseLayerType dense2 = NNCDenseLayerAlloc(16, 16);
     NNCDenseLayerSetRegularizationParameters(dense2, 0, 5e-4, 0, 5e-4);
@@ -58,19 +58,19 @@ void RunDevelopment(){
     NNCIDenseLayerType dense3 = NNCDenseLayerAlloc(16, output_len);
     NNCDenseLayerSetRegularizationParameters(dense3, 0, 5e-4, 0, 5e-4);
 
-    NNCIOptimizerAdamType optimizerAdam = NNCOptimizerAdamAlloc(learning_rate, decay, epislon, beta_1, beta_2);
+//    NNCIOptimizerAdamType optimizerAdam = NNCOptimizerAdamAlloc(learning_rate, decay, epislon, beta_1, beta_2);
     NNCIOptimizerAdaGradType optimizerAdaGrad = NNCOptimizerAdaGradAlloc(learning_rate, decay);
 
     NNCIModelType model = NNCModelAlloc("DoubleDense32");
 
     NNCIModelLayerType layerDense1 = NNCModelLayerAlloc(dense1, NNCLayerType_Layer_Dense_With_Regularization, "dense1");
     NNCIModelLayerType layerActivationReLu = NNCModelLayerAlloc(nnc_null, NNCLayerType_Activation_ReLU, "relu1");
-    NNCIModelLayerType layerActivationSoftmax1 = NNCModelLayerAlloc(nnc_null, NNCLayerType_Activation_SoftMax, "softmax1");
-    NNCIModelLayerType layerDropout1 = NNCModelLayerAlloc(dropout1, NNCLayerType_Layer_Dropout, "dropout1");
+//    NNCIModelLayerType layerActivationSoftmax1 = NNCModelLayerAlloc(nnc_null, NNCLayerType_Activation_SoftMax, "softmax1");
+//    NNCIModelLayerType layerDropout1 = NNCModelLayerAlloc(dropout1, NNCLayerType_Layer_Dropout, "dropout1");
     NNCIModelLayerType layerDense2 = NNCModelLayerAlloc(dense2, NNCLayerType_Layer_Dense_With_Regularization, "dense2");
     NNCIModelLayerType layerDense3 = NNCModelLayerAlloc(dense3, NNCLayerType_Layer_Dense_With_Regularization, "dense3");
     NNCIModelLayerType layerActivationSoftMax = NNCModelLayerAlloc(nnc_null, NNCLayerType_Activation_SoftMax, "softmax1");
-    NNCIModelLayerType layerOptimizerAdam = NNCModelLayerAlloc(optimizerAdam, NNCLayerType_Optimizer_Adam, "optimizerAdam");
+//    NNCIModelLayerType layerOptimizerAdam = NNCModelLayerAlloc(optimizerAdam, NNCLayerType_Optimizer_Adam, "optimizerAdam");
     NNCIModelLayerType layerOptimizerAdaGrad = NNCModelLayerAlloc(optimizerAdaGrad, NNCLayerType_Optimizer_AdaGrad, "optimizerAdaGrad");
     NNCITrainerType trainer = NNCTrainerAlloc("trainer", NNCTrainerTypeStrategy_Iterative, epoch_len);
 
@@ -94,11 +94,29 @@ void RunDevelopment(){
 
 //    dprintf("%s", NNCIMatrixSerialize(dense2->weights)->matrix);
 
-    NNCISerializedModelType demodel = NNCSerialize(NNCSerializer_TrainedModel, model, trainer);
+//    NNCISerializedModelType demodel = NNCSerialize(NNCSerializer_TrainedModel, model, trainer);
+//
+//    char* file_name = malloc(sizeof(char) * 200);
+//    sprintf(file_name, "%s_%d_%f.model", model->tag, statistics_train->total_epoch, statistics_test->accuracy);
+//    NNCSerializedModelSaveToFile(demodel, "DoubleDense32_10_0.149000.model");
+//
+//    free(file_name);
+//    NNCSerializedModelDeAlloc(demodel);
 
-    char* file_name = malloc(sizeof(char) * 200);
-    sprintf(file_name, "%s_%d_%f.model", model->tag, statistics_train->total_epoch, statistics_test->accuracy);
-    NNCSerializedModelSaveToFile(demodel, file_name);
+//    NNCModelDeAllocAll(model);
+
+
+    free(statistics_train);
+    free(statistics_test);
+
+    NNCMatrixDeAlloc(inputs_training);
+    NNCMatrixDeAlloc(target_training);
+
+    NNCMatrixDeAlloc(inputs_test);
+    NNCMatrixDeAlloc(target_test);
+
+    NNCTrainerDeAlloc(trainer);
+    NNCModelDeAllocAll(model);
 
     dprintf("Done");
 }

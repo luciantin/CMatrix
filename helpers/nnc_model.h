@@ -42,6 +42,8 @@ enum NNCModelLayerElementType{
     NNCLayerType_Optimizer_AdaGrad,
     NNCLayerType_Optimizer_RMSProp,
     NNCLayerType_Optimizer_Adam,
+
+    NNCLayerType_NONE
 };
 
 static const char * const NNCModelLayerElementTypeToString[] =
@@ -56,6 +58,7 @@ static const char * const NNCModelLayerElementTypeToString[] =
     [NNCLayerType_Optimizer_AdaGrad]  = "NNCLayerType_Optimizer_AdaGrad",
     [NNCLayerType_Optimizer_RMSProp]  = "NNCLayerType_Optimizer_RMSProp",
     [NNCLayerType_Optimizer_Adam]  = "NNCLayerType_Optimizer_Adam",
+    [NNCLayerType_NONE]  = "NNCLayerType_NONE",
 };
 
 typedef struct NNCModelLayerType
@@ -89,6 +92,7 @@ NNCModelLayerOutputType;
 
 NNCIModelLayerOutputType NNCModelLayerOutputAlloc(NNCIMatrixType output, nnc_bool must_not_deallocate);
 void NNCIModelLayerOutputDeAlloc(NNCIModelLayerOutputType output);
+void NNCIModelLayerOutputDeAllocForced(NNCIModelLayerOutputType output);
 
 ////////
 

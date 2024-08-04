@@ -3,10 +3,10 @@
 
 int main() {
 
-
-    NNCSerializedModelLoadFromFile("DoubleDense32_10_0.232000.model");
-
     RunDevelopment();
+
+//    NNCSerializedModelLoadFromFile("DoubleDense32_10_0.149000.model");
+
 
 
     return 0;

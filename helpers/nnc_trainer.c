@@ -42,6 +42,13 @@ NNCIModelStatistics NNCTrainerTrain(NNCITrainerType trainer, NNCIModelType model
         for(int i = 0; i < model->layer_len; i++) if(output_forward_lst[i] != nnc_null) NNCIModelLayerOutputDeAlloc(output_forward_lst[i]);
         for(int i = 0; i < model->layer_len; i++) if(output_backward_lst[i] != nnc_null) NNCIModelLayerOutputDeAlloc(output_backward_lst[i]);
 
+        free(output_forward_lst);
+        free(output_backward_lst);
+//        if(trainer->current_epoch == trainer->max_epoch){
+//            for(int i = 0; i < model->layer_len; i++) if(output_forward_lst[i] != nnc_null) NNCIModelLayerOutputDeAllocForced(output_forward_lst[i]);
+//            for(int i = 0; i < model->layer_len; i++) if(output_backward_lst[i] != nnc_null) NNCIModelLayerOutputDeAllocForced(output_backward_lst[i]);
+//        }
+
         NNCStatisticsPrint(statistics);
 
         #if NNC_CALCULATE_EXECUTION_TIME == 1
@@ -74,6 +81,8 @@ NNCIModelStatistics NNCTrainerTest(NNCITrainerType trainer, NNCIModelType model,
 
     for(int i = 0; i < model->layer_len; i++) if(output_forward_lst[i] != nnc_null) NNCIModelLayerOutputDeAlloc(output_forward_lst[i]);
     NNCStatisticsPrint(statistics);
+
+//    for(int i = 0; i < model->layer_len; i++) NNCIModelLayerOutputDeAlloc(output_forward_lst[i]); // NOT HERE
 
     #if NNC_CALCULATE_EXECUTION_TIME == 1
         time_type epoch_end = dgetTime();
