@@ -63,23 +63,43 @@ NNCIList NNCListAllocMType(nnc_mtype value) {
 
 void NNCListDeAlloc(NNCIList node) {
     if(node != nnc_null){
-        if(node->value != nnc_null) free(node->value);
+        free(node->value);
         free(node);
     }
 }
 
 void NNCListDeAllocNextAll(NNCList *node) {
+#if NNCLIST_ITERATIVE == 1
+    NNCIList tmp;
+    while(node != nnc_null) {
+        tmp = node;
+        node = node->next;
+        NNCListDeAlloc(tmp);
+    }
+#endif
+#if NNCLIST_RECURSIVE == 1 && NNCLIST_ITERATIVE == 0
     if(node != nnc_null){
         NNCListDeAllocNextAll(node->next);
         NNCListDeAlloc(node);
     }
+#endif
 }
 
 void NNCListDeAllocPrevAll(NNCList *node) {
+#if NNCLIST_ITERATIVE == 1
+    NNCIList tmp;
+    while(node != nnc_null) {
+        tmp = node;
+        node = node->prev;
+        NNCListDeAlloc(tmp);
+    }
+#endif
+#if NNCLIST_RECURSIVE == 1 && NNCLIST_ITERATIVE == 0
     if(node != nnc_null){
         NNCListDeAllocPrevAll(node->next);
         NNCListDeAlloc(node);
     }
+#endif
 }
 
 void NNCListDeAllocAll(NNCIList node) {

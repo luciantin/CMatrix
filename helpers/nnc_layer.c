@@ -182,7 +182,6 @@ void NNCDropoutLayerDeAlloc(NNCIDropoutLayerType layer) {
 NNCIMatrixType NNCDropoutLayerForward(NNCIMatrixType inputs, NNCIDropoutLayerType layer) {
     if(layer->binary_mask != nnc_null) NNCMatrixDeAlloc(layer->binary_mask);
     layer->binary_mask = NNCMatrixAllocBernoulli(inputs->x, inputs->y, layer->dropout_rate, layer->dropout_rate);
-//    layer->binary_mask = NNCMatrixAllocDiagonal(inputs->x, inputs->y, 1);
     return NNCMatrixProduct(inputs, layer->binary_mask);
 }
 

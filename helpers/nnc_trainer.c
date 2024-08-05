@@ -82,7 +82,7 @@ NNCIModelStatistics NNCTrainerTest(NNCITrainerType trainer, NNCIModelType model,
     for(int i = 0; i < model->layer_len; i++) if(output_forward_lst[i] != nnc_null) NNCIModelLayerOutputDeAlloc(output_forward_lst[i]);
     NNCStatisticsPrint(statistics);
 
-//    for(int i = 0; i < model->layer_len; i++) NNCIModelLayerOutputDeAlloc(output_forward_lst[i]); // NOT HERE
+    free(output_forward_lst);
 
     #if NNC_CALCULATE_EXECUTION_TIME == 1
         time_type epoch_end = dgetTime();

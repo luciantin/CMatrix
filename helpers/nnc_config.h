@@ -53,7 +53,7 @@ enum NNC_MATRIX_MULTIPLY_SQUARE_ALGO_TYPE {
 
 nnc_mtype NNCGetRandomMType();
 nnc_mtype NNCGetRandomUnsignedMType();
-
+nnc_bool NNCStrComp(const char* str_a, const char* str_b);
 
 #if DEBUG
     #include <stdio.h>

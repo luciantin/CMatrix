@@ -97,6 +97,7 @@ NNCISerializedModelType NNCSerializedModelLoadFromFile(char* file_name);
 NNCISerializedModelType   NNCDeSerializedModelSerialize(enum NNCSerializerType type, NNCIDeSerializedModelType model);
 NNCIDeSerializedModelType NNCSerializedModelDeSerialize(NNCISerializedModelType model);
 
+void NNCSerializedModelPrint(NNCISerializedModelType model);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

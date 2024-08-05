@@ -74,13 +74,19 @@ NNCIModelLayerOutputType* NNCModelLayerForwardPass(NNCIModelType model, NNCIMatr
     NNCIModelLayerOutputType* _output_forward_lst = malloc(sizeof(NNCIMatrixType) * model->layer_len);
     NNCIModelLayerOutputType _output_forward = NNCModelLayerOutputAlloc(input, nnc_true);;
 
-    for(int layer_index = 0; layer_index < model->layer_len; layer_index ++){
+    NNCIModelLayerOutputType _tmp_output_forward = NNCModelLayerForwardStep(model->layers[0], _output_forward);
+    _output_forward_lst[0] = _tmp_output_forward;
+
+    for(int layer_index = 1; layer_index < model->layer_len; layer_index ++){
 #if NNC_PRINT_LAYER_PATH == 1
         dprintf("%d. - %s - ", layer_index + 1, model->tag);
 #endif
-        _output_forward = NNCModelLayerForwardStep(model->layers[layer_index], _output_forward);
-        _output_forward_lst[layer_index] = _output_forward;
+        _tmp_output_forward = NNCModelLayerForwardStep(model->layers[layer_index], _output_forward_lst[layer_index-1]);
+        _output_forward_lst[layer_index] = _tmp_output_forward;
     }
+
+    free(_output_forward);
+
     return _output_forward_lst;
 }
 
@@ -90,16 +96,20 @@ NNCIModelLayerOutputType NNCModelLayerForwardStep(NNCIModelLayerType layer, NNCI
 #endif
 
     if(layer->type == NNCLayerType_Layer_Dense || layer->type == NNCLayerType_Layer_Dense_With_Regularization){
-        return NNCModelLayerOutputAlloc(NNCDenseLayerForward(input->data, layer->layer), nnc_false);
+        NNCIModelLayerOutputType output = NNCModelLayerOutputAlloc(NNCDenseLayerForward(input->data, layer->layer), nnc_false);
+        return output;
     }
     else if(layer->type == NNCLayerType_Activation_ReLU){
-        return NNCModelLayerOutputAlloc(NNCActivationReLUForward(input->data), nnc_false);
+        NNCIModelLayerOutputType output = NNCModelLayerOutputAlloc(NNCActivationReLUForward(input->data), nnc_false);
+        return output;
     }
     else if(layer->type == NNCLayerType_Layer_Dropout){
-        return NNCModelLayerOutputAlloc(NNCDropoutLayerForward(input->data, layer->layer), nnc_false);
+        NNCIModelLayerOutputType output = NNCModelLayerOutputAlloc(NNCDropoutLayerForward(input->data, layer->layer), nnc_false);
+        return output;
     }
     else if(layer->type == NNCLayerType_Activation_SoftMax){
-        return NNCModelLayerOutputAlloc(NNCActivationSoftMaxForward(input->data), nnc_false);
+        NNCIModelLayerOutputType output = NNCModelLayerOutputAlloc(NNCActivationSoftMaxForward(input->data), nnc_false);
+        return output;
     }
     else return nnc_null;
 }
@@ -108,13 +118,18 @@ NNCIModelLayerOutputType* NNCModelLayerBackwardPass(NNCIModelType model, NNCIMat
     NNCIModelLayerOutputType* _output_backward_lst = malloc(sizeof(NNCIMatrixType) * model->layer_len);
     NNCIModelLayerOutputType _output_backward = NNCModelLayerOutputAlloc(target, nnc_true);
 
-    for(int layer_index = model->layer_len - 1; layer_index >= 0; layer_index -= 1){
+    NNCIModelLayerOutputType _tmp_output_backward = NNCModelLayerBackwardStep(model->layers[model->layer_len - 1], _output_backward, output_forward_lst[model->layer_len - 1]);
+    _output_backward_lst[model->layer_len - 1] = _tmp_output_backward;
+
+    for(int layer_index = model->layer_len - 2; layer_index >= 0; layer_index -= 1){
 #if NNC_PRINT_LAYER_PATH == 1
         dprintf("%d. - %s - backward - %s - %s\n", layer_index + 1, model->tag, model->layers[layer_index]->tag, NNCModelLayerElementTypeToString[model->layers[layer_index]->type]);
 #endif
-        _output_backward = NNCModelLayerBackwardStep(model->layers[layer_index], _output_backward, output_forward_lst[layer_index]);
-        _output_backward_lst[layer_index] = _output_backward;
+        _tmp_output_backward = NNCModelLayerBackwardStep(model->layers[layer_index], _output_backward_lst[layer_index + 1], output_forward_lst[layer_index]);
+        _output_backward_lst[layer_index] = _tmp_output_backward;
     }
+
+    free(_output_backward);
 
     return _output_backward_lst;
 }
@@ -225,4 +240,10 @@ void NNCIModelLayerOutputDeAlloc(NNCIModelLayerOutputType output){
 void NNCIModelLayerOutputDeAllocForced(NNCIModelLayerOutputType output){
     if(output->data != nnc_null) NNCMatrixDeAlloc(output->data);
     free(output);
+}
+
+enum NNCModelLayerElementType NNCModelLayerElementTypeFromString(char* string) {
+    
+
+    return NNCLayerType_NONE;
 }

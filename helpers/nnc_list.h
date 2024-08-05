@@ -87,6 +87,7 @@ void NNCListAppendChar(NNCIList head, char value);
 void NNCListAppendFloat(NNCIList head, float value);
 void NNCListAppendInt(NNCIList head, int value);
 void NNCListAppendMType(NNCIList head, nnc_mtype value);
+void NNCListAppendByCopy(NNCIList head, NNCIList node);
 
 int NNCListLengthToLastNode(NNCIList node);
 int NNCListLengthToFirstNode(NNCIList node);

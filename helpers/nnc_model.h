@@ -61,6 +61,8 @@ static const char * const NNCModelLayerElementTypeToString[] =
     [NNCLayerType_NONE]  = "NNCLayerType_NONE",
 };
 
+enum NNCModelLayerElementType NNCModelLayerElementTypeFromString(char* string);
+
 typedef struct NNCModelLayerType
 {
     enum NNCModelLayerElementType   type;
