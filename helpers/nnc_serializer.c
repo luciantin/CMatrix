@@ -452,11 +452,11 @@ NNCISerializedModelType NNCSerializedModelMaxify_Destructive(NNCIList list) {
         current_node = NNCListPop(&list);
     }
 
-//    current_node = NNCListPop(&model_type);
-//    NNCListDeAlloc(current_node);
-//
-//    current_node = NNCListPop(&tag);
-//    NNCListDeAlloc(current_node);
+    current_node = NNCListPop(&model_type);
+    NNCListDeAlloc(current_node);
+
+    current_node = NNCListPop(&tag);
+    NNCListDeAlloc(current_node);
 
     trainer = NNCSerializedLayerTypeFromList_Destructive(&list);
     optimizer = NNCSerializedLayerTypeFromList_Destructive(&list);
@@ -470,7 +470,7 @@ NNCISerializedModelType NNCSerializedModelMaxify_Destructive(NNCIList list) {
     layers = malloc(sizeof(NNCISerializedLayerType) * layers_len);
     for(int i = 0; i < layers_len; i++) layers[i] = NNCSerializedLayerTypeFromList_Destructive(&list);
 
-//    NNCListDeAllocAll(model_type);
+    NNCListDeAllocAll(model_type);
     smodel = NNCSerializedModelAlloc(type, tag, trainer, optimizer, layers, layers_len);
 
     if(list != nnc_null) NNCListDeAllocAll(list);
@@ -555,11 +555,11 @@ NNCISerializedLayerType NNCSerializedLayerTypeFromList_Destructive(NNCIList* lis
     while(current_node != nnc_null){
 
         if(current_node->type == CHAR && *(char*)current_node->value == NNC_LAYER_END_BYTE) {
-//            NNCListDeAlloc(current_node);
+            NNCListDeAlloc(current_node);
             break;
         }
         else if(current_node->type == CHAR && *(char*)current_node->value == NNC_LAYER_START_BYTE) {
-//            NNCListDeAlloc(current_node);
+            NNCListDeAlloc(current_node);
             take = nnc_true;
         }
         else if(take == nnc_true) {
@@ -571,29 +571,43 @@ NNCISerializedLayerType NNCSerializedLayerTypeFromList_Destructive(NNCIList* lis
         current_node = NNCListPop(list);
     }
 
-//    current_node = NNCListPop(&(slayer->layer));
-//    NNCListDeAlloc(current_node);
+    current_node = NNCListPop(&(slayer->layer));
+    NNCListDeAlloc(current_node);
 
     return slayer;
 }
 
 void NNCSerializedModelPrint(NNCISerializedModelType model) {
-    NNCIListCString cstr1 = NNCListToCString(model->tag, nnc_false, NNC_VALUE_EMPTY_BYTE, nnc_false);
-    dprintf("\n%s\n", cstr1->string);
+//    NNCIListCString cstr1 = NNCListToCString(model->tag, nnc_false, NNC_VALUE_EMPTY_BYTE, nnc_false);
+//    dprintf("\n%s\n", cstr1->string);
 //    NNCListCStringDeAlloc(cstr1);
-
-    NNCIListCString cstr2 = NNCListToCString(model->trainer->layer, nnc_false, NNC_VALUE_EMPTY_BYTE, nnc_false);
-    dprintf("\n%s\n", cstr2->string);
+//
+//    NNCIListCString cstr2 = NNCListToCString(model->trainer->layer, nnc_false, NNC_VALUE_EMPTY_BYTE, nnc_false);
+//    dprintf("\n%s\n", cstr2->string);
 //    NNCListCStringDeAlloc(cstr2);
-
-    NNCIListCString cstr3 = NNCListToCString(model->optimizer->layer, nnc_false, NNC_VALUE_EMPTY_BYTE, nnc_false);
-    dprintf("\n%s\n", cstr3->string);
+//
+//    NNCIListCString cstr3 = NNCListToCString(model->optimizer->layer, nnc_false, NNC_VALUE_EMPTY_BYTE, nnc_false);
+//    dprintf("\n%s\n", cstr3->string);
 //    NNCListCStringDeAlloc(cstr3);
 
-    for(int i = 0; i < model->layers_len; i++) {
-        NNCIListCString cstr4 = NNCListToCString(model->layers[i]->layer, nnc_false, NNC_VALUE_EMPTY_BYTE, nnc_false);
-        dprintf("\n%s\n", cstr4->string);
-//        NNCListCStringDeAlloc(cstr4);
-    }
+//    for(int i = 0; i < model->layers_len; i++) {
+//        NNCIListCString cstr4 = NNCListToCString(model->layers[i]->layer, nnc_false, NNC_VALUE_EMPTY_BYTE, nnc_false);
+////        dprintf("\n%s\n", cstr4->string);
+////        NNCListCStringDeAlloc(cstr4);
+//    }
+
+
+    NNCIListCString cstr4 = NNCListToCString(model->layers[0]->layer, nnc_false, NNC_VALUE_EMPTY_BYTE, nnc_false);
+    dprintf("\n%s\n", cstr4->string);
+    cstr4 = NNCListToCString(model->layers[1]->layer, nnc_false, NNC_VALUE_EMPTY_BYTE, nnc_false);
+    dprintf("\n%s\n", cstr4->string);
+    cstr4 = NNCListToCString(model->layers[2]->layer, nnc_false, NNC_VALUE_EMPTY_BYTE, nnc_false);
+    dprintf("\n%s\n", cstr4->string);
+    cstr4 = NNCListToCString(model->layers[3]->layer, nnc_false, NNC_VALUE_EMPTY_BYTE, nnc_false);
+    dprintf("\n%s\n", cstr4->string);
+    cstr4 = NNCListToCString(model->layers[4]->layer, nnc_false, NNC_VALUE_EMPTY_BYTE, nnc_false);
+    dprintf("\n%s\n", cstr4->string);
+    cstr4 = NNCListToCString(model->layers[5]->layer, nnc_false, NNC_VALUE_EMPTY_BYTE, nnc_false);
+    dprintf("\n%s\n", cstr4->string);
 }
 

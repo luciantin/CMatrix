@@ -5,7 +5,7 @@ int main() {
 
 //    dprintf("\n%d\n", NNCStrComp("1", "1test"));
 
-//    RunDevelopment();
+    RunDevelopment();
 
     NNCISerializedModelType model = NNCSerializedModelLoadFromFile("DoubleDense32_10_0.149000.model");
     NNCSerializedModelPrint(model);
