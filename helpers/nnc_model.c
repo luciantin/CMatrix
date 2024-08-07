@@ -243,7 +243,16 @@ void NNCIModelLayerOutputDeAllocForced(NNCIModelLayerOutputType output){
 }
 
 enum NNCModelLayerElementType NNCModelLayerElementTypeFromString(char* string) {
-    
-
+    if(NNCStrComp(string, NNCModelLayerElementTypeToString[NNCLayerType_Layer_Dense]) == nnc_true) return NNCLayerType_Layer_Dense;
+    if(NNCStrComp(string, NNCModelLayerElementTypeToString[NNCLayerType_Layer_Dense_With_Regularization]) == nnc_true) return NNCLayerType_Layer_Dense_With_Regularization;
+    if(NNCStrComp(string, NNCModelLayerElementTypeToString[NNCLayerType_Layer_Dropout]) == nnc_true) return NNCLayerType_Layer_Dropout;
+    if(NNCStrComp(string, NNCModelLayerElementTypeToString[NNCLayerType_Activation_ReLU]) == nnc_true) return NNCLayerType_Activation_ReLU;
+    if(NNCStrComp(string, NNCModelLayerElementTypeToString[NNCLayerType_Activation_SoftMax]) == nnc_true) return NNCLayerType_Activation_SoftMax;
+    if(NNCStrComp(string, NNCModelLayerElementTypeToString[NNCLayerType_Loss_CCEL]) == nnc_true) return NNCLayerType_Loss_CCEL;
+    if(NNCStrComp(string, NNCModelLayerElementTypeToString[NNCLayerType_Optimizer_SGD]) == nnc_true) return NNCLayerType_Optimizer_SGD;
+    if(NNCStrComp(string, NNCModelLayerElementTypeToString[NNCLayerType_Optimizer_AdaGrad]) == nnc_true) return NNCLayerType_Optimizer_AdaGrad;
+    if(NNCStrComp(string, NNCModelLayerElementTypeToString[NNCLayerType_Optimizer_RMSProp]) == nnc_true) return NNCLayerType_Optimizer_RMSProp;
+    if(NNCStrComp(string, NNCModelLayerElementTypeToString[NNCLayerType_Optimizer_Adam]) == nnc_true) return NNCLayerType_Optimizer_Adam;
+    if(NNCStrComp(string, NNCModelLayerElementTypeToString[NNCLayerType_NONE]) == nnc_true) return NNCLayerType_NONE;
     return NNCLayerType_NONE;
 }

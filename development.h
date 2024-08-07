@@ -42,12 +42,12 @@ void RunDevelopment(){
     nnc_mtype decay = 1e-5;
     nnc_mtype dropout_rate = 0.01;
 
-    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(input_len, 16);
+    NNCIDenseLayerType dense1 = NNCDenseLayerAlloc(input_len, 32);
     NNCDenseLayerSetRegularizationParameters(dense1, 0, 5e-4, 0, 5e-4);
 
     NNCIDropoutLayerType dropout1 = NNCDropoutLayerAlloc(dropout_rate);
 
-    NNCIDenseLayerType dense2 = NNCDenseLayerAlloc(16, 16);
+    NNCIDenseLayerType dense2 = NNCDenseLayerAlloc(32, 16);
     NNCDenseLayerSetRegularizationParameters(dense2, 0, 5e-4, 0, 5e-4);
 
     NNCIDenseLayerType dense3 = NNCDenseLayerAlloc(16, output_len);

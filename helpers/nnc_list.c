@@ -292,7 +292,9 @@ NNCIListCString NNCListToCString(NNCIList node, nnc_bool use_delimiter, char del
             lcstr->string = tmp_str;
             lcstr->len = tmp_len;
         }else { // TODO implement realloc
-            char* tmp_cpy = malloc(lcstr->len + tmp_len);
+
+            // TODO works with +1, without throws malloc(): invalid next size (unsorted)
+            char* tmp_cpy = malloc(lcstr->len + tmp_len + 1);
 
             memcpy(tmp_cpy, lcstr->string, lcstr->len);
             memcpy(&tmp_cpy[lcstr->len], tmp_str, tmp_len);
