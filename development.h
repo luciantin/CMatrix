@@ -36,7 +36,7 @@ void RunDevelopment(){
 
     int input_len = input->x;
     int output_len = 10;
-    int epoch_len = 5;
+    int epoch_len = 500;
 
     nnc_mtype learning_rate = 0.05;
     nnc_mtype decay = 1e-5;

@@ -315,23 +315,53 @@ NNCIListCString NNCListToCString(NNCIList node, nnc_bool use_delimiter, char del
 
 NNCIList NNCMatrixTypeToList(NNCIMatrixType matrix, nnc_bool use_delimiter, char delimiter) {
     NNCIList lmatrix = NNCListAllocChar(NNC_MODEL_SERIALIZED_MATRIX_START);
-    if(use_delimiter == nnc_true) NNCListAppendChar(lmatrix, delimiter);
+//    if(use_delimiter == nnc_true) NNCListAppendChar(lmatrix, delimiter);
 
     NNCListAppend(lmatrix, NNCListAllocInt((int)matrix->x));
-    if(use_delimiter == nnc_true) NNCListAppendChar(lmatrix, delimiter);
+//    if(use_delimiter == nnc_true) NNCListAppendChar(lmatrix, delimiter);
     NNCListAppend(lmatrix, NNCListAllocInt((int)matrix->y));
-    if(use_delimiter == nnc_true) NNCListAppendChar(lmatrix, delimiter);
+//    if(use_delimiter == nnc_true) NNCListAppendChar(lmatrix, delimiter);
 
     for(int _y = 0; _y < matrix->y; _y ++){
         for(int _x = 0; _x < matrix->x; _x ++){
             NNCListAppend(lmatrix, NNCListAllocMType(matrix->matrix[_y][_x]));
-            if(use_delimiter == nnc_true) NNCListAppendChar(lmatrix, delimiter);
+//            if(use_delimiter == nnc_true) NNCListAppendChar(lmatrix, delimiter);
         }
     }
 
     NNCListAppendChar(lmatrix, NNC_MODEL_SERIALIZED_MATRIX_END);
 
     return lmatrix;
+}
+
+NNCIMatrixType NNCListToMatrixType(NNCIList* list, nnc_bool use_delimiter, char delimiter) {
+    NNCIList current_node = nnc_null;
+
+    current_node = NNCListPop(list); // 'M'
+    NNCListDeAlloc(current_node);
+
+    current_node = NNCListPop(list);
+    int x = *(int*)current_node->value;
+    NNCListDeAlloc(current_node);
+
+    current_node = NNCListPop(list);
+    int y = *(int*)current_node->value;
+    NNCListDeAlloc(current_node);
+
+    NNCIMatrixType matrix = NNCMatrixAlloc(x, y);
+
+    for(int _y = 0; _y < matrix->y; _y ++){
+        for(int _x = 0; _x < matrix->x; _x ++){
+            current_node = NNCListPop(list);
+            matrix->matrix[_y][_x] = *(nnc_mtype*)current_node->value;
+            NNCListDeAlloc(current_node);
+        }
+    }
+
+    current_node = NNCListPop(list); // 'N'
+    NNCListDeAlloc(current_node);
+
+    return matrix;
 }
 
 NNCIListCString NNCListCStringAlloc() {
